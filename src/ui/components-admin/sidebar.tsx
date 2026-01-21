@@ -5,6 +5,7 @@ import {
   PlusCircle,
   Award,
   BookOpen,
+  FileText,
   LayoutDashboard,
   UserPen,
   Menu,
@@ -30,9 +31,11 @@ const Sidebar: React.FC = () => {
   };
 
   const confirmLogout = () => {
-    // Implementasi logout logic di sini
-    localStorage.removeItem("token"); // contoh
-    window.location.href = "/login";
+    // Hapus token dan data user dari localStorage
+    localStorage.removeItem("admin_token");
+    localStorage.removeItem("admin_user");
+    // Redirect ke halaman login
+    window.location.href = "/login/admin";
   };
 
   const menuItems = [
@@ -43,36 +46,43 @@ const Sidebar: React.FC = () => {
           icon: LayoutDashboard,
           label: "Dashboard",
           href: "/admin",
-          color: "text-blue-600",
-          bgColor: "bg-blue-100",
+          color: "text-green-600",
+          bgColor: "bg-green-100",
         },
         {
           icon: PlusCircle,
           label: "Manajemen Berita",
           href: "/add-news",
-          color: "text-emerald-600",
-          bgColor: "bg-emerald-100",
+          color: "text-green-600",
+          bgColor: "bg-green-100",
         },
         {
           icon: Award,
           label: "Manajemen Prestasi",
           href: "/add-prestasi",
-          color: "text-yellow-600",
-          bgColor: "bg-yellow-100",
+          color: "text-green-600",
+          bgColor: "bg-green-100",
         },
         {
           icon: BookOpen,
           label: "Publikasi Jurnal",
           href: "/add-jurnal",
-          color: "text-purple-600",
-          bgColor: "bg-purple-100",
+          color: "text-green-600",
+          bgColor: "bg-green-100",
+        },
+        {
+          icon: FileText,
+          label: "Edit Tentang Pesantren",
+          href: "/edit-about",
+          color: "text-green-600",
+          bgColor: "bg-green-100",
         },
         {
           icon: Bell,
           label: "Notifikasi",
           href: "/notification",
-          color: "text-orange-600",
-          bgColor: "bg-orange-100",
+          color: "text-green-600",
+          bgColor: "bg-green-100",
         },
       ],
     },
@@ -83,8 +93,8 @@ const Sidebar: React.FC = () => {
           icon: UserPen,
           label: "Profile Pengguna",
           href: "/add-profile",
-          color: "text-indigo-600",
-          bgColor: "bg-indigo-100",
+          color: "text-emerald-600",
+          bgColor: "bg-emerald-100",
         },
         {
           icon: Settings,
@@ -146,7 +156,7 @@ const Sidebar: React.FC = () => {
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className={`
-    fixed lg:static top-0 left-0 bg-gradient-to-b from-white via-slate-50 to-blue-50 shadow-2xl z-40 flex flex-col
+    fixed lg:static top-0 left-0 bg-gradient-to-b from-white via-slate-50 to-green-50 shadow-2xl z-40 flex flex-col
     ${isMobileOpen ? "flex" : "hidden lg:flex"}
     ${isOpen || isMobileOpen ? "w-[280px]" : "w-0 overflow-hidden"}
   `}
@@ -182,7 +192,7 @@ const Sidebar: React.FC = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2, duration: 0.4 }}
-          className="p-4 mx-4 mt-4 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl text-white"
+          className="p-4 mx-4 mt-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl text-white"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
@@ -190,7 +200,7 @@ const Sidebar: React.FC = () => {
             </div>
             <div>
               <p className="font-semibold text-sm">Admin User</p>
-              <p className="text-xs text-blue-100">Super Administrator</p>
+              <p className="text-xs text-green-100">Super Administrator</p>
             </div>
           </div>
         </motion.div>

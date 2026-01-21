@@ -31,7 +31,7 @@ const Dropdown = ({ label, children }: DropdownProps) => {
     <div ref={dropdownRef} className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="whitespace-nowrap pb-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
+        className="whitespace-nowrap pb-2 text-sm font-medium text-white hover:text-white hover:border-white/60"
       >
         {label}
       </button>

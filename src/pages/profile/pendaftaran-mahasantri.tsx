@@ -1,36 +1,5 @@
-// src/pages/Pendaftaran.tsx
-import React, { useState } from "react";
-
-const accounts = [
-  { bank: "BRI", number: "386201028545536", name: "Nayla Syarifa" },
-  { bank: "BSI", number: "7235009492", name: "Nayla Syarifa" },
-  {
-    bank: "BTN",
-    number: "108901610110387",
-    name: "Azizah Fiqriyatul Mujahidah",
-  },
-  { bank: "Dana", number: "081998925631", name: "Azizah Fiqriyatul Mujahidah" },
-  {
-    bank: "Gopay",
-    number: "085819704766",
-    name: "Azizah Fiqriyatul Mujahidah",
-  },
-  {
-    bank: "ShopeePay",
-    number: "081998925631",
-    name: "Azizah Fiqriyatul Mujahidah",
-  },
-];
-
-const whatsappContacts = [
-  { name: "Abian", number: "083176608687" },
-  { name: "Syarifa", number: "085935271192" },
-];
-
-const FORM_LINK = "https://linktr.ee/OPRECSABA25";
-const REGISTRATION_FEE = "Rp30.000,-";
-const TIMELINE_START = "15 April 2025";
-const TIMELINE_END = "21 Juli 2025";
+import React, { useState, useEffect } from "react";
+import { pageContentsService, defaultPendaftaranContent, type PendaftaranContent } from "../../services/pageContents";
 
 const AccountRow: React.FC<{
   bank: string;
@@ -84,7 +53,25 @@ const AccountRow: React.FC<{
 };
 
 const Pendaftaran: React.FC = () => {
+  const [content, setContent] = useState<PendaftaranContent>(defaultPendaftaranContent);
+  const [isLoading, setIsLoading] = useState(true);
   const [copiedNumber, setCopiedNumber] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const response = await pageContentsService.getByKey<PendaftaranContent>("pendaftaran");
+        if (response.success && response.data?.content) {
+          setContent(response.data.content);
+        }
+      } catch (error) {
+        console.error("Error fetching content:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchContent();
+  }, []);
 
   const handleCopy = async (s: string) => {
     try {
@@ -92,20 +79,31 @@ const Pendaftaran: React.FC = () => {
       setCopiedNumber(s);
       setTimeout(() => setCopiedNumber(null), 2000);
     } catch {
-      // fallback: select manually
       setCopiedNumber(s);
       setTimeout(() => setCopiedNumber(null), 2000);
     }
   };
 
   const makeWhatsAppLink = (phone: string, defaultText?: string) => {
-    // sanitize phone: remove non-digit (basic)
     const raw = phone.replace(/\D/g, "");
     const text = encodeURIComponent(
       defaultText || "Halo, saya ingin konfirmasi pendaftaran PRM"
     );
     return `https://wa.me/${raw}?text=${text}`;
   };
+
+  if (isLoading) {
+    return (
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="animate-pulse space-y-8">
+          <div className="bg-white rounded-2xl shadow-sm p-8">
+            <div className="h-8 bg-slate-200 rounded w-2/3 mb-4"></div>
+            <div className="h-4 bg-slate-200 rounded w-1/2"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
@@ -114,16 +112,13 @@ const Pendaftaran: React.FC = () => {
         <div className="md:flex md:items-center md:justify-between gap-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Pendaftaran Mahasantri Baru 2025
+              {content.header.title}
             </h1>
-            <p className="text-gray-600">
-              Pesantren Riset Al-Muhtada — Jelaskan persyaratan, mekanisme
-              pendaftaran, dan tata cara konfirmasi.
-            </p>
+            <p className="text-gray-600">{content.header.description}</p>
 
             <div className="mt-4 flex flex-wrap gap-3">
               <a
-                href={FORM_LINK}
+                href={content.formLink}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-green-600 text-white font-medium hover:bg-green-700 transition"
@@ -131,17 +126,19 @@ const Pendaftaran: React.FC = () => {
                 Daftar Sekarang
               </a>
 
-              <a
-                href={makeWhatsAppLink(
-                  whatsappContacts[0].number,
-                  "PRM_Nama_Prodi_Alamat"
-                )}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-gray-200 text-gray-700 hover:bg-gray-50 transition"
-              >
-                Konfirmasi via WhatsApp
-              </a>
+              {content.whatsappContacts.length > 0 && (
+                <a
+                  href={makeWhatsAppLink(
+                    content.whatsappContacts[0].number,
+                    "PRM_Nama_Prodi_Alamat"
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-gray-200 text-gray-700 hover:bg-gray-50 transition"
+                >
+                  Konfirmasi via WhatsApp
+                </a>
+              )}
             </div>
           </div>
 
@@ -149,7 +146,7 @@ const Pendaftaran: React.FC = () => {
             <div className="rounded-lg bg-green-50 px-4 py-3 text-center">
               <div className="text-sm text-gray-600">Biaya Pendaftaran</div>
               <div className="text-xl font-semibold text-green-700 mt-1">
-                {REGISTRATION_FEE}
+                {content.registrationFee}
               </div>
             </div>
           </div>
@@ -165,27 +162,23 @@ const Pendaftaran: React.FC = () => {
               Persyaratan Pendaftaran
             </h2>
             <ol className="list-decimal pl-5 space-y-2 text-gray-700">
-              <li>Mahasiswa Universitas Negeri Semarang Angkatan 2025</li>
-              <li>Laki-laki atau perempuan</li>
-              <li>Beragama Islam</li>
-              <li>Bisa membaca Al-Qur’an</li>
-              <li>Tidak merokok</li>
-              <li>Bersedia mematuhi tata tertib pesantren</li>
-              <li>Bersedia mengikuti program Pesantren Riset Al-Muhtada</li>
+              {content.requirements.map((req, index) => (
+                <li key={index}>{req}</li>
+              ))}
               <li>
                 Melakukan pembayaran biaya pendaftaran sebesar{" "}
-                <strong>{REGISTRATION_FEE}</strong> ke salah satu rekening di
+                <strong>{content.registrationFee}</strong> ke salah satu rekening di
                 bawah.
               </li>
               <li>
                 Mengisi formulir online melalui laman{" "}
                 <a
-                  href={FORM_LINK}
+                  href={content.formLink}
                   className="text-[#00531b] hover:underline"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  {FORM_LINK}
+                  {content.formLink}
                 </a>{" "}
                 dan konfirmasi via WhatsApp (format:{" "}
                 <code className="bg-gray-100 px-1 rounded">
@@ -202,7 +195,7 @@ const Pendaftaran: React.FC = () => {
               Rekening / Metode Pembayaran
             </h3>
             <div className="space-y-3">
-              {accounts.map((a) => (
+              {content.accounts.map((a) => (
                 <AccountRow
                   key={a.bank + a.number}
                   bank={a.bank}
@@ -231,7 +224,7 @@ const Pendaftaran: React.FC = () => {
                   Periode Pendaftaran
                 </h4>
                 <p className="text-sm text-gray-600">
-                  {TIMELINE_START} — {TIMELINE_END}
+                  {content.timelineStart} — {content.timelineEnd}
                 </p>
               </div>
 
@@ -240,20 +233,9 @@ const Pendaftaran: React.FC = () => {
                   Langkah Pendaftaran
                 </h4>
                 <ol className="list-decimal pl-5 text-gray-700 space-y-2 text-sm">
-                  <li>Isi formulir online di link pendaftaran.</li>
-                  <li>
-                    Lakukan pembayaran biaya pendaftaran (Rp30.000) ke salah
-                    satu rekening di atas.
-                  </li>
-                  <li>
-                    Konfirmasi pembayaran via WhatsApp ke kontak di samping
-                    dengan format PRM_Nama_Prodi_Alamat.
-                  </li>
-                  <li>Seleksi: wawancara & tes baca Al-Qur’an.</li>
-                  <li>
-                    Pengumuman hasil seleksi akan diberitahukan via WhatsApp &
-                    laman resmi.
-                  </li>
+                  {content.steps.map((step, index) => (
+                    <li key={index}>{step}</li>
+                  ))}
                 </ol>
               </div>
             </div>
@@ -271,7 +253,7 @@ const Pendaftaran: React.FC = () => {
             </p>
 
             <div className="space-y-3">
-              {whatsappContacts.map((c) => (
+              {content.whatsappContacts.map((c) => (
                 <a
                   key={c.number}
                   href={makeWhatsAppLink(c.number, "PRM_Nama_Prodi_Alamat")}
@@ -311,7 +293,7 @@ const Pendaftaran: React.FC = () => {
               Jika mengalami kendala saat daftar, hubungi kontak resmi di atas.
             </p>
             <a
-              href={FORM_LINK}
+              href={content.formLink}
               target="_blank"
               rel="noreferrer"
               className="inline-block px-4 py-2 rounded-md bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition"

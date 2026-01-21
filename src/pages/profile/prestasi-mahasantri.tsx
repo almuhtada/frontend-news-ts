@@ -1,7 +1,48 @@
-import { populer, achievements } from "../../assets/data/dummy";
+import { useState, useEffect } from "react";
+import { populer } from "../../assets/data/dummy";
 import ArtikelPopuler from "../../ui/components-global/artikel-populer";
+import { achievementsService, type Achievement } from "../../services/achievements";
 
 const PrestasiMahasantri = () => {
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAchievements = async () => {
+      try {
+        setLoading(true);
+        const response = await achievementsService.getAll();
+        setAchievements(response.data);
+      } catch (error) {
+        console.error('Error fetching achievements:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAchievements();
+  }, []);
+
+  // Group achievements by year
+  const groupedByYear = achievements.reduce((acc, achievement) => {
+    const year = achievement.years;
+    if (!acc[year]) {
+      acc[year] = [];
+    }
+    acc[year].push(achievement);
+    return acc;
+  }, {} as Record<number, Achievement[]>);
+
+  const sortedYears = Object.keys(groupedByYear).sort((a, b) => Number(b) - Number(a));
+
+  if (loading) {
+    return (
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="text-center">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
       {/* Layout utama: Header, Prestasi, Artikel Populer */}
@@ -18,24 +59,30 @@ const PrestasiMahasantri = () => {
 
           {/* Konten Prestasi */}
           <div className="space-y-10">
-            {achievements.map((group) => (
-              <div key={group.years}>
-                <div className="border-b">
-                  <h2 className="text-2xl font-semibold text-emerald-600 mb-4">
-                    Tahun {group.years}
-                  </h2>
-                </div>
-                <div className="bg-white rounded-2xl p-6">
-                  <ul className="list-disc list-inside space-y-2 text-gray-700">
-                    {(group.name ? [group.name] : []).map(
-                      (item: string, idx: number) => (
-                        <li key={idx}>{item}</li>
-                      )
-                    )}
-                  </ul>
-                </div>
+            {sortedYears.length === 0 ? (
+              <div className="text-center text-gray-500">
+                Belum ada data prestasi
               </div>
-            ))}
+            ) : (
+              sortedYears.map((year) => (
+                <div key={year}>
+                  <div className="border-b">
+                    <h2 className="text-2xl font-semibold text-emerald-600 mb-4">
+                      Tahun {year}
+                    </h2>
+                  </div>
+                  <div className="bg-white rounded-2xl p-6">
+                    <ul className="list-disc list-inside space-y-2 text-gray-700">
+                      {groupedByYear[Number(year)].map((achievement) => (
+                        <li key={achievement.id}>
+                          <strong>{achievement.title}</strong> - {achievement.name}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 

@@ -1,54 +1,72 @@
 import { useState } from "react";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL, API_ENDPOINTS } from "../config/api";
 
-const dummyUsers = [
-  {
-    id: 1,
-    username: "admin",
-    email: "admin@example.com",
-    password: "admin123", // password minimal 6 karakter
-    role: "Administrator",
-  },
-  {
-    id: 2,
-    username: "nabil",
-    email: "nabil@example.com",
-    password: "nabil123",
-    role: "Staff",
-  },
-];
+/* =======================
+   Types
+======================= */
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
+interface LoginErrors {
+  email?: string;
+  password?: string;
+  general?: string;
+}
+
+interface LoginResponse {
+  token: string;
+  user: unknown; // ganti dengan interface User kalau sudah ada
+  message?: string;
+}
+
+/* =======================
+   Component
+======================= */
 
 const LoginAdmin = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<Record<string, string>>({
-    username: "",
+
+  const [formData, setFormData] = useState<LoginFormData>({
+    email: "",
     password: "",
   });
-  const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e: any) => {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [errors, setErrors] = useState<LoginErrors>({});
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  /* =======================
+     Handlers
+  ======================= */
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-    // Clear error saat user mulai mengetik
-    if (errors[name]) {
+
+    if (errors[name as keyof LoginErrors]) {
       setErrors((prev) => ({
         ...prev,
-        [name]: "",
+        [name]: undefined,
       }));
     }
   };
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
+  const validateForm = (): LoginErrors => {
+    const newErrors: LoginErrors = {};
 
-    if (!formData.username.trim()) {
-      newErrors.username = "Username/Email harus diisi";
+    if (!formData.email.trim()) {
+      newErrors.email = "Email harus diisi";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Format email tidak valid";
     }
 
     if (!formData.password) {
@@ -60,7 +78,7 @@ const LoginAdmin = () => {
     return newErrors;
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formErrors = validateForm();
@@ -73,73 +91,76 @@ const LoginAdmin = () => {
     setErrors({});
 
     try {
-      // Simulasi API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.LOGIN}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-      const foundUser = dummyUsers.find(
-        (user) =>
-          (user.username === formData.username ||
-            user.email === formData.username) &&
-          user.password === formData.password
-      );
+      const data: LoginResponse = await response.json();
 
-      if (foundUser) {
-        console.log("Login berhasil:", foundUser);
-        navigate("/admin");
-      } else {
-        setErrors({ general: "Username atau password salah" });
+      if (!response.ok) {
+        setErrors({
+          general: data.message ?? "Email atau password salah",
+        });
+        return;
       }
-    } catch (error) {
-      setErrors({ general: "Login gagal. Silakan coba lagi." });
+
+      localStorage.setItem("admin_token", data.token);
+      localStorage.setItem("admin_user", JSON.stringify(data.user));
+
+      navigate("/admin");
+    } catch {
+      setErrors({
+        general: "Login gagal. Silakan coba lagi.",
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
+  /* =======================
+     Render
+  ======================= */
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
       <div className="w-full max-w-sm bg-white rounded-xl shadow-lg p-6 flex flex-col items-center">
-        {/* Judul */}
         <h4 className="text-xl font-semibold mb-4">Login Dashboard</h4>
 
-        {/* Logo */}
         <img
           src="/src/assets/image/logo1.png"
           alt="Logo"
           className="w-16 h-16 object-cover rounded-lg mb-6"
         />
 
-        {/* Form */}
-        <form className="w-full flex flex-col gap-4">
-          {/* Username / Email */}
+        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
+          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Username / Email
+              Email
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Mail className="h-5 w-5 text-gray-400" />
-              </div>
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
-                type="text"
-                name="username"
-                value={formData.username}
+                type="email"
+                name="email"
+                value={formData.email}
                 onChange={handleChange}
-                placeholder="Masukkan username atau email"
-                className={`
-                  block w-full pl-10 pr-3 py-3 border rounded-lg text-sm 
-                  focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
-                  transition-colors duration-200
+                placeholder="Masukkan email"
+                className={`block w-full pl-10 py-3 border rounded-lg text-sm
+                  focus:ring-2 focus:ring-emerald-500
                   ${
-                    errors.username
+                    errors.email
                       ? "border-red-500 bg-red-50"
-                      : "border-gray-300 bg-white"
-                  }
-                `}
+                      : "border-gray-300"
+                  }`}
               />
             </div>
-            {errors.username && (
-              <p className="mt-1 text-sm text-red-600">{errors.username}</p>
+            {errors.email && (
+              <p className="mt-1 text-sm text-red-600">{errors.email}</p>
             )}
           </div>
 
@@ -149,35 +170,30 @@ const LoginAdmin = () => {
               Password
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Lock className="h-5 w-5 text-gray-400" />
-              </div>
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Masukkan password"
-                className={`
-                  block w-full pl-10 pr-12 py-3 border rounded-lg text-sm 
-                  focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
-                  transition-colors duration-200
+                className={`block w-full pl-10 pr-12 py-3 border rounded-lg text-sm
+                  focus:ring-2 focus:ring-emerald-500
                   ${
                     errors.password
                       ? "border-red-500 bg-red-50"
-                      : "border-gray-300 bg-white"
-                  }
-                `}
+                      : "border-gray-300"
+                  }`}
               />
               <button
                 type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2"
               >
                 {showPassword ? (
-                  <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  <EyeOff className="h-5 w-5 text-gray-400" />
                 ) : (
-                  <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  <Eye className="h-5 w-5 text-gray-400" />
                 )}
               </button>
             </div>
@@ -186,29 +202,23 @@ const LoginAdmin = () => {
             )}
           </div>
 
-          {/* Tombol Login */}
+          {errors.general && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-600">{errors.general}</p>
+            </div>
+          )}
+
           <button
-            type="button"
+            type="submit"
             disabled={isLoading}
-            onClick={handleSubmit}
-            className={`
-              w-full flex justify-center py-3 px-4 border border-transparent rounded-lg 
-              text-sm font-semibold text-white transition-all duration-200
+            className={`w-full py-3 rounded-lg text-sm font-semibold text-white
               ${
                 isLoading
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-emerald-600 hover:bg-emerald-700 hover:shadow-lg transform hover:-translate-y-0.5"
-              }
-            `}
+                  : "bg-emerald-600 hover:bg-emerald-700"
+              }`}
           >
-            {isLoading ? (
-              <div className="flex items-center">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Memproses...
-              </div>
-            ) : (
-              "Masuk"
-            )}
+            {isLoading ? "Memproses..." : "Masuk"}
           </button>
         </form>
       </div>

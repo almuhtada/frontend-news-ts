@@ -1,4 +1,4 @@
-import { Search, LayoutGrid, List, Download } from "lucide-react";
+import { Search, LayoutGrid, List, Download, X } from "lucide-react";
 
 type NewsFiltersProps = {
   searchQuery: string;
@@ -24,114 +24,139 @@ const NewsFilters = ({
   viewMode,
   setViewMode,
   onReset,
-}: NewsFiltersProps) => (
-  <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100 mb-8">
-    <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-      {/* Search + Filters */}
-      <div className="flex flex-col sm:flex-row gap-4 flex-1 w-full lg:w-auto">
-        <div className="relative flex-1 min-w-[300px]">
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Cari artikel, penulis, atau konten..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-2xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition-all"
-          />
+}: NewsFiltersProps) => {
+  const hasFilter = searchQuery || selectedCategory || selectedStatus;
+
+  return (
+    <section className="mb-6 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+      {/* Top Row */}
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        {/* Search + Select */}
+        <div className="flex w-full flex-col gap-3 sm:flex-row lg:flex-1">
+          {/* Search */}
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Cari artikel…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="
+                w-full rounded-xl border border-gray-200
+                py-2.5 pl-9 pr-3 text-sm
+                focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500
+              "
+            />
+          </div>
+
+          {/* Category */}
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="
+              rounded-xl border border-gray-200 bg-white
+              px-3 py-2.5 text-sm
+              focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500
+            "
+          >
+            <option value="">Semua Kategori</option>
+            {availableCategories.map((cat) => (
+              <option key={cat}>{cat}</option>
+            ))}
+          </select>
+
+          {/* Status */}
+          <select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            className="
+              rounded-xl border border-gray-200 bg-white
+              px-3 py-2.5 text-sm
+              focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500
+            "
+          >
+            <option value="">Semua Status</option>
+            <option value="published">Publikasi</option>
+            <option value="draft">Draft</option>
+            <option value="archived">Arsip</option>
+          </select>
         </div>
 
-        {/* Category */}
-        <select
-          aria-label="Filter berdasarkan kategori"
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="px-4 py-3 border border-gray-200 rounded-2xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none bg-white min-w-[150px]"
-        >
-          <option value="">Semua Kategori</option>
-          {availableCategories.map((category) => (
-            <option key={category}>{category}</option>
-          ))}
-        </select>
+        {/* Right Tools */}
+        <div className="flex items-center gap-2">
+          {/* View Mode */}
+          <div className="flex rounded-xl border border-gray-200 bg-gray-50 p-1">
+            <button
+              onClick={() => setViewMode("grid")}
+              aria-label="Grid view"
+              className={`rounded-lg p-2 transition ${
+                viewMode === "grid"
+                  ? "bg-white text-emerald-600 shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              <LayoutGrid className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => setViewMode("list")}
+              aria-label="List view"
+              className={`rounded-lg p-2 transition ${
+                viewMode === "list"
+                  ? "bg-white text-emerald-600 shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              <List className="h-4 w-4" />
+            </button>
+          </div>
 
-        {/* Status */}
-        <select
-          aria-label="Filter berdasarkan status"
-          value={selectedStatus}
-          onChange={(e) => setSelectedStatus(e.target.value)}
-          className="px-4 py-3 border border-gray-200 rounded-2xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none bg-white min-w-[130px]"
-        >
-          <option value="">Semua Status</option>
-          <option value="published">Dipublikasi</option>
-          <option value="draft">Draft</option>
-          <option value="archived">Arsip</option>
-        </select>
-      </div>
-
-      {/* View Mode */}
-      <div className="flex items-center gap-3">
-        <div className="flex bg-gray-100 rounded-2xl p-1">
+          {/* Export */}
           <button
-            aria-label="Ubah ke tampilan grid"
-            onClick={() => setViewMode("grid")}
-            className={`p-3 rounded-xl transition-all ${
-              viewMode === "grid"
-                ? "bg-white text-blue-600 shadow-sm"
-                : "text-gray-600 hover:text-gray-800"
-            }`}
+            aria-label="Unduh data"
+            className="
+              rounded-xl border border-gray-200 bg-white p-2
+              text-gray-500 transition hover:bg-gray-50 hover:text-gray-700
+            "
           >
-            <LayoutGrid className="w-5 h-5" />
-          </button>
-          <button
-            aria-label="Ubah ke tampilan daftar"
-            onClick={() => setViewMode("list")}
-            className={`p-3 rounded-xl transition-all ${
-              viewMode === "list"
-                ? "bg-white text-blue-600 shadow-sm"
-                : "text-gray-600 hover:text-gray-800"
-            }`}
-          >
-            <List className="w-5 h-5" />
+            <Download className="h-4 w-4" />
           </button>
         </div>
-
-        <button
-          aria-label="Unduh data artikel"
-          className="p-3 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-2xl transition-all"
-        >
-          <Download className="w-5 h-5" />
-        </button>
       </div>
-    </div>
 
-    {/* Reset Filters */}
-    {(searchQuery || selectedCategory || selectedStatus) && (
-      <div className="flex items-center gap-2 mt-4 pt-4 border-t border-gray-100">
-        <span className="text-sm text-gray-600">Filter aktif:</span>
-        {searchQuery && (
-          <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">
-            "{searchQuery}"
-          </span>
-        )}
-        {selectedCategory && (
-          <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-medium">
-            {selectedCategory}
-          </span>
-        )}
-        {selectedStatus && (
-          <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-medium">
-            {selectedStatus}
-          </span>
-        )}
-        <button
-          aria-label="Reset semua filter"
-          onClick={onReset}
-          className="text-gray-400 hover:text-gray-600 text-xs ml-2"
-        >
-          Reset semua
-        </button>
-      </div>
-    )}
-  </div>
-);
+      {/* Active Filters */}
+      {hasFilter && (
+        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-gray-100 pt-3">
+          <span className="text-xs text-gray-500">Filter:</span>
+
+          {searchQuery && (
+            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-700">
+              “{searchQuery}”
+            </span>
+          )}
+
+          {selectedCategory && (
+            <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs text-emerald-700">
+              {selectedCategory}
+            </span>
+          )}
+
+          {selectedStatus && (
+            <span className="rounded-full bg-gray-200 px-3 py-1 text-xs text-gray-700">
+              {selectedStatus}
+            </span>
+          )}
+
+          <button
+            onClick={onReset}
+            className="ml-1 inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600"
+          >
+            <X className="h-3 w-3" />
+            Reset
+          </button>
+        </div>
+      )}
+    </section>
+  );
+};
 
 export default NewsFilters;

@@ -5,6 +5,7 @@ import Navbar from "./ui/navbar/Navbar";
 import Footer from "./ui/footer/Footer";
 import DetailNews from "./pages/detail/detail-news";
 import PendidikanPage from "./pages/Pendidikan";
+import AuthorPage from "./pages/AuthorPage";
 import Dashboard from "./admin/dashboard";
 
 import TentangPesantren from "./pages/profile/tentang-pesantren";
@@ -18,8 +19,10 @@ import InputAddNews from "./admin/dashboard/add-news";
 import SejarahPage from "./pages/Sejarah";
 import AdminAchievements from "./admin/dashboard/add-prestasi";
 import AdminPublications from "./admin/dashboard/add-jurnal";
+import AdminAbout from "./admin/dashboard/edit-about";
 import AdminUsers from "./admin/dashboard/user-profile";
 import AdminNotifications from "./admin/dashboard/notification";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 
 // Layout umum untuk halaman publik
 const PublicLayout = ({ children }: { children: React.ReactNode }) => (
@@ -53,10 +56,26 @@ function App() {
           }
         />
         <Route
-          path="/detail-news"
+          path="/detail-news/:slug"
           element={
             <PublicLayout>
               <DetailNews />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path="/category/:slug"
+          element={
+            <PublicLayout>
+              <SejarahPage />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path="/author/:username"
+          element={
+            <PublicLayout>
+              <AuthorPage />
             </PublicLayout>
           }
         />
@@ -65,14 +84,6 @@ function App() {
           element={
             <PublicLayout>
               <PendidikanPage />
-            </PublicLayout>
-          }
-        />
-        <Route
-          path="/sejarah"
-          element={
-            <PublicLayout>
-              <SejarahPage />
             </PublicLayout>
           }
         />
@@ -127,12 +138,62 @@ function App() {
 
         {/* Halaman login admin pakai layout kosong */}
         <Route path="/login/admin" element={<LoginAdmin />} />
-        <Route path="/admin" element={<Dashboard />} />
-        <Route path="/add-news" element={<InputAddNews />} />
-        <Route path="/add-prestasi" element={<AdminAchievements />} />
-        <Route path="/add-jurnal" element={<AdminPublications />} />
-        <Route path="/add-profile" element={<AdminUsers />} />
-        <Route path="/notification" element={<AdminNotifications />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/add-news"
+          element={
+            <ProtectedRoute>
+              <InputAddNews />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/add-prestasi"
+          element={
+            <ProtectedRoute>
+              <AdminAchievements />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/add-jurnal"
+          element={
+            <ProtectedRoute>
+              <AdminPublications />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/edit-about"
+          element={
+            <ProtectedRoute>
+              <AdminAbout />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/add-profile"
+          element={
+            <ProtectedRoute>
+              <AdminUsers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notification"
+          element={
+            <ProtectedRoute>
+              <AdminNotifications />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

@@ -1,17 +1,20 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Logo from "../../assets/image/logo.png";
+import Logo from "../../assets/image/logo.svg";
 import SearchBar from "./SearchBar";
 import Dropdown from "./Dropdown";
 import NavLink from "./Navlink";
 import DropdownItem from "./DropdownItem";
 import { Menu, X } from "lucide-react"; // ikon hamburger & close
+import { categoriesService } from "../../services/categories";
+import type { Category } from "../../services/posts";
 
 const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [activeCategory, setActiveCategory] = useState("Beranda");
   const [isOpen, setIsOpen] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const controlNavbar = () => {
     if (typeof window !== "undefined") {
@@ -25,14 +28,50 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", controlNavbar);
   }, [lastScrollY]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoriesData = await categoriesService.getCategories();
+        // Filter hanya category yang memiliki posts
+        const categoriesWithPosts = categoriesData.filter(
+          (cat: Category & { post_count?: string }) =>
+            cat.post_count && parseInt(cat.post_count) > 0,
+        );
+        setCategories(categoriesWithPosts);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   return (
     <>
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-[#00531b] shadow-sm border-b border-green-900">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <img src={Logo} alt="Logo Al-Muhtada" className="w-[150px]" />
-            <span className="text-sm text-gray-500 hidden md:block">
+          <div className="flex items-center gap-4">
+            {/* Logo */}
+            <img
+              src={Logo}
+              alt="Logo Al-Muhtada"
+              className="
+                    w-auto
+                    h-14
+                    sm:h-17
+                    md:h-18
+                    lg:h-19
+                    xl:h-20
+                    object-contain
+                  "
+            />
+
+            {/* Divider */}
+            <span className="hidden md:block h-8 w-px bg-white/30" />
+
+            {/* Date */}
+            <span className="hidden md:block text-sm text-white/80 leading-tight">
               {new Date().toLocaleDateString("id-ID", {
                 weekday: "long",
                 year: "numeric",
@@ -48,7 +87,7 @@ const Navbar = () => {
             </div>
             {/* Hamburger Menu */}
             <button
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100"
+              className="md:hidden p-2 rounded-lg hover:bg-white/10 text-white"
               onClick={() => setIsOpen(!isOpen)}
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -59,7 +98,7 @@ const Navbar = () => {
 
       {/* Navigation */}
       <nav
-        className={`bg-white border-b sticky top-0 z-50 transition-transform duration-300 ${
+        className={`bg-[#00531b] border-b border-gray-200 sticky top-0 z-50 transition-transform duration-300 ${
           showNavbar ? "translate-y-0" : "-translate-y-full"
         }`}
       >
@@ -70,8 +109,8 @@ const Navbar = () => {
               to="/"
               className={`whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
                 activeCategory === "Beranda"
-                  ? "border-[#00531b] text-[#00531b]"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? "border-white text-white"
+                  : "border-transparent text-white/80 hover:text-white hover:border-white/60"
               }`}
               onClick={() => setActiveCategory("Beranda")}
             >
@@ -82,8 +121,8 @@ const Navbar = () => {
               to="/pendidikan"
               className={`whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
                 activeCategory === "Pendidikan"
-                  ? "border-[#00531b] text-[#00531b]"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? "border-white text-white"
+                  : "border-transparent text-white/80 hover:text-white hover:border-white/60"
               }`}
               onClick={() => setActiveCategory("Pendidikan")}
             >
@@ -91,38 +130,38 @@ const Navbar = () => {
             </NavLink>
 
             <NavLink
-              to="/sejarah"
+              to="/category/sejarah"
               className={`whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
                 activeCategory === "sejarah"
-                  ? "border-[#00531b] text-[#00531b]"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? "border-white text-white"
+                  : "border-transparent text-white/80 hover:text-white hover:border-white/60"
               }`}
               onClick={() => setActiveCategory("sejarah")}
             >
               Sejarah
             </NavLink>
 
-            <Dropdown
-              label="Keislaman"
-              className={`whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
-                activeCategory === "Keislaman"
-                  ? "border-[#00531b] text-[#00531b]"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-              }`}
-              onClick={() => setActiveCategory("Keislaman")}
-            >
-              <DropdownItem to="/doa">Doa Harian</DropdownItem>
-              <DropdownItem to="/Fiqih">Fiqih</DropdownItem>
-              <DropdownItem to="/hadist">Hadist</DropdownItem>
-              <DropdownItem to="/tafsir">Tafsir</DropdownItem>
-            </Dropdown>
+            {categories.slice(0, 4).map((category) => (
+              <NavLink
+                key={category.id}
+                to={`/category/${category.slug}`}
+                className={`whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
+                  activeCategory === category.slug
+                    ? "border-white text-white"
+                    : "border-transparent text-white/80 hover:text-white hover:border-white/60"
+                }`}
+                onClick={() => setActiveCategory(category.slug)}
+              >
+                {category.name}
+              </NavLink>
+            ))}
 
             <Dropdown
               label="Profil"
               className={`whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
                 activeCategory === "Profil"
-                  ? "border-[#00531b] text-[#00531b]"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? "border-white text-white"
+                  : "border-transparent text-white/80 hover:text-white hover:border-white/60"
               }`}
               onClick={() => setActiveCategory("Profil")}
             >
@@ -170,7 +209,7 @@ const Navbar = () => {
                 Pendidikan
               </Link>
               <Link
-                to="/sejarah"
+                to="/category/sejarah"
                 className="text-gray-700 hover:text-[#00531b]"
                 onClick={() => {
                   setActiveCategory("sejarah");
@@ -180,12 +219,21 @@ const Navbar = () => {
                 Sejarah
               </Link>
               <div>
-                <p className="font-medium text-gray-600">Keislaman</p>
+                <p className="font-medium text-gray-600">Kategori</p>
                 <div className="pl-4 flex flex-col space-y-2">
-                  <Link to="/doa">Doa Harian</Link>
-                  <Link to="/Fiqih">Fiqih</Link>
-                  <Link to="/hadist">Hadist</Link>
-                  <Link to="/tafsir">Tafsir</Link>
+                  {categories.map((category) => (
+                    <Link
+                      key={category.id}
+                      to={`/category/${category.slug}`}
+                      className="text-gray-700 hover:text-[#00531b]"
+                      onClick={() => {
+                        setActiveCategory(category.slug);
+                        setIsOpen(false);
+                      }}
+                    >
+                      {category.name}
+                    </Link>
+                  ))}
                 </div>
               </div>
               <div>

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Users,
   BookOpen,
@@ -6,55 +7,43 @@ import {
   Settings,
   Heart,
 } from "lucide-react";
-
 import SectionCard from "../../ui/components-news/card-section-program-pengajar";
+import { pageContentsService, defaultProgramPengajarContent, type ProgramPengajarContent } from "../../services/pageContents";
 
 const ProgramPengajar = () => {
-  const programs = [
-    "Kajian Agama: Tauhid, Tafsir, Hadits, Fiqh, dan Akhlaq",
-    "Kajian Sosial dan Analisis Kritis Masalah Aktual",
-    "Pelatihan Riset dan Menulis Karya Ilmiah",
-    "Pelatihan Bahasa Inggris dan Bahasa Arab",
-    "Pelatihan Presentasi dan Public Speaking",
-    "Program Penelitian dan Pengabdian Masyarakat secara Berkala",
-    "Bimbingan Beasiswa S2/S3 Dalam & Luar Negeri",
-  ];
+  const [content, setContent] = useState<ProgramPengajarContent>(defaultProgramPengajarContent);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const masyayikh = [
-    "Dr. H. Dani Muhtada, M.Ag., M.A., M.P.A.",
-    "Dr. H. A. Hasan Asy'ari Ulama'i, M.Ag.",
-    "Prof. Dr. Ahwan Fanani, M.Ag., M.S.",
-    "Dr. H. M. Hakim Junaidi, M.Ag.",
-    "Dr. H. Mohammad Nasih, M.Si.",
-    "Dr. H. Sukendar, M.Ag., M.A.",
-    "Dr. H. Aji Sofanudin, M.Si.",
-  ];
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const response = await pageContentsService.getByKey<ProgramPengajarContent>("program-pengajar");
+        if (response.success && response.data?.content) {
+          setContent(response.data.content);
+        }
+      } catch (error) {
+        console.error("Error fetching content:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchContent();
+  }, []);
 
-  const asatidz = [
-    "Dr. Imam Baehaqie, M.Hum.",
-    "Hikmiyatin Jalilah, S.Ag., M.Ag.",
-    "Asma Luthfi, S.Th.I., M.Hum.",
-    "Ayon Diniyanto, S.H., M.H.",
-    "Dwi Wisnu Kurniawan, S.H.",
-    "Rikha Zulia, S.Pd.",
-    "Wihda Ikvina Anfaul Umat, S.Pd.",
-    "In'am Zaidi, S.H., M.H.",
-  ];
-
-  const pengurus = [
-    { role: "Sekretaris Pesantren", name: "Dwi Wisnu Kurniawan, S.H., M.H." },
-    { role: "Divisi IT dan Humas", name: "M. Akiyasul Azkiya, S.Kom." },
-    { role: "Divisi Program", name: "Eka Diyanti" },
-  ];
-
-  const mentors = [
-    "Mohammad Rizal Ardiansyah, S.Si.",
-    "Gema Aditya Mahendra, S.T.",
-    "Mohammad Fattahul Alim, S.E.",
-    "Mohammad Khollaqul Alim, S.E.",
-    "Zahrotuz Zakiyah, S.Pd.",
-    "Tia Rosalita, S.Pd.",
-  ];
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="max-w-7xl mx-auto px-6 py-16">
+          <div className="animate-pulse space-y-8">
+            <div className="text-center space-y-4">
+              <div className="h-12 bg-slate-200 rounded w-1/2 mx-auto"></div>
+              <div className="h-4 bg-slate-200 rounded w-2/3 mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -63,14 +52,10 @@ const ProgramPengajar = () => {
         <div className="text-center mb-16 relative">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 opacity-5 blur-3xl"></div>
           <div className="relative">
-            <h1 className="text-5xl md:text-6xl font-bold">
-              Program & Pengajar
-            </h1>
+            <h1 className="text-5xl md:text-6xl font-bold">{content.header.title}</h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Informasi mengenai program pesantren, dewan masyayikh, asatidz,
-              hingga tim mentor yang berpengalaman dan berkualitas.
+              {content.header.description}
             </p>
-            {/* Decorative elements */}
             <div className="flex justify-center mt-8">
               <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
             </div>
@@ -78,7 +63,7 @@ const ProgramPengajar = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
-          {/* PROGRAM PESANTREN - Takes full width on large screens */}
+          {/* PROGRAM PESANTREN */}
           <div className="lg:col-span-2 xl:col-span-3">
             <SectionCard
               title="Program Pesantren"
@@ -86,15 +71,13 @@ const ProgramPengajar = () => {
               gradient="bg-gradient-to-r from-emerald-500 to-teal-500"
             >
               <div className="grid md:grid-cols-2 gap-4">
-                {programs.map((program, index) => (
+                {content.programs.map((program, index) => (
                   <div
                     key={index}
                     className="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl hover:bg-emerald-100 transition-colors group"
                   >
                     <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0 group-hover:scale-125 transition-transform"></div>
-                    <span className="text-gray-700 leading-relaxed">
-                      {program}
-                    </span>
+                    <span className="text-gray-700 leading-relaxed">{program}</span>
                   </div>
                 ))}
               </div>
@@ -108,7 +91,7 @@ const ProgramPengajar = () => {
             gradient="bg-gradient-to-r from-amber-500 to-orange-500"
           >
             <div className="space-y-3">
-              {masyayikh.map((person, index) => (
+              {content.masyayikh.map((person, index) => (
                 <div
                   key={index}
                   className="flex items-center gap-3 p-3 bg-amber-50 rounded-lg hover:bg-amber-100 transition-colors group"
@@ -131,7 +114,7 @@ const ProgramPengajar = () => {
             gradient="bg-gradient-to-r from-blue-500 to-cyan-500"
           >
             <div className="space-y-3">
-              {asatidz.map((person, index) => (
+              {content.asatidz.map((person, index) => (
                 <div
                   key={index}
                   className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors group"
@@ -154,7 +137,7 @@ const ProgramPengajar = () => {
             gradient="bg-gradient-to-r from-purple-500 to-pink-500"
           >
             <div className="space-y-4">
-              {pengurus.map((item, index) => (
+              {content.pengurus.map((item, index) => (
                 <div
                   key={index}
                   className="p-4 bg-purple-50 rounded-xl hover:bg-purple-100 transition-colors group"
@@ -177,7 +160,7 @@ const ProgramPengajar = () => {
             gradient="bg-gradient-to-r from-rose-500 to-red-500"
           >
             <div className="space-y-3">
-              {mentors.map((person, index) => (
+              {content.mentors.map((person, index) => (
                 <div
                   key={index}
                   className="flex items-center gap-3 p-3 bg-rose-50 rounded-lg hover:bg-rose-100 transition-colors group"
@@ -193,7 +176,7 @@ const ProgramPengajar = () => {
             </div>
           </SectionCard>
 
-          {/* ADDITIONAL MENTOR */}
+          {/* BERGABUNG */}
           <div className="lg:col-span-2 xl:col-span-1">
             <SectionCard
               title="Bergabung dengan Kami"
@@ -207,10 +190,7 @@ const ProgramPengajar = () => {
                 <h3 className="text-lg font-bold text-gray-800 mb-3">
                   Tertarik Bergabung?
                 </h3>
-                <p className="text-gray-600 text-sm mb-6">
-                  Jadilah bagian dari komunitas pesantren yang berkembang dan
-                  belajar dari para pengajar terbaik.
-                </p>
+                <p className="text-gray-600 text-sm mb-6">{content.ctaText}</p>
                 <button className="bg-gradient-to-r from-indigo-500 to-blue-600 text-white px-6 py-3 rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300 font-semibold">
                   Hubungi Kami
                 </button>
