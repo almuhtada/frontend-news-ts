@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { pageContentsService, defaultGriyaQuranContent, type GriyaQuranContent } from "../../services/pageContents";
+import { pageContentsService, type GriyaQuranContent } from "../../services/pageContents";
 
 const GriyaQuran = () => {
-  const [content, setContent] = useState<GriyaQuranContent>(defaultGriyaQuranContent);
+  const [content, setContent] = useState<GriyaQuranContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -11,9 +12,12 @@ const GriyaQuran = () => {
         const response = await pageContentsService.getByKey<GriyaQuranContent>("griya-quran");
         if (response.success && response.data?.content) {
           setContent(response.data.content);
+        } else {
+          setError("Konten tidak ditemukan");
         }
-      } catch (error) {
-        console.error("Error fetching content:", error);
+      } catch (err) {
+        console.error("Error fetching content:", err);
+        setError("Gagal memuat konten");
       } finally {
         setIsLoading(false);
       }
@@ -30,6 +34,14 @@ const GriyaQuran = () => {
             <div className="h-4 bg-slate-200 rounded w-1/2 mx-auto"></div>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  if (error || !content) {
+    return (
+      <div className="max-w-6xl mx-auto px-6 py-12 text-center">
+        <p className="text-red-500">{error || "Konten tidak tersedia"}</p>
       </div>
     );
   }

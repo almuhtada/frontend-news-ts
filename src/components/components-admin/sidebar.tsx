@@ -17,6 +17,7 @@ import {
   ChevronRight,
   User,
   HelpCircle,
+  Layers,
 } from "lucide-react";
 import Logo from "../../assets/image/logo1.png";
 
@@ -74,6 +75,13 @@ const Sidebar: React.FC = () => {
           icon: FileText,
           label: "Edit Tentang Pesantren",
           href: "/edit-about",
+          color: "text-green-600",
+          bgColor: "bg-green-100",
+        },
+        {
+          icon: Layers,
+          label: "Kelola Konten Halaman",
+          href: "/page-contents",
           color: "text-green-600",
           bgColor: "bg-green-100",
         },

@@ -10,15 +10,13 @@ import {
 import SectionCard from "../../components/components-news/card-section-program-pengajar";
 import {
   pageContentsService,
-  defaultProgramPengajarContent,
   type ProgramPengajarContent,
 } from "../../services/pageContents";
 
 const ProgramPengajar = () => {
-  const [content, setContent] = useState<ProgramPengajarContent>(
-    defaultProgramPengajarContent,
-  );
+  const [content, setContent] = useState<ProgramPengajarContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -29,9 +27,12 @@ const ProgramPengajar = () => {
           );
         if (response.success && response.data?.content) {
           setContent(response.data.content);
+        } else {
+          setError("Konten tidak ditemukan");
         }
-      } catch (error) {
-        console.error("Error fetching content:", error);
+      } catch (err) {
+        console.error("Error fetching content:", err);
+        setError("Gagal memuat konten");
       } finally {
         setIsLoading(false);
       }
@@ -46,6 +47,14 @@ const ProgramPengajar = () => {
           <div className="h-12 bg-slate-200 rounded w-1/2 mx-auto" />
           <div className="h-4 bg-slate-200 rounded w-2/3 mx-auto" />
         </div>
+      </div>
+    );
+  }
+
+  if (error || !content) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <p className="text-red-500">{error || "Konten tidak tersedia"}</p>
       </div>
     );
   }

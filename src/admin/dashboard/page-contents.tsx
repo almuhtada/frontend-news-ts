@@ -14,9 +14,6 @@ import {
 import Sidebar from "../../components/components-admin/sidebar";
 import {
   pageContentsService,
-  defaultGriyaQuranContent,
-  defaultProgramPengajarContent,
-  defaultPendaftaranContent,
   type GriyaQuranContent,
   type ProgramPengajarContent,
   type PendaftaranContent,
@@ -37,14 +34,48 @@ const PageContents: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState("");
 
   // Content states
-  const [griyaQuran, setGriyaQuran] = useState<GriyaQuranContent>(
-    defaultGriyaQuranContent,
-  );
+  const [griyaQuran, setGriyaQuran] = useState<GriyaQuranContent>({
+    header: {
+      title: "",
+      description: "",
+      address: "",
+      phone: "",
+    },
+    vpiMisi: {
+      visi: "",
+      misi: [],
+    },
+    programs: [],
+    halaqah: [],
+  });
   const [programPengajar, setProgramPengajar] =
-    useState<ProgramPengajarContent>(defaultProgramPengajarContent);
-  const [pendaftaran, setPendaftaran] = useState<PendaftaranContent>(
-    defaultPendaftaranContent,
-  );
+    useState<ProgramPengajarContent>({
+      header: {
+        title: "",
+        description: "",
+      },
+      programs: [],
+      masyayikh: [],
+      asatidz: [],
+      pengurus: [],
+      mentors: [],
+      ctaText: "",
+    });
+
+  const [pendaftaran, setPendaftaran] = useState<PendaftaranContent>({
+    header: {
+      title: "",
+      description: "",
+    },
+    formLink: "",
+    registrationFee: "",
+    timelineStart: "",
+    timelineEnd: "",
+    requirements: [],
+    accounts: [],
+    whatsappContacts: [],
+    steps: [],
+  });
 
   // Collapsible sections
   const [expandedSections, setExpandedSections] = useState<

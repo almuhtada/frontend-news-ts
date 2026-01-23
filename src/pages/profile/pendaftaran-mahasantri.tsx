@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { pageContentsService, defaultPendaftaranContent, type PendaftaranContent } from "../../services/pageContents";
+import {
+  pageContentsService,
+  type PendaftaranContent,
+} from "../../services/pageContents";
 
 const AccountRow: React.FC<{
   bank: string;
@@ -53,14 +56,15 @@ const AccountRow: React.FC<{
 };
 
 const Pendaftaran: React.FC = () => {
-  const [content, setContent] = useState<PendaftaranContent>(defaultPendaftaranContent);
+  const [content, setContent] = useState<PendaftaranContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copiedNumber, setCopiedNumber] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const response = await pageContentsService.getByKey<PendaftaranContent>("pendaftaran");
+        const response =
+          await pageContentsService.getByKey<PendaftaranContent>("pendaftaran");
         if (response.success && response.data?.content) {
           setContent(response.data.content);
         }
@@ -87,7 +91,7 @@ const Pendaftaran: React.FC = () => {
   const makeWhatsAppLink = (phone: string, defaultText?: string) => {
     const raw = phone.replace(/\D/g, "");
     const text = encodeURIComponent(
-      defaultText || "Halo, saya ingin konfirmasi pendaftaran PRM"
+      defaultText || "Halo, saya ingin konfirmasi pendaftaran PRM",
     );
     return `https://wa.me/${raw}?text=${text}`;
   };
@@ -100,6 +104,15 @@ const Pendaftaran: React.FC = () => {
             <div className="h-8 bg-slate-200 rounded w-2/3 mb-4"></div>
             <div className="h-4 bg-slate-200 rounded w-1/2"></div>
           </div>
+        </div>
+      </div>
+    );
+  }
+  if (!content) {
+    return (
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="bg-white rounded-2xl shadow-sm p-8 text-center text-gray-500">
+          Konten tidak tersedia.
         </div>
       </div>
     );
@@ -130,7 +143,7 @@ const Pendaftaran: React.FC = () => {
                 <a
                   href={makeWhatsAppLink(
                     content.whatsappContacts[0].number,
-                    "PRM_Nama_Prodi_Alamat"
+                    "PRM_Nama_Prodi_Alamat",
                   )}
                   target="_blank"
                   rel="noreferrer"
@@ -167,8 +180,8 @@ const Pendaftaran: React.FC = () => {
               ))}
               <li>
                 Melakukan pembayaran biaya pendaftaran sebesar{" "}
-                <strong>{content.registrationFee}</strong> ke salah satu rekening di
-                bawah.
+                <strong>{content.registrationFee}</strong> ke salah satu
+                rekening di bawah.
               </li>
               <li>
                 Mengisi formulir online melalui laman{" "}
@@ -265,7 +278,7 @@ const Pendaftaran: React.FC = () => {
                     <img
                       src={`https://ui-avatars.com/api/?name=${c.name.replace(
                         /\s+/g,
-                        "+"
+                        "+",
                       )}&background=0D9488&color=fff&size=32`}
                       alt={c.name}
                       className="w-8 h-8 rounded-full"

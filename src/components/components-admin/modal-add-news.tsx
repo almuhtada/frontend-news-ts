@@ -29,6 +29,7 @@ import {
   Plus,
   ChevronDown,
   Loader2,
+  Sparkles,
 } from "lucide-react";
 
 interface FormData {
@@ -102,6 +103,7 @@ const NewsModal: React.FC<Props> = ({
   const [isTagDropdownOpen, setIsTagDropdownOpen] = useState(false);
   const [creatingTag, setCreatingTag] = useState(false);
   const [imageInfo, setImageInfo] = useState<ImageInfo | null>(null);
+  const [summarizing, setSummarizing] = useState(false);
 
   useEffect(() => {
     if (!previewUrl) {
@@ -204,18 +206,46 @@ const NewsModal: React.FC<Props> = ({
     }, 0);
   };
 
-  // Auto-generate ringkasan dari isi berita menggunakan smart algorithm
-  const generateExcerpt = () => {
-    if (!form.content.trim()) return;
+  // Auto-generate ringkasan dari isi berita menggunakan AI
+  const generateExcerpt = async () => {
+    if (!form.content.trim() || summarizing) return;
 
-    // Gunakan smart excerpt generator yang bisa memilih kalimat penting
-    const excerpt = generateSmartExcerpt(form.content, {
-      maxLength: 250,
-      minSentences: 2,
-      maxSentences: 4,
-    });
+    setSummarizing(true);
+    try {
+      // Ambil teks tanpa HTML tags
+      const plainText = form.content.replace(/<[^>]*>/g, "");
 
-    onChange({ ...form, excerpt });
+      const res = await fetch("http://localhost:3001/api/posts/summarize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: plainText }),
+      });
+
+      const data = await res.json();
+
+      if (data.success && data.data?.summary) {
+        onChange({ ...form, excerpt: data.data.summary });
+      } else {
+        // Fallback ke smart excerpt jika API gagal
+        const excerpt = generateSmartExcerpt(form.content, {
+          maxLength: 250,
+          minSentences: 2,
+          maxSentences: 4,
+        });
+        onChange({ ...form, excerpt });
+      }
+    } catch (error) {
+      console.error("AI Summary error:", error);
+      // Fallback ke smart excerpt
+      const excerpt = generateSmartExcerpt(form.content, {
+        maxLength: 250,
+        minSentences: 2,
+        maxSentences: 4,
+      });
+      onChange({ ...form, excerpt });
+    } finally {
+      setSummarizing(false);
+    }
   };
 
   const isFormValid =
@@ -588,10 +618,20 @@ const NewsModal: React.FC<Props> = ({
               <button
                 type="button"
                 onClick={generateExcerpt}
-                disabled={!form.content.trim()}
-                className="text-xs px-3 py-1 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                disabled={!form.content.trim() || summarizing}
+                className="text-xs px-3 py-1 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-lg hover:from-purple-600 hover:to-indigo-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all flex items-center gap-1"
               >
-                Auto Generate
+                {summarizing ? (
+                  <>
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-3 h-3" />
+                    AI Ringkas
+                  </>
+                )}
               </button>
             </div>
             <textarea

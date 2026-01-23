@@ -22,6 +22,7 @@ import AdminPublications from "./admin/dashboard/add-jurnal";
 import AdminAbout from "./admin/dashboard/edit-about";
 import AdminUsers from "./admin/dashboard/user-profile";
 import AdminNotifications from "./admin/dashboard/notification";
+import PageContents from "./admin/dashboard/page-contents";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
 // Layout umum untuk halaman publik
@@ -191,6 +192,14 @@ function App() {
           element={
             <ProtectedRoute>
               <AdminNotifications />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/page-contents"
+          element={
+            <ProtectedRoute>
+              <PageContents />
             </ProtectedRoute>
           }
         />
