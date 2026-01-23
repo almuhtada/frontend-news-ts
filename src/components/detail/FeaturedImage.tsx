@@ -5,21 +5,33 @@ interface FeaturedImageProps {
 }
 
 const FeaturedImage = ({ post }: FeaturedImageProps) => {
-  if (!post.featured_image) return null;
+  const imageUrl = post.featured_image ?? "";
+
+  if (!imageUrl) return null;
 
   return (
-    <div className="mt-6">
-      <img
-        src={post.featured_image}
-        alt={post.title}
-        className="w-full h-80 object-cover rounded-lg"
-        draggable="false"
-        onDragStart={(e) => e.preventDefault()}
-      />
-      <p className="text-xs text-gray-500 mt-2 italic">
-        {post.meta_description || post.excerpt || "Gambar artikel"}
-      </p>
-    </div>
+    <figure className="mt-8">
+      {/* IMAGE FRAME */}
+      <div className="relative w-full h-[420px] rounded-2xl overflow-hidden bg-slate-100">
+        <img
+          src={imageUrl}
+          alt={post.title}
+          className="
+            absolute inset-0
+            w-full h-full
+            object-cover
+            select-none
+          "
+          draggable={false}
+          onDragStart={(e) => e.preventDefault()}
+        />
+      </div>
+
+      {/* CAPTION */}
+      <figcaption className="mt-3 text-center text-sm text-gray-500 italic">
+        {post.meta_description || post.excerpt || "Gambar ilustrasi"}
+      </figcaption>
+    </figure>
   );
 };
 

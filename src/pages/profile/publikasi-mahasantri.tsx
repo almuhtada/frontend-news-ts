@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { populer } from "../../assets/data/dummy";
-import ArtikelPopuler from "../../ui/components-global/artikel-populer";
-import { publicationsService, type Publication } from "../../services/publications";
+import ArtikelPopuler from "../../components/components-global/artikel-populer";
+import {
+  publicationsService,
+  type Publication,
+} from "../../services/publications";
 
 const PublikasiMahasantri = () => {
   const [publications, setPublications] = useState<Publication[]>([]);
@@ -14,7 +17,7 @@ const PublikasiMahasantri = () => {
         const response = await publicationsService.getAll();
         setPublications(response.data);
       } catch (error) {
-        console.error('Error fetching publications:', error);
+        console.error("Error fetching publications:", error);
       } finally {
         setLoading(false);
       }
@@ -54,7 +57,8 @@ const PublikasiMahasantri = () => {
                 </h2>
                 <p className="text-sm text-gray-600 mb-1">{pub.authors}</p>
                 <p className="text-sm text-gray-500 mb-2 italic">
-                  {pub.journal ? `${pub.journal}, ` : ''}{pub.year}
+                  {pub.journal ? `${pub.journal}, ` : ""}
+                  {pub.year}
                 </p>
                 {pub.link && (
                   <a

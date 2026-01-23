@@ -1,12 +1,12 @@
 import React from "react";
-import Sidebar from "../../ui/components-admin/sidebar";
+import Sidebar from "../../components/components-admin/sidebar";
 import {
   UserHeader,
   UserFilters,
   UserTable,
   UserModal,
   useUserPage,
-} from "../../ui/components-admin/user";
+} from "../../components/components-admin/user";
 
 const UserProfile: React.FC = () => {
   const {

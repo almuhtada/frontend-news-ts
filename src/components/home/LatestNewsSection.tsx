@@ -1,5 +1,5 @@
 import { Clock, Loader2 } from "lucide-react";
-import ArticleCardApi from "../../ui/components-global/card-artikel-api";
+import ArticleCardApi from "../components-global/card-artikel-api";
 import type { Post } from "../../services/posts";
 
 interface LatestNewsSectionProps {
@@ -26,9 +26,7 @@ const LatestNewsSection = ({
           <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center">
             <Clock className="w-5 h-5 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">
-            Berita Terbaru
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-900">Berita Terbaru</h2>
           {activeCategory !== "semua" && (
             <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium capitalize">
               {activeCategory}
@@ -68,7 +66,9 @@ const LatestNewsSection = ({
             {loadingMore && (
               <div className="flex items-center gap-2 text-blue-600">
                 <Loader2 className="w-6 h-6 animate-spin" />
-                <span className="text-sm font-medium">Memuat berita lainnya...</span>
+                <span className="text-sm font-medium">
+                  Memuat berita lainnya...
+                </span>
               </div>
             )}
             {!hasMore && articles.length > 0 && (

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import SidebarSection from "../../ui/components-news/sidebar-section";
+import SidebarSection from "../components-news/sidebar-section";
 import type { Post } from "../../services/posts";
 
 interface NewsSidebarProps {
@@ -13,7 +13,7 @@ const NewsSidebar = ({
   categories,
   editorsPicks,
   mostRead,
-  onCategoryClick
+  onCategoryClick,
 }: NewsSidebarProps) => {
   return (
     <aside className="space-y-4">

@@ -1,4 +1,4 @@
-import ArticleCardApi from "../../ui/components-global/card-artikel-api";
+import ArticleCardApi from "../components-global/card-artikel-api";
 import type { Post } from "../../services/posts";
 
 interface CategoryArticlesProps {

@@ -1,11 +1,11 @@
 import { Loader } from "lucide-react";
-import Sidebar from "../../ui/components-admin/sidebar";
+import Sidebar from "../../components/components-admin/sidebar";
 import {
   AboutHeader,
   AboutSectionCard,
   AboutToast,
   useAboutPage,
-} from "../../ui/components-admin/about";
+} from "../../components/components-admin/about";
 
 /**
  * Halaman Edit Tentang Pesantren

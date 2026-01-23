@@ -1,4 +1,4 @@
-import CardHeadlinerApi from "../../ui/components-global/card-headliner-api";
+import CardHeadlinerApi from "../components-global/card-headliner-api";
 import type { Post } from "../../services/posts";
 
 interface CategoryHeroProps {

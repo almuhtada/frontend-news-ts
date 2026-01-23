@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import CardHeadlinerApi from "../ui/components-global/card-headliner-api";
-import TrendingListApi from "../ui/components-global/trending-list-api";
-import ArticleCardApi from "../ui/components-global/card-artikel-api";
-import SidebarSection from "../ui/components-news/sidebar-section";
+import CardHeadlinerApi from "../components/components-global/card-headliner-api";
+import TrendingListApi from "../components/components-global/trending-list-api";
+import ArticleCardApi from "../components/components-global/card-artikel-api";
+import SidebarSection from "../components/components-news/sidebar-section";
 import { postsService } from "../services/posts";
 import { categoriesService } from "../services/categories";
 import type { Post, Category } from "../services/posts";

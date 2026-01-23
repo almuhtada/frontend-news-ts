@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { populer } from "../../assets/data/dummy";
-import ArtikelPopuler from "../../ui/components-global/artikel-populer";
+import ArtikelPopuler from "../../components/components-global/artikel-populer";
 import { aboutService, type AboutSection } from "../../services/about";
 import { API_BASE_URL } from "../../config/api";
 
@@ -15,7 +15,7 @@ const TentangPesantren = () => {
         const response = await aboutService.getAll();
         setSections(response.data);
       } catch (error) {
-        console.error('Error fetching about data:', error);
+        console.error("Error fetching about data:", error);
       } finally {
         setLoading(false);
       }
@@ -25,7 +25,7 @@ const TentangPesantren = () => {
   }, []);
 
   const getSection = (key: string) => {
-    return sections.find(s => s.section_key === key);
+    return sections.find((s) => s.section_key === key);
   };
 
   const parseMission = (content: string) => {
@@ -37,13 +37,13 @@ const TentangPesantren = () => {
   };
 
   const getImageUrl = (url: string | null) => {
-    if (!url) return '';
+    if (!url) return "";
     // If URL is already absolute, return as is
-    if (url.startsWith('http://') || url.startsWith('https://')) {
+    if (url.startsWith("http://") || url.startsWith("https://")) {
       return url;
     }
     // Otherwise, prepend the API base URL (without /api)
-    const baseUrl = API_BASE_URL.replace('/api', '');
+    const baseUrl = API_BASE_URL.replace("/api", "");
     return `${baseUrl}${url}`;
   };
 
@@ -57,12 +57,12 @@ const TentangPesantren = () => {
     );
   }
 
-  const mainIntro = getSection('main_intro');
-  const founders = getSection('founders');
-  const vision = getSection('vision');
-  const mission = getSection('mission');
-  const founderUstadz = getSection('founder_ustadz');
-  const founderUstadzah = getSection('founder_ustadzah');
+  const mainIntro = getSection("main_intro");
+  const founders = getSection("founders");
+  const vision = getSection("vision");
+  const mission = getSection("mission");
+  const founderUstadz = getSection("founder_ustadz");
+  const founderUstadzah = getSection("founder_ustadzah");
 
   return (
     <div className="bg-white min-h-screen">
@@ -70,7 +70,7 @@ const TentangPesantren = () => {
         {/* Kolom Kiri */}
         <div className="md:col-span-2">
           <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-8">
-            {mainIntro?.title || 'Tentang Pesantren'}
+            {mainIntro?.title || "Tentang Pesantren"}
           </h1>
 
           {mainIntro && (
@@ -88,7 +88,9 @@ const TentangPesantren = () => {
           {/* Visi */}
           {vision && (
             <section className="mb-10">
-              <h2 className="text-2xl font-bold text-gray-900 mb-3">{vision.title}</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                {vision.title}
+              </h2>
               <blockquote className="italic text-gray-600 border-l-4 border-green-600 pl-4 bg-green-50 py-2 rounded-md">
                 "{vision.content}"
               </blockquote>
@@ -98,11 +100,15 @@ const TentangPesantren = () => {
           {/* Misi */}
           {mission && (
             <section className="mb-12">
-              <h2 className="text-2xl font-bold text-gray-900 mb-3">{mission.title}</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                {mission.title}
+              </h2>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
-                {parseMission(mission.content).map((item: string, idx: number) => (
-                  <li key={idx}>{item}</li>
-                ))}
+                {parseMission(mission.content).map(
+                  (item: string, idx: number) => (
+                    <li key={idx}>{item}</li>
+                  ),
+                )}
               </ul>
             </section>
           )}
@@ -123,7 +129,7 @@ const TentangPesantren = () => {
                       className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
                       onError={(e) => {
                         // Fallback to placeholder if image fails to load
-                        e.currentTarget.src = 'https://via.placeholder.com/150';
+                        e.currentTarget.src = "https://via.placeholder.com/150";
                       }}
                     />
                   )}
@@ -146,7 +152,7 @@ const TentangPesantren = () => {
                       className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
                       onError={(e) => {
                         // Fallback to placeholder if image fails to load
-                        e.currentTarget.src = 'https://via.placeholder.com/150';
+                        e.currentTarget.src = "https://via.placeholder.com/150";
                       }}
                     />
                   )}

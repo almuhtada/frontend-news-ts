@@ -1,4 +1,4 @@
-import Sidebar from "../../ui/components-admin/sidebar";
+import Sidebar from "../../components/components-admin/sidebar";
 import {
   NotificationHeader,
   NotificationStats,
@@ -6,7 +6,7 @@ import {
   NotificationContent,
   NotificationPreviewModal,
   useNotificationPage,
-} from "../../ui/components-admin/notification";
+} from "../../components/components-admin/notification";
 
 /**
  * Halaman Pusat Notifikasi
@@ -20,7 +20,7 @@ import {
  */
 const AdminNotifications: React.FC = () => {
   const {
-    // State
+    // Statex
     notifications,
     stats,
     searchQuery,

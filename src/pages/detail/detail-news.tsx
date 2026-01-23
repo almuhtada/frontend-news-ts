@@ -11,6 +11,8 @@ import RelatedPosts from "../../components/detail/RelatedPosts";
 import ArticleTags from "../../components/detail/ArticleTags";
 
 import formatEveryFourSentences from "../../utils/formatParagraph";
+import ArticleLike from "../../components/detail/ArticleLike";
+import ArticleComments from "../../components/detail/ArticleComments";
 
 const DetailNews = () => {
   const {
@@ -71,8 +73,13 @@ const DetailNews = () => {
       }}
     >
       <div className="max-w-6xl mx-auto px-4 py-6 bg-white">
-        {/* Header */}
-        <ArticleHeader post={post} />
+        {/* Header + Like */}
+        <div className="flex flex-col md:flex-row md:items-start gap-4">
+          <div className="flex-1 min-w-0">
+            <ArticleHeader post={post} />
+          </div>
+          <ArticleLike initialCount={23} />
+        </div>
 
         {/* Author */}
         <AuthorInfo
@@ -107,6 +114,9 @@ const DetailNews = () => {
 
         {/* Tags */}
         <ArticleTags post={post} />
+
+        {/* Komentar */}
+        <ArticleComments />
       </div>
     </div>
   );

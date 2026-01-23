@@ -1,5 +1,5 @@
-import TrendingListApi from "../../ui/components-global/trending-list-api";
-import SidebarSection from "../../ui/components-news/sidebar-section";
+import TrendingListApi from "../components-global/trending-list-api";
+import SidebarSection from "../components-news/sidebar-section";
 import type { Post, Category } from "../../services/posts";
 
 interface CategorySidebarProps {
@@ -7,7 +7,10 @@ interface CategorySidebarProps {
   categories: Category[];
 }
 
-const CategorySidebar = ({ trendingNews, categories }: CategorySidebarProps) => {
+const CategorySidebar = ({
+  trendingNews,
+  categories,
+}: CategorySidebarProps) => {
   return (
     <aside className="lg:col-span-1 space-y-8">
       <TrendingListApi items={trendingNews} />

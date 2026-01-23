@@ -1,14 +1,14 @@
 import { Loader } from "lucide-react";
-import Sidebar from "../../ui/components-admin/sidebar";
-import NewsModal from "../../ui/components-admin/modal-add-news";
-import NewsFilters from "../../ui/components-admin/filter-news";
-import SuccessToast from "../../ui/components-admin/success-toast";
+import Sidebar from "../../components/components-admin/sidebar";
+import NewsModal from "../../components/components-admin/modal-add-news";
+import NewsFilters from "../../components/components-admin/filter-news";
+import SuccessToast from "../../components/components-admin/success-toast";
 import {
   NewsHeader,
   NewsContent,
   NewsPagination,
   useNewsPage,
-} from "../../ui/components-admin/news";
+} from "../../components/components-admin/news";
 
 /**
  * Halaman Manajemen Berita

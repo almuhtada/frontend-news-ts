@@ -3,7 +3,7 @@ import { generateSmartExcerpt } from "../../utils/excerptGenerator";
 import {
   X,
   Upload,
-  Image,
+  Image as ImageIcon,
   FileText,
   Tag,
   User,
@@ -55,6 +55,28 @@ interface Props {
   onSave: () => void;
   onCreateTag?: (name: string) => Promise<{ id: number; name: string } | null>;
 }
+type ImageInfo = {
+  width: number;
+  height: number;
+};
+
+const getImageSize = (url: string): Promise<ImageInfo> =>
+  new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = url;
+    img.onload = () =>
+      resolve({
+        width: img.naturalWidth,
+        height: img.naturalHeight,
+      });
+    img.onerror = reject;
+  });
+
+const getOrientation = (w: number, h: number) => {
+  if (w > h) return "Landscape";
+  if (h > w) return "Portrait";
+  return "Square";
+};
 
 const NewsModal: React.FC<Props> = ({
   isOpen,
@@ -79,6 +101,18 @@ const NewsModal: React.FC<Props> = ({
   const [tagSearch, setTagSearch] = useState("");
   const [isTagDropdownOpen, setIsTagDropdownOpen] = useState(false);
   const [creatingTag, setCreatingTag] = useState(false);
+  const [imageInfo, setImageInfo] = useState<ImageInfo | null>(null);
+
+  useEffect(() => {
+    if (!previewUrl) {
+      setImageInfo(null);
+      return;
+    }
+
+    getImageSize(previewUrl)
+      .then(setImageInfo)
+      .catch(() => setImageInfo(null));
+  }, [previewUrl]);
 
   // Set initial content saat modal dibuka
   useEffect(() => {
@@ -90,7 +124,10 @@ const NewsModal: React.FC<Props> = ({
   // Click outside to close tag dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (tagDropdownRef.current && !tagDropdownRef.current.contains(event.target as Node)) {
+      if (
+        tagDropdownRef.current &&
+        !tagDropdownRef.current.contains(event.target as Node)
+      ) {
         setIsTagDropdownOpen(false);
       }
     };
@@ -100,12 +137,12 @@ const NewsModal: React.FC<Props> = ({
 
   // Filter tags based on search
   const filteredTags = tags.filter((tag) =>
-    tag.name.toLowerCase().includes(tagSearch.toLowerCase())
+    tag.name.toLowerCase().includes(tagSearch.toLowerCase()),
   );
 
   // Check if search query exactly matches an existing tag
   const exactMatch = tags.some(
-    (tag) => tag.name.toLowerCase() === tagSearch.toLowerCase()
+    (tag) => tag.name.toLowerCase() === tagSearch.toLowerCase(),
   );
 
   // Get selected tags
@@ -333,39 +370,40 @@ const NewsModal: React.FC<Props> = ({
                       className="w-full px-3 py-2 text-left text-sm hover:bg-emerald-50 flex items-center gap-2 text-emerald-600 border-b border-gray-100"
                     >
                       <Plus className="w-4 h-4" />
-                      Buat tag baru: <span className="font-medium">"{tagSearch}"</span>
+                      Buat tag baru:{" "}
+                      <span className="font-medium">"{tagSearch}"</span>
                     </button>
                   )}
 
                   {/* Filtered tags list */}
-                  {filteredTags.length > 0 ? (
-                    filteredTags
-                      .filter((tag) => !form.tag_ids?.includes(tag.id))
-                      .map((tag) => (
-                        <button
-                          key={tag.id}
-                          type="button"
-                          onClick={() => handleSelectTag(tag.id)}
-                          className="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
-                        >
-                          <Tag className="w-3 h-3 text-gray-400" />
-                          {tag.name}
-                        </button>
-                      ))
-                  ) : (
-                    !tagSearch.trim() && (
-                      <div className="px-3 py-2 text-sm text-gray-400">
-                        Tidak ada tags tersedia
-                      </div>
-                    )
-                  )}
+                  {filteredTags.length > 0
+                    ? filteredTags
+                        .filter((tag) => !form.tag_ids?.includes(tag.id))
+                        .map((tag) => (
+                          <button
+                            key={tag.id}
+                            type="button"
+                            onClick={() => handleSelectTag(tag.id)}
+                            className="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
+                          >
+                            <Tag className="w-3 h-3 text-gray-400" />
+                            {tag.name}
+                          </button>
+                        ))
+                    : !tagSearch.trim() && (
+                        <div className="px-3 py-2 text-sm text-gray-400">
+                          Tidak ada tags tersedia
+                        </div>
+                      )}
 
                   {/* No results message */}
-                  {tagSearch.trim() && filteredTags.length === 0 && !onCreateTag && (
-                    <div className="px-3 py-2 text-sm text-gray-400">
-                      Tag tidak ditemukan
-                    </div>
-                  )}
+                  {tagSearch.trim() &&
+                    filteredTags.length === 0 &&
+                    !onCreateTag && (
+                      <div className="px-3 py-2 text-sm text-gray-400">
+                        Tag tidak ditemukan
+                      </div>
+                    )}
                 </div>
               )}
             </div>
@@ -590,7 +628,7 @@ const NewsModal: React.FC<Props> = ({
           {/* Upload Gambar */}
           <div>
             <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-              <Image className="w-4 h-4 text-emerald-600" />
+              <ImageIcon className="w-4 h-4 text-emerald-600" />
               Gambar Berita
             </label>
 
@@ -608,35 +646,68 @@ const NewsModal: React.FC<Props> = ({
                 />
               </label>
             ) : (
-              <div className="relative group">
-                <img
-                  src={previewUrl}
-                  alt="Preview"
-                  className="w-full h-32 object-cover rounded-lg border"
-                />
-                {/* Overlay buttons */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
-                  <label className="px-4 py-2 bg-white text-emerald-600 rounded-lg cursor-pointer hover:bg-emerald-50 transition-colors flex items-center gap-2">
-                    <Upload className="w-4 h-4" />
-                    <span className="text-sm font-medium">Ganti</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={onFileChange}
-                      className="hidden"
-                    />
-                  </label>
-                  {onRemoveImage && (
-                    <button
-                      type="button"
-                      onClick={onRemoveImage}
-                      className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center gap-2"
-                    >
-                      <X className="w-4 h-4" />
-                      <span className="text-sm font-medium">Hapus</span>
-                    </button>
-                  )}
+              <div className="space-y-2">
+                <div className="relative group">
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    className="w-full max-h-[220px] object-contain rounded-lg border bg-slate-50"
+                  />
+
+                  {/* Overlay buttons */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+                    <label className="px-4 py-2 bg-white text-emerald-600 rounded-lg cursor-pointer hover:bg-emerald-50 flex items-center gap-2">
+                      <Upload className="w-4 h-4" />
+                      <span className="text-sm font-medium">Ganti</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={onFileChange}
+                        className="hidden"
+                      />
+                    </label>
+                    {onRemoveImage && (
+                      <button
+                        type="button"
+                        onClick={onRemoveImage}
+                        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center gap-2"
+                      >
+                        <X className="w-4 h-4" />
+                        <span className="text-sm font-medium">Hapus</span>
+                      </button>
+                    )}
+                  </div>
                 </div>
+
+                {/* INFO UKURAN GAMBAR */}
+                {imageInfo && (
+                  <div className="text-xs space-y-1">
+                    <p className="text-gray-600">
+                      📐 {imageInfo.width} × {imageInfo.height} px ·{" "}
+                      <strong>
+                        {getOrientation(imageInfo.width, imageInfo.height)}
+                      </strong>
+                    </p>
+
+                    {imageInfo.width < 800 && (
+                      <p className="text-red-500">
+                        ⚠️ Resolusi terlalu kecil, gambar bisa pecah
+                      </p>
+                    )}
+
+                    {imageInfo.width >= 800 && imageInfo.width < 1200 && (
+                      <p className="text-amber-500">
+                        ⚠️ Disarankan minimal <strong>1200 × 630 px</strong>
+                      </p>
+                    )}
+
+                    {imageInfo.width >= 1200 && (
+                      <p className="text-green-600">
+                        ✅ Resolusi gambar sudah ideal
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </div>

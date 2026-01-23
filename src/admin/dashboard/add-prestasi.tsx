@@ -1,13 +1,13 @@
 import { Loader } from "lucide-react";
-import Sidebar from "../../ui/components-admin/sidebar";
-import AchievementModal from "../../ui/components-admin/modal-add-prestasi";
+import Sidebar from "../../components/components-admin/sidebar";
+import AchievementModal from "../../components/components-admin/modal-add-prestasi";
 import {
   PrestasiHeader,
   PrestasiFilters,
   PrestasiContent,
   PrestasiToast,
   usePrestasiPage,
-} from "../../ui/components-admin/prestasi";
+} from "../../components/components-admin/prestasi";
 
 /**
  * Halaman Manajemen Prestasi Mahasantri

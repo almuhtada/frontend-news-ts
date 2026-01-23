@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { populer } from "../../assets/data/dummy";
-import ArtikelPopuler from "../../ui/components-global/artikel-populer";
-import { achievementsService, type Achievement } from "../../services/achievements";
+import ArtikelPopuler from "../../components/components-global/artikel-populer";
+import {
+  achievementsService,
+  type Achievement,
+} from "../../services/achievements";
 
 const PrestasiMahasantri = () => {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
@@ -14,7 +17,7 @@ const PrestasiMahasantri = () => {
         const response = await achievementsService.getAll();
         setAchievements(response.data);
       } catch (error) {
-        console.error('Error fetching achievements:', error);
+        console.error("Error fetching achievements:", error);
       } finally {
         setLoading(false);
       }
@@ -24,16 +27,21 @@ const PrestasiMahasantri = () => {
   }, []);
 
   // Group achievements by year
-  const groupedByYear = achievements.reduce((acc, achievement) => {
-    const year = achievement.years;
-    if (!acc[year]) {
-      acc[year] = [];
-    }
-    acc[year].push(achievement);
-    return acc;
-  }, {} as Record<number, Achievement[]>);
+  const groupedByYear = achievements.reduce(
+    (acc, achievement) => {
+      const year = achievement.years;
+      if (!acc[year]) {
+        acc[year] = [];
+      }
+      acc[year].push(achievement);
+      return acc;
+    },
+    {} as Record<number, Achievement[]>,
+  );
 
-  const sortedYears = Object.keys(groupedByYear).sort((a, b) => Number(b) - Number(a));
+  const sortedYears = Object.keys(groupedByYear).sort(
+    (a, b) => Number(b) - Number(a),
+  );
 
   if (loading) {
     return (
@@ -75,7 +83,8 @@ const PrestasiMahasantri = () => {
                     <ul className="list-disc list-inside space-y-2 text-gray-700">
                       {groupedByYear[Number(year)].map((achievement) => (
                         <li key={achievement.id}>
-                          <strong>{achievement.title}</strong> - {achievement.name}
+                          <strong>{achievement.title}</strong> -{" "}
+                          {achievement.name}
                         </li>
                       ))}
                     </ul>

@@ -1,13 +1,13 @@
 import { Loader } from "lucide-react";
-import Sidebar from "../../ui/components-admin/sidebar";
-import PublicationModal from "../../ui/components-admin/modal-add-jurnal";
+import Sidebar from "../../components/components-admin/sidebar";
+import PublicationModal from "../../components/components-admin/modal-add-jurnal";
 import {
   JurnalHeader,
   JurnalFilters,
   JurnalContent,
   JurnalToast,
   useJurnalPage,
-} from "../../ui/components-admin/jurnal";
+} from "../../components/components-admin/jurnal";
 
 /**
  * Halaman Manajemen Publikasi Jurnal

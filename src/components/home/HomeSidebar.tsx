@@ -1,5 +1,5 @@
 import { Flame as Fire, ChevronRight } from "lucide-react";
-import TrendingListApi from "../../ui/components-global/trending-list-api";
+import TrendingListApi from "../components-global/trending-list-api";
 import type { Post } from "../../services/posts";
 
 interface HotTopic {

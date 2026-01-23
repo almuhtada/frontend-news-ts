@@ -1,5 +1,5 @@
 import { TrendingUp } from "lucide-react";
-import ArticleCardApi from "../../ui/components-global/card-artikel-api";
+import ArticleCardApi from "../components-global/card-artikel-api";
 import type { Post } from "../../services/posts";
 
 interface ViralSectionProps {
@@ -15,9 +15,7 @@ const ViralSection = ({ articles, isLoading }: ViralSectionProps) => {
           <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center">
             <TrendingUp className="w-5 h-5 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">
-            Viral & Populer
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-900">Viral & Populer</h2>
         </div>
       </div>
 
