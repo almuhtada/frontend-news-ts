@@ -6,14 +6,15 @@ import {
   Trash2,
   Star,
 } from "lucide-react";
+import type { ArticleDisplay } from "./news/types";
 
 type NewsGridCardProps = {
-  article: any;
-  onEdit: (a: any) => void;
+  article: ArticleDisplay;
+  onEdit: (article: ArticleDisplay) => void;
   onDelete: (id: number) => void;
-  getCategoryColor: (c: string) => string;
-  formatDate: (d: Date) => string;
-  truncateText: (t: string, l: number) => string;
+  getCategoryColor: (categoryName: string) => string;
+  formatDate: (dateString: string) => string;
+  truncateText: (text: string, maxLength: number) => string;
 };
 
 const NewsGridCard = ({
@@ -38,7 +39,7 @@ const NewsGridCard = ({
           <ImageIcon className="w-12 h-12 text-gray-400" />
         </div>
       )}
-      {article.featured && (
+      {article.is_featured && (
         <div className="absolute top-3 left-3">
           <div className="bg-yellow-500 text-white px-2 py-1 rounded-full flex items-center gap-1">
             <Star className="w-3 h-3" />

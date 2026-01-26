@@ -95,12 +95,12 @@ export const useHomeData = () => {
         });
         setFeaturedArticles(featured.posts);
 
-        // Fetch popular posts untuk trending (limit 4)
+        // Fetch popular posts untuk trending (limit 4) - based on total views
         const popular = await postsService.getPopularPosts(4);
         setTrendingNews(popular);
 
-        // Fetch viral posts (posts dengan views tinggi, limit 4)
-        const viral = await postsService.getPopularPosts(4);
+        // Fetch viral/trending posts (limit 4) - based on engagement score in last 24 hours
+        const viral = await postsService.getTrendingPosts(4, 24);
         setViralNews(viral);
 
         // Fetch recent posts untuk berita terbaru (limit 4)

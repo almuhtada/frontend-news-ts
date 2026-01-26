@@ -13,8 +13,8 @@ interface ExcerptOptions {
  * Membersihkan teks dari HTML tags dan whitespace berlebihan
  */
 function cleanText(html: string): string {
-  let text = html.replace(/<[^>]*>/g, ' ');
-  text = text.replace(/\s+/g, ' ');
+  let text = html.replace(/<[^>]*>/g, " ");
+  text = text.replace(/\s+/g, " ");
   text = text.trim();
   return text;
 }
@@ -24,7 +24,9 @@ function cleanText(html: string): string {
  */
 function splitIntoSentences(text: string): string[] {
   // Split berdasarkan . ! ? yang diikuti spasi atau akhir string
-  const sentences = text.split(/([.!?]+)\s+/).filter(s => s.trim().length > 0);
+  const sentences = text
+    .split(/([.!?]+)\s+/)
+    .filter((s) => s.trim().length > 0);
 
   // Gabungkan kembali tanda baca dengan kalimat
   const result: string[] = [];
@@ -36,14 +38,14 @@ function splitIntoSentences(text: string): string[] {
     }
   }
 
-  return result.filter(s => s.length > 15); // Filter kalimat pendek
+  return result.filter((s) => s.length > 15); // Filter kalimat pendek
 }
 
 /**
  * Menghitung skor penting dari sebuah kalimat
  * Semakin tinggi skor, semakin penting kalimat tersebut
  */
-function calculateSentenceScore(sentence: string, position: number, totalSentences: number): number {
+function calculateSentenceScore(sentence: string, position: number): number {
   let score = 0;
 
   // Posisi awal lebih penting (lead paragraph)
@@ -60,14 +62,30 @@ function calculateSentenceScore(sentence: string, position: number, totalSentenc
 
   // Kata kunci penting
   const keywords = [
-    'penting', 'utama', 'pertama', 'terakhir', 'baru', 'kini', 'saat ini',
-    'mengumumkan', 'melaporkan', 'menyatakan', 'mengatakan',
-    'masalah', 'solusi', 'dampak', 'hasil', 'kesimpulan',
-    'kerugian', 'keuntungan', 'peningkatan', 'penurunan'
+    "penting",
+    "utama",
+    "pertama",
+    "terakhir",
+    "baru",
+    "kini",
+    "saat ini",
+    "mengumumkan",
+    "melaporkan",
+    "menyatakan",
+    "mengatakan",
+    "masalah",
+    "solusi",
+    "dampak",
+    "hasil",
+    "kesimpulan",
+    "kerugian",
+    "keuntungan",
+    "peningkatan",
+    "penurunan",
   ];
 
   const lowerSentence = sentence.toLowerCase();
-  keywords.forEach(keyword => {
+  keywords.forEach((keyword) => {
     if (lowerSentence.includes(keyword)) score += 2;
   });
 
@@ -83,32 +101,28 @@ function calculateSentenceScore(sentence: string, position: number, totalSentenc
  */
 export function generateSmartExcerpt(
   htmlContent: string,
-  options: ExcerptOptions = {}
+  options: ExcerptOptions = {},
 ): string {
-  const {
-    maxLength = 250,
-    minSentences = 2,
-    maxSentences = 4
-  } = options;
+  const { maxLength = 250, minSentences = 2, maxSentences = 4 } = options;
 
   // Bersihkan HTML
   const cleanedText = cleanText(htmlContent);
 
-  if (!cleanedText) return '';
+  if (!cleanedText) return "";
 
   // Pisahkan menjadi kalimat
   const sentences = splitIntoSentences(cleanedText);
 
   if (sentences.length === 0) {
     // Fallback: ambil 200 karakter pertama
-    return cleanedText.substring(0, maxLength) + '...';
+    return cleanedText.substring(0, maxLength) + "...";
   }
 
   // Hitung skor setiap kalimat
   const scoredSentences = sentences.map((sentence, index) => ({
     sentence,
-    score: calculateSentenceScore(sentence, index, sentences.length),
-    position: index
+    score: calculateSentenceScore(sentence, index),
+    index,
   }));
 
   // Sort berdasarkan skor (descending) untuk mendapatkan kalimat terpenting
@@ -127,38 +141,39 @@ export function generateSmartExcerpt(
   // Prioritas 2: Ambil kalimat dengan skor tinggi
   for (const item of sortedByScore) {
     // Skip jika sudah diambil (kalimat pertama)
-    if (item.position === 0) continue;
+    if (item.index === 0) continue;
 
     const newLength = currentLength + item.sentence.length;
 
     // Cek batasan
     if (selectedSentences.length >= maxSentences) break;
-    if (newLength > maxLength && selectedSentences.length >= minSentences) break;
+    if (newLength > maxLength && selectedSentences.length >= minSentences)
+      break;
 
     selectedSentences.push(item);
     currentLength = newLength;
   }
 
   // Sort kembali berdasarkan posisi asli agar urutan natural
-  selectedSentences.sort((a, b) => a.position - b.position);
+  selectedSentences.sort((a, b) => a.index - b.index);
 
   // Gabungkan kalimat
-  let excerpt = selectedSentences.map(item => item.sentence).join(' ');
+  let excerpt = selectedSentences.map((item) => item.sentence).join(" ");
 
   // Potong jika terlalu panjang
   if (excerpt.length > maxLength) {
     excerpt = excerpt.substring(0, maxLength);
     // Potong di akhir kata
-    const lastSpace = excerpt.lastIndexOf(' ');
+    const lastSpace = excerpt.lastIndexOf(" ");
     if (lastSpace > maxLength * 0.8) {
       excerpt = excerpt.substring(0, lastSpace);
     }
-    excerpt += '...';
+    excerpt += "...";
   }
 
   // Pastikan ada tanda baca di akhir
-  if (!excerpt.match(/[.!?]$/) && !excerpt.endsWith('...')) {
-    excerpt += '.';
+  if (!excerpt.match(/[.!?]$/) && !excerpt.endsWith("...")) {
+    excerpt += ".";
   }
 
   return excerpt;
@@ -168,21 +183,24 @@ export function generateSmartExcerpt(
  * Generate excerpt simple (fallback method)
  * Hanya mengambil beberapa kalimat pertama
  */
-export function generateSimpleExcerpt(htmlContent: string, maxLength: number = 200): string {
+export function generateSimpleExcerpt(
+  htmlContent: string,
+  maxLength: number = 200,
+): string {
   const cleanedText = cleanText(htmlContent);
 
-  if (!cleanedText) return '';
+  if (!cleanedText) return "";
 
   const sentences = splitIntoSentences(cleanedText);
 
   if (sentences.length === 0) {
-    return cleanedText.substring(0, maxLength) + '...';
+    return cleanedText.substring(0, maxLength) + "...";
   }
 
-  let excerpt = '';
+  let excerpt = "";
   for (const sentence of sentences.slice(0, 3)) {
     if (excerpt.length + sentence.length <= maxLength) {
-      excerpt += (excerpt ? ' ' : '') + sentence;
+      excerpt += (excerpt ? " " : "") + sentence;
     } else {
       break;
     }
@@ -190,12 +208,12 @@ export function generateSimpleExcerpt(htmlContent: string, maxLength: number = 2
 
   if (excerpt.length > maxLength) {
     excerpt = excerpt.substring(0, maxLength);
-    const lastSpace = excerpt.lastIndexOf(' ');
+    const lastSpace = excerpt.lastIndexOf(" ");
     if (lastSpace > maxLength * 0.8) {
       excerpt = excerpt.substring(0, lastSpace);
     }
-    excerpt += '...';
+    excerpt += "...";
   }
 
-  return excerpt || cleanedText.substring(0, maxLength) + '...';
+  return excerpt || cleanedText.substring(0, maxLength) + "...";
 }

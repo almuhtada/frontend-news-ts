@@ -20,6 +20,7 @@ export interface NewsFormData {
   excerpt: string;
   status: "draft" | "publish" | "archived";
   tag_ids: number[];
+  rejection_reason?: string;
 }
 
 export interface NewsPageState {

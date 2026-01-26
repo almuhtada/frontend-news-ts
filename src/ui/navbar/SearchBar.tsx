@@ -1,35 +1,43 @@
-const SearchBar = () => (
-  <div className="hidden md:flex items-center gap-3 rounded-full bg-white/90 px-4 py-2 shadow-sm ring-1 ring-black/5 focus-within:ring-emerald-600 transition">
-    {/* Icon */}
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      className="text-emerald-700"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="M21 21l-4.35-4.35" />
-    </svg>
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { Search } from "lucide-react";
 
-    {/* Input */}
-    <input
-      type="search"
-      placeholder="Cari artikel..."
-      className="
-        w-56
-        bg-transparent
-        text-sm
-        text-gray-700
-        placeholder:text-gray-400
-        outline-none
-      "
-    />
-  </div>
-);
+const SearchBar = () => {
+  const [query, setQuery] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    if (query.trim()) {
+      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+      setQuery("");
+    }
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="flex items-center gap-3 rounded-full bg-white/90 px-4 py-2 shadow-sm ring-1 ring-black/5 focus-within:ring-emerald-600 transition w-full md:w-auto"
+    >
+      <Search className="w-4 h-4 text-emerald-700 flex-shrink-0" />
+
+      <input
+        type="search"
+        placeholder="Cari artikel..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        className="
+          w-full md:w-56
+          bg-transparent
+          text-sm
+          text-gray-700
+          placeholder:text-gray-400
+          outline-none
+        "
+      />
+    </form>
+  );
+};
 
 export default SearchBar;

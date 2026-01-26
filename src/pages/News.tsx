@@ -4,6 +4,7 @@ import QuickBites from "../components/news/QuickBites";
 import Features from "../components/news/Features";
 import ArticlesList from "../components/news/ArticlesList";
 import NewsSidebar from "../components/news/NewsSidebar";
+import Pagination from "../components/common/Pagination";
 
 const News = () => {
   const {
@@ -18,6 +19,10 @@ const News = () => {
     handleCategoryClick,
     formatTimeAgo,
     filteredArticles,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    totalArticles,
   } = useNewsData();
 
   if (loading) {
@@ -42,8 +47,8 @@ const News = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900 p-6">
-      <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <div className="min-h-screen bg-gray-100 text-gray-900 px-4 py-6 sm:px-6 sm:py-8">
+      <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
         <section className="lg:col-span-3 space-y-6">
           {topStories[0] && (
             <HeroSection story={topStories[0]} formatTimeAgo={formatTimeAgo} />
@@ -57,6 +62,16 @@ const News = () => {
             articles={filteredArticles}
             selectedCategory={selectedCategory}
             onClearFilter={() => setSelectedCategory(null)}
+          />
+
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={totalArticles}
+            displayedCount={filteredArticles.length}
+            itemLabel="artikel"
+            onPageChange={setCurrentPage}
           />
         </section>
 

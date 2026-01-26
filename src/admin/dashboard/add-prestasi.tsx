@@ -8,6 +8,7 @@ import {
   PrestasiToast,
   usePrestasiPage,
 } from "../../components/components-admin/prestasi";
+import { NewsPagination } from "../../components/components-admin/news";
 
 /**
  * Halaman Manajemen Prestasi Mahasantri
@@ -38,6 +39,9 @@ const AdminAchievements: React.FC = () => {
     searchQuery,
     selectedYear,
     availableYears,
+    currentPage,
+    totalPages,
+    displayedCount,
 
     // Actions
     setYear,
@@ -47,6 +51,7 @@ const AdminAchievements: React.FC = () => {
     setSearchQuery,
     setSelectedYear,
     setShowPreview,
+    setCurrentPage,
     openAddModal,
     closeModal,
     resetFilters,
@@ -100,6 +105,15 @@ const AdminAchievements: React.FC = () => {
           onEdit={handleEdit}
           onDelete={handleDelete}
           onAddFirst={openAddModal}
+        />
+
+        {/* Pagination */}
+        <NewsPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalPosts={totalCount}
+          displayedCount={displayedCount}
+          onPageChange={setCurrentPage}
         />
       </main>
 

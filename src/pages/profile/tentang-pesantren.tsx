@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { populer } from "../../assets/data/dummy";
-import ArtikelPopuler from "../../components/components-global/artikel-populer";
+import ArtikelPopulerApi from "../../components/components-global/artikel-populer-api";
 import { aboutService, type AboutSection } from "../../services/about";
 import { API_BASE_URL } from "../../config/api";
 
@@ -66,10 +65,10 @@ const TentangPesantren = () => {
 
   return (
     <div className="bg-white min-h-screen">
-      <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
         {/* Kolom Kiri */}
         <div className="md:col-span-2">
-          <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center text-gray-900 mb-6 md:mb-8">
             {mainIntro?.title || "Tentang Pesantren"}
           </h1>
 
@@ -170,7 +169,7 @@ const TentangPesantren = () => {
 
         {/* Kolom Kanan: Artikel Populer */}
         <div>
-          <ArtikelPopuler items={populer} />
+          <ArtikelPopulerApi />
         </div>
       </div>
     </div>

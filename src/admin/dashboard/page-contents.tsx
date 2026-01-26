@@ -180,8 +180,8 @@ const PageContents: React.FC = () => {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-indigo-100 rounded-xl">
-              <FileText className="w-6 h-6 text-indigo-600" />
+            <div className="p-2 bg-green-100 rounded-xl">
+              <FileText className="w-6 h-6 text-green-600" />
             </div>
             <h1 className="text-2xl font-bold text-slate-800">
               Kelola Konten Halaman
@@ -200,7 +200,7 @@ const PageContents: React.FC = () => {
               onClick={() => setActiveTab(tab.key)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
                 activeTab === tab.key
-                  ? "bg-indigo-600 text-white shadow-lg"
+                  ? "bg-green-600 text-white shadow-lg"
                   : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
               }`}
             >
@@ -212,7 +212,7 @@ const PageContents: React.FC = () => {
 
         {isLoading ? (
           <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
-            <RefreshCw className="w-8 h-8 animate-spin text-indigo-500 mx-auto mb-4" />
+            <RefreshCw className="w-8 h-8 animate-spin text-green-500 mx-auto mb-4" />
             <p className="text-slate-500">Memuat konten...</p>
           </div>
         ) : (
@@ -250,7 +250,7 @@ const PageContents: React.FC = () => {
               <button
                 onClick={() => handleSave(activeTab)}
                 disabled={isSaving}
-                className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 disabled:bg-slate-300 transition-all"
+                className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 disabled:bg-slate-300 transition-all"
               >
                 {isSaving ? (
                   <RefreshCw className="w-4 h-4 animate-spin" />
@@ -326,7 +326,7 @@ const InputField: React.FC<{
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         rows={3}
-        className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none"
+        className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-400 outline-none"
       />
     ) : (
       <input
@@ -334,7 +334,7 @@ const InputField: React.FC<{
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none"
+        className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-400 outline-none"
       />
     )}
   </div>
@@ -475,7 +475,7 @@ const GriyaQuranEditor: React.FC<GriyaQuranEditorProps> = ({
                   newMisi[i] = e.target.value;
                   updateVisiMisi("misi", newMisi);
                 }}
-                className="flex-1 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-400 outline-none"
+                className="flex-1 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 outline-none"
               />
               <button
                 onClick={() =>
@@ -494,7 +494,7 @@ const GriyaQuranEditor: React.FC<GriyaQuranEditorProps> = ({
             onClick={() =>
               updateVisiMisi("misi", [...content.vpiMisi.misi, ""])
             }
-            className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700"
+            className="flex items-center gap-1 text-sm text-green-600 hover:text-green-700"
           >
             <Plus className="w-4 h-4" /> Tambah Misi
           </button>
@@ -540,7 +540,7 @@ const GriyaQuranEditor: React.FC<GriyaQuranEditorProps> = ({
         ))}
         <button
           onClick={addProgram}
-          className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700"
+          className="flex items-center gap-1 text-sm text-green-600 hover:text-green-700"
         >
           <Plus className="w-4 h-4" /> Tambah Program
         </button>
@@ -580,7 +580,7 @@ const GriyaQuranEditor: React.FC<GriyaQuranEditorProps> = ({
         ))}
         <button
           onClick={addHalaqah}
-          className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700"
+          className="flex items-center gap-1 text-sm text-green-600 hover:text-green-700"
         >
           <Plus className="w-4 h-4" /> Tambah Halaqah
         </button>
@@ -648,7 +648,7 @@ const ProgramPengajarEditor: React.FC<ProgramPengajarEditorProps> = ({
               newList[i] = e.target.value;
               updateList(field, newList);
             }}
-            className="flex-1 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-400 outline-none"
+            className="flex-1 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 outline-none"
           />
           <button
             onClick={() =>
@@ -665,7 +665,7 @@ const ProgramPengajarEditor: React.FC<ProgramPengajarEditorProps> = ({
       ))}
       <button
         onClick={() => updateList(field, [...content[field], ""])}
-        className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700"
+        className="flex items-center gap-1 text-sm text-green-600 hover:text-green-700"
       >
         <Plus className="w-4 h-4" /> Tambah
       </button>
@@ -740,7 +740,7 @@ const ProgramPengajarEditor: React.FC<ProgramPengajarEditorProps> = ({
               pengurus: [...content.pengurus, { role: "", name: "" }],
             })
           }
-          className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700"
+          className="flex items-center gap-1 text-sm text-green-600 hover:text-green-700"
         >
           <Plus className="w-4 h-4" /> Tambah Pengurus
         </button>
@@ -871,7 +871,7 @@ const PendaftaranEditor: React.FC<PendaftaranEditorProps> = ({
                 newReqs[i] = e.target.value;
                 onChange({ ...content, requirements: newReqs });
               }}
-              className="flex-1 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-400 outline-none"
+              className="flex-1 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 outline-none"
             />
             <button
               onClick={() =>
@@ -895,7 +895,7 @@ const PendaftaranEditor: React.FC<PendaftaranEditorProps> = ({
               requirements: [...content.requirements, ""],
             })
           }
-          className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700"
+          className="flex items-center gap-1 text-sm text-green-600 hover:text-green-700"
         >
           <Plus className="w-4 h-4" /> Tambah Persyaratan
         </button>
@@ -953,7 +953,7 @@ const PendaftaranEditor: React.FC<PendaftaranEditorProps> = ({
               ],
             })
           }
-          className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700"
+          className="flex items-center gap-1 text-sm text-green-600 hover:text-green-700"
         >
           <Plus className="w-4 h-4" /> Tambah Rekening
         </button>
@@ -1008,7 +1008,7 @@ const PendaftaranEditor: React.FC<PendaftaranEditorProps> = ({
               ],
             })
           }
-          className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700"
+          className="flex items-center gap-1 text-sm text-green-600 hover:text-green-700"
         >
           <Plus className="w-4 h-4" /> Tambah Kontak
         </button>
@@ -1021,7 +1021,7 @@ const PendaftaranEditor: React.FC<PendaftaranEditorProps> = ({
       >
         {content.steps.map((step, i) => (
           <div key={i} className="flex gap-2 mb-2">
-            <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-sm font-medium">
+            <span className="flex-shrink-0 w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm font-medium">
               {i + 1}
             </span>
             <input
@@ -1032,7 +1032,7 @@ const PendaftaranEditor: React.FC<PendaftaranEditorProps> = ({
                 newSteps[i] = e.target.value;
                 onChange({ ...content, steps: newSteps });
               }}
-              className="flex-1 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-400 outline-none"
+              className="flex-1 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 outline-none"
             />
             <button
               onClick={() =>
@@ -1051,7 +1051,7 @@ const PendaftaranEditor: React.FC<PendaftaranEditorProps> = ({
           onClick={() =>
             onChange({ ...content, steps: [...content.steps, ""] })
           }
-          className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700"
+          className="flex items-center gap-1 text-sm text-green-600 hover:text-green-700"
         >
           <Plus className="w-4 h-4" /> Tambah Langkah
         </button>

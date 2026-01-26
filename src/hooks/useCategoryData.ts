@@ -3,12 +3,17 @@ import { postsService } from "../services/posts";
 import { categoriesService } from "../services/categories";
 import type { Post, Category } from "../services/posts";
 
+const POSTS_PER_PAGE = 12;
+
 export const useCategoryData = (categorySlug?: string) => {
   const [featuredArticles, setFeaturedArticles] = useState<Post[]>([]);
   const [articles, setArticles] = useState<Post[]>([]);
   const [trendingNews, setTrendingNews] = useState<Post[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalPosts, setTotalPosts] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,11 +24,14 @@ export const useCategoryData = (categorySlug?: string) => {
         if (categorySlug) {
           const categoryPosts = await postsService.getPosts({
             category: categorySlug,
-            limit: 12,
+            limit: POSTS_PER_PAGE,
+            page: currentPage,
             status: "publish",
           });
           setArticles(categoryPosts.posts);
           setFeaturedArticles(categoryPosts.posts.slice(0, 5));
+          setTotalPages(categoryPosts.totalPages || 1);
+          setTotalPosts(categoryPosts.total || categoryPosts.posts.length);
         } else {
           // Fetch featured posts
           const featured = await postsService.getPosts({
@@ -33,12 +41,15 @@ export const useCategoryData = (categorySlug?: string) => {
           });
           setFeaturedArticles(featured.posts);
 
-          // Fetch articles
+          // Fetch articles with pagination
           const allPosts = await postsService.getPosts({
-            limit: 12,
+            limit: POSTS_PER_PAGE,
+            page: currentPage,
             status: "publish",
           });
           setArticles(allPosts.posts);
+          setTotalPages(allPosts.totalPages || 1);
+          setTotalPosts(allPosts.total || allPosts.posts.length);
         }
 
         // Fetch popular posts
@@ -56,7 +67,7 @@ export const useCategoryData = (categorySlug?: string) => {
     };
 
     fetchData();
-  }, [categorySlug]);
+  }, [categorySlug, currentPage]);
 
   return {
     featuredArticles,
@@ -64,5 +75,9 @@ export const useCategoryData = (categorySlug?: string) => {
     trendingNews,
     categories,
     loading,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    totalPosts,
   };
 };

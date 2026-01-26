@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { achievementsService } from "../../../services/achievements";
 import type { Achievement, ValidationError } from "./types";
 
+const ITEMS_PER_PAGE = 12;
+
 export const usePrestasiPage = () => {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [year, setYear] = useState<number>(new Date().getFullYear());
@@ -18,6 +20,7 @@ export const usePrestasiPage = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [dataLoading, setDataLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Fetch achievements
   const fetchAchievements = useCallback(async () => {
@@ -156,6 +159,7 @@ export const usePrestasiPage = () => {
   const resetFilters = useCallback(() => {
     setSearchQuery("");
     setSelectedYear(null);
+    setCurrentPage(1);
   }, []);
 
   // Filtered achievements
@@ -168,6 +172,12 @@ export const usePrestasiPage = () => {
     )
     .sort((a, b) => b.years - a.years);
 
+  // Pagination
+  const totalPages = Math.ceil(filteredAchievements.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedAchievements = filteredAchievements.slice(startIndex, endIndex);
+
   // Available years for filter
   const availableYears = [...new Set(achievements.map((a) => a.years))].sort(
     (a, b) => b - a
@@ -175,8 +185,8 @@ export const usePrestasiPage = () => {
 
   return {
     // State
-    achievements: filteredAchievements,
-    totalCount: achievements.length,
+    achievements: paginatedAchievements,
+    totalCount: filteredAchievements.length,
     isModalOpen,
     editMode,
     year,
@@ -191,6 +201,9 @@ export const usePrestasiPage = () => {
     searchQuery,
     selectedYear,
     availableYears,
+    currentPage,
+    totalPages,
+    displayedCount: paginatedAchievements.length,
 
     // Actions
     setYear,
@@ -200,6 +213,7 @@ export const usePrestasiPage = () => {
     setSearchQuery,
     setSelectedYear,
     setShowPreview,
+    setCurrentPage,
     openAddModal,
     closeModal,
     resetFilters,

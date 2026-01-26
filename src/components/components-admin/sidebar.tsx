@@ -12,12 +12,12 @@ import {
   X,
   Bell,
   LogOut,
-  Settings,
   ChevronLeft,
   ChevronRight,
   User,
-  HelpCircle,
   Layers,
+  Settings,
+  HelpCircle,
 } from "lucide-react";
 import Logo from "../../assets/image/logo1.png";
 

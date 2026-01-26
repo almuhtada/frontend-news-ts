@@ -10,6 +10,8 @@ const INITIAL_FORM: PublicationForm = {
   link: "",
 };
 
+const ITEMS_PER_PAGE = 12;
+
 export const useJurnalPage = () => {
   const [publications, setPublications] = useState<Publication[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,6 +24,7 @@ export const useJurnalPage = () => {
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Fetch publications
   const fetchPublications = useCallback(async () => {
@@ -126,6 +129,7 @@ export const useJurnalPage = () => {
   const resetFilters = useCallback(() => {
     setSearchQuery("");
     setSelectedYear(null);
+    setCurrentPage(1);
   }, []);
 
   // Filtered and sorted publications
@@ -140,6 +144,12 @@ export const useJurnalPage = () => {
     )
     .sort((a, b) => b.year - a.year);
 
+  // Pagination
+  const totalPages = Math.ceil(filteredPublications.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedPublications = filteredPublications.slice(startIndex, endIndex);
+
   // Available years for filter
   const availableYears = Array.from(
     new Set(publications.map((pub) => pub.year))
@@ -147,8 +157,8 @@ export const useJurnalPage = () => {
 
   return {
     // State
-    publications: filteredPublications,
-    totalCount: publications.length,
+    publications: paginatedPublications,
+    totalCount: filteredPublications.length,
     isModalOpen,
     editMode,
     form,
@@ -159,8 +169,13 @@ export const useJurnalPage = () => {
     searchQuery,
     selectedYear,
     availableYears,
+    currentPage,
+    totalPages,
+    totalPosts: publications.length,
+    displayedCount: paginatedPublications.length,
 
     // Actions
+    setCurrentPage,
     setForm,
     setViewMode,
     setSearchQuery,

@@ -49,60 +49,51 @@ const Navbar = () => {
   return (
     <>
       {/* Header */}
-      <header className="bg-[#00531b] shadow-sm border-b border-green-900">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            {/* Logo */}
-            <img
-              src={Logo}
-              alt="Logo Al-Muhtada"
-              className="
-                    w-auto
-                    h-14
-                    sm:h-17
-                    md:h-18
-                    lg:h-19
-                    xl:h-20
-                    object-contain
-                  "
-            />
+      <header className="bg-[#00531b] border-b border-green-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+          <div className="flex items-center justify-between gap-4">
+            {/* LOGO + DATE */}
+            <div className="flex items-center gap-2 sm:gap-4">
+              <img
+                src={Logo}
+                alt="Logo Al-Muhtada"
+                className="h-12 sm:h-14 md:h-16 lg:h-18 object-contain"
+              />
 
-            {/* Divider */}
-            <span className="hidden md:block h-8 w-px bg-white/30" />
-
-            {/* Date */}
-            <span className="hidden md:block text-sm text-white/80 leading-tight">
-              {new Date().toLocaleDateString("id-ID", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </span>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <div className="hidden md:block">
-              <SearchBar />
+              <span className="hidden lg:block text-sm text-white/80 leading-tight">
+                {new Date().toLocaleDateString("id-ID", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </span>
             </div>
-            {/* Hamburger Menu */}
-            <button
-              className="md:hidden p-2 rounded-lg hover:bg-white/10 text-white"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+
+            {/* SEARCH + HAMBURGER */}
+            <div className="flex items-center gap-2 sm:gap-4">
+              <div className="hidden md:block">
+                <SearchBar />
+              </div>
+
+              <button
+                className="md:hidden p-2 rounded-lg hover:bg-white/10 text-white transition-colors"
+                onClick={() => setIsOpen(!isOpen)}
+                aria-label={isOpen ? "Close menu" : "Open menu"}
+              >
+                {isOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
         </div>
       </header>
-
       {/* Navigation */}
       <nav
         className={`bg-[#00531b] border-b border-gray-200 sticky top-0 z-50 transition-transform duration-300 ${
           showNavbar ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="px-6">
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8 py-4">
             <NavLink
@@ -141,7 +132,8 @@ const Navbar = () => {
               Sejarah
             </NavLink>
 
-            {categories.slice(0, 4).map((category) => (
+            {/* Kategori dari Database */}
+            {categories.map((category) => (
               <NavLink
                 key={category.id}
                 to={`/category/${category.slug}`}
@@ -186,11 +178,13 @@ const Navbar = () => {
 
           {/* Mobile Menu */}
           {isOpen && (
-            <div className="md:hidden flex flex-col space-y-4 py-4 border-t">
-              <SearchBar />
+            <div className="md:hidden flex flex-col space-y-4 py-4 border-t border-white/20 bg-[#00531b]">
+              <div className="px-2">
+                <SearchBar />
+              </div>
               <Link
                 to="/"
-                className="text-gray-700 hover:text-[#00531b]"
+                className="px-4 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
                 onClick={() => {
                   setActiveCategory("Beranda");
                   setIsOpen(false);
@@ -200,7 +194,7 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/pendidikan"
-                className="text-gray-700 hover:text-[#00531b]"
+                className="px-4 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
                 onClick={() => {
                   setActiveCategory("Pendidikan");
                   setIsOpen(false);
@@ -210,7 +204,7 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/category/sejarah"
-                className="text-gray-700 hover:text-[#00531b]"
+                className="px-4 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
                 onClick={() => {
                   setActiveCategory("sejarah");
                   setIsOpen(false);
@@ -218,33 +212,66 @@ const Navbar = () => {
               >
                 Sejarah
               </Link>
-              <div>
-                <p className="font-medium text-gray-600">Kategori</p>
-                <div className="pl-4 flex flex-col space-y-2">
-                  {categories.map((category) => (
-                    <Link
-                      key={category.id}
-                      to={`/category/${category.slug}`}
-                      className="text-gray-700 hover:text-[#00531b]"
-                      onClick={() => {
-                        setActiveCategory(category.slug);
-                        setIsOpen(false);
-                      }}
-                    >
-                      {category.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <p className="font-medium text-gray-600">Profil</p>
-                <div className="pl-4 flex flex-col space-y-2">
-                  <Link to="/tentang-pesantren">Tentang Pesantren</Link>
-                  <Link to="/program-pengajar">Program & Pengajar</Link>
-                  <Link to="/pendaftaran">Pendaftaran Mahasantri Baru</Link>
-                  <Link to="/prestasi-mahasantri">Prestasi Mahasantri</Link>
-                  <Link to="/publikasi-mahasantri">Publikasi Mahasantri</Link>
-                  <Link to="/griya-quran">Griya Qur'an</Link>
+
+              {/* Kategori dari Database */}
+              {categories.map((category) => (
+                <Link
+                  key={category.id}
+                  to={`/category/${category.slug}`}
+                  className="px-4 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                  onClick={() => {
+                    setActiveCategory(category.slug);
+                    setIsOpen(false);
+                  }}
+                >
+                  {category.name}
+                </Link>
+              ))}
+              <div className="border-t border-white/20 pt-4 mt-2">
+                <p className="px-4 font-semibold text-white mb-2">Profil</p>
+                <div className="flex flex-col space-y-2">
+                  <Link
+                    to="/tentang-pesantren"
+                    className="px-6 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Tentang Pesantren
+                  </Link>
+                  <Link
+                    to="/program-pengajar"
+                    className="px-6 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Program & Pengajar
+                  </Link>
+                  <Link
+                    to="/pendaftaran"
+                    className="px-6 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Pendaftaran Mahasantri Baru
+                  </Link>
+                  <Link
+                    to="/prestasi-mahasantri"
+                    className="px-6 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Prestasi Mahasantri
+                  </Link>
+                  <Link
+                    to="/publikasi-mahasantri"
+                    className="px-6 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Publikasi Mahasantri
+                  </Link>
+                  <Link
+                    to="/griya-quran"
+                    className="px-6 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Griya Qur'an
+                  </Link>
                 </div>
               </div>
             </div>

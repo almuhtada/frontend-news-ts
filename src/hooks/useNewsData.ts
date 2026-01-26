@@ -3,6 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import { postsService } from "../services/posts";
 import type { Post } from "../services/posts";
 
+const ARTICLES_PER_PAGE = 6;
+
 export const useNewsData = () => {
   const [searchParams] = useSearchParams();
   const [topStories, setTopStories] = useState<Post[]>([]);
@@ -13,6 +15,9 @@ export const useNewsData = () => {
   const [error, setError] = useState<string | null>(null);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalArticles, setTotalArticles] = useState(0);
 
   useEffect(() => {
     const categoryFromUrl = searchParams.get("category");
@@ -33,12 +38,15 @@ export const useNewsData = () => {
         });
         setTopStories(featuredPosts.posts);
 
-        // Fetch recent posts for articles
+        // Fetch recent posts for articles with pagination
         const recentPosts = await postsService.getPosts({
-          limit: 6,
+          limit: ARTICLES_PER_PAGE,
+          page: currentPage,
           status: "publish",
         });
         setArticles(recentPosts.posts);
+        setTotalPages(recentPosts.totalPages || 1);
+        setTotalArticles(recentPosts.total || recentPosts.posts.length);
 
         // Fetch popular posts
         const popularPosts = await postsService.getPopularPosts(3);
@@ -73,7 +81,7 @@ export const useNewsData = () => {
     };
 
     fetchData();
-  }, [searchParams]);
+  }, [searchParams, currentPage]);
 
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(selectedCategory === category ? null : category);
@@ -112,5 +120,9 @@ export const useNewsData = () => {
     handleCategoryClick,
     formatTimeAgo,
     filteredArticles,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    totalArticles,
   };
 };

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { populer } from "../../assets/data/dummy";
-import ArtikelPopuler from "../../components/components-global/artikel-populer";
+import ArtikelPopulerApi from "../../components/components-global/artikel-populer-api";
 import {
   achievementsService,
   type Achievement,
@@ -52,15 +51,15 @@ const PrestasiMahasantri = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       {/* Layout utama: Header, Prestasi, Artikel Populer */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
         <div className="lg:col-span-2 justify-center items-center">
           {/* Header */}
-          <h1 className="text-4xl text-center font-bold text-gray-900 mb-3">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl text-center font-bold text-gray-900 mb-3">
             Prestasi Mahasantri
           </h1>
-          <p className="text-gray-600 max-w-2xl mb-8 text-center">
+          <p className="text-sm sm:text-base text-gray-600 max-w-2xl mb-6 sm:mb-8 text-center mx-auto px-4">
             Daftar prestasi yang diraih oleh para mahasantri dalam berbagai
             kompetisi, akademik, penelitian, hingga karya publikasi.
           </p>
@@ -96,7 +95,7 @@ const PrestasiMahasantri = () => {
         </div>
 
         {/* Kanan: Artikel Populer */}
-        <ArtikelPopuler items={populer} />
+        <ArtikelPopulerApi />
       </div>
     </div>
   );

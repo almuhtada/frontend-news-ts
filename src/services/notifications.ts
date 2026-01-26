@@ -90,6 +90,7 @@ export interface CreateNotificationData {
 export interface UpdateNotificationStatusData {
   status: 'approved' | 'rejected';
   post_status?: 'publish' | 'archived';
+  rejection_reason?: string;
 }
 
 export const notificationsService = {

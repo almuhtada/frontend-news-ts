@@ -77,7 +77,7 @@ interface NotificationContentProps {
   notifications: Notification[];
   isLoading: boolean;
   onApprove: (id: number) => void;
-  onReject: (id: number) => void;
+  onReject: (id: number, postTitle?: string) => void;
   onViewPost: (postId: number) => void;
 }
 
@@ -228,7 +228,7 @@ const NotificationContent: React.FC<NotificationContentProps> = ({
                           Setujui
                         </button>
                         <button
-                          onClick={() => onReject(notification.id)}
+                          onClick={() => onReject(notification.id, notification.target)}
                           className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50"
                         >
                           <XCircle className="h-3 w-3" />

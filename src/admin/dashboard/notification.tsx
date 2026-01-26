@@ -5,6 +5,8 @@ import {
   NotificationFilters,
   NotificationContent,
   NotificationPreviewModal,
+  NotificationRejectModal,
+  NotificationPagination,
   useNotificationPage,
 } from "../../components/components-admin/notification";
 
@@ -29,20 +31,28 @@ const AdminNotifications: React.FC = () => {
     showSuccess,
     lastAction,
     isLoading,
+    currentPage,
+    totalPages,
+    totalNotifications,
     showPreviewModal,
     previewPost,
     loadingPreview,
+    showRejectModal,
+    rejectPostTitle,
 
     // Actions
     setSearchQuery,
     setSelectedStatus,
     setSelectedCategory,
+    setCurrentPage,
     handleApprove,
     handleReject,
+    handleConfirmReject,
     handleRefresh,
     handleMarkAllRead,
     handleViewPost,
     closePreviewModal,
+    closeRejectModal,
     resetFilters,
   } = useNotificationPage();
 
@@ -103,6 +113,15 @@ const AdminNotifications: React.FC = () => {
           onReject={handleReject}
           onViewPost={handleViewPost}
         />
+
+        {/* Pagination */}
+        <NotificationPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalNotifications={totalNotifications}
+          displayedCount={notifications.length}
+          onPageChange={setCurrentPage}
+        />
       </main>
 
       {/* Preview Modal */}
@@ -111,6 +130,14 @@ const AdminNotifications: React.FC = () => {
         post={previewPost}
         loading={loadingPreview}
         onClose={closePreviewModal}
+      />
+
+      {/* Reject Modal */}
+      <NotificationRejectModal
+        isOpen={showRejectModal}
+        postTitle={rejectPostTitle}
+        onClose={closeRejectModal}
+        onConfirm={handleConfirmReject}
       />
 
       <style>{`

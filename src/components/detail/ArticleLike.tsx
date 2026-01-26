@@ -1,17 +1,70 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
+import { interactionService } from "../../services/interactions";
+import { getUserIdentifier } from "../../utils/userIdentifier";
 
 interface Props {
+  postId: number;
   initialCount?: number;
 }
 
-const ArticleLike = ({ initialCount = 24 }: Props) => {
+const ArticleLike = ({ postId, initialCount = 0 }: Props) => {
   const [liked, setLiked] = useState(false);
   const [count, setCount] = useState(initialCount);
+  const [loading, setLoading] = useState(false);
 
-  const toggleLike = () => {
-    setLiked((prev) => !prev);
-    setCount((prev) => (liked ? prev - 1 : prev + 1));
+  // Fetch initial like data
+  useEffect(() => {
+    const fetchLikeData = async () => {
+      try {
+        const userIdentifier = getUserIdentifier();
+        const response = await interactionService.getLikes(postId, userIdentifier);
+
+        if (response.success) {
+          setLiked(response.data.liked);
+          setCount(response.data.likeCount);
+        }
+      } catch (error) {
+        console.error("Failed to fetch like data:", error);
+      }
+    };
+
+    fetchLikeData();
+  }, [postId]);
+
+  const toggleLike = async () => {
+    if (loading) return;
+
+    setLoading(true);
+
+    // Optimistic update
+    const previousLiked = liked;
+    const previousCount = count;
+
+    setLiked(!liked);
+    setCount(liked ? count - 1 : count + 1);
+
+    try {
+      const userIdentifier = getUserIdentifier();
+      const response = await interactionService.toggleLike(postId, userIdentifier);
+
+      if (response.success) {
+        // Update with actual data from server
+        setLiked(response.data.liked);
+        setCount(response.data.likeCount);
+      } else {
+        // Revert on failure
+        setLiked(previousLiked);
+        setCount(previousCount);
+      }
+    } catch (error) {
+      console.error("Failed to toggle like:", error);
+      // Revert on error
+      setLiked(previousLiked);
+      setCount(previousCount);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

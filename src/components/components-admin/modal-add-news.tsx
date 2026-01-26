@@ -39,6 +39,7 @@ interface FormData {
   excerpt: string;
   status: "draft" | "publish" | "archived";
   tag_ids?: number[];
+  rejection_reason?: string;
 }
 
 interface Props {
@@ -279,6 +280,31 @@ const NewsModal: React.FC<Props> = ({
 
         {/* Content */}
         <div className="p-4 overflow-y-auto flex-1 space-y-4">
+          {/* Rejection Reason Alert */}
+          {form.rejection_reason && (
+            <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 mt-0.5">
+                  <AlertCircle className="w-5 h-5 text-red-600" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-red-900 mb-1">
+                    Berita Ditolak oleh Editor
+                  </h4>
+                  <p className="text-sm text-red-800 mb-2">
+                    Berita ini ditolak dengan alasan:
+                  </p>
+                  <div className="bg-white border border-red-200 rounded px-3 py-2 text-sm text-gray-800">
+                    {form.rejection_reason}
+                  </div>
+                  <p className="text-xs text-red-700 mt-2">
+                    💡 Silakan perbaiki sesuai catatan di atas, lalu submit kembali untuk direview.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Judul */}
           <div>
             <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">

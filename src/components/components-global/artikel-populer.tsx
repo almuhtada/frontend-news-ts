@@ -1,8 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 type ArtikelPopulerItem = {
   title: string;
   desc: string;
+  slug?: string; // Optional slug for routing
 };
 
 type ArtikelPopulerProps = {
@@ -20,19 +22,35 @@ const ArtikelPopuler: React.FC<ArtikelPopulerProps> = ({ items }) => {
 
       {/* LIST */}
       <ul className="space-y-3">
-        {items.map((item, index) => (
-          <li
-            key={index}
-            className="group p-4 rounded-xl border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50 transition"
-          >
-            <h3 className="font-medium text-gray-800 group-hover:text-emerald-700 leading-snug">
-              {item.title}
-            </h3>
-            <p className="text-sm text-gray-500 mt-1 line-clamp-2">
-              {item.desc}
-            </p>
-          </li>
-        ))}
+        {items.map((item, index) => {
+          const content = (
+            <>
+              <h3 className="font-medium text-gray-800 group-hover:text-emerald-700 leading-snug">
+                {item.title}
+              </h3>
+              <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                {item.desc}
+              </p>
+            </>
+          );
+
+          return (
+            <li key={index}>
+              {item.slug ? (
+                <Link
+                  to={`/detail-news/${item.slug}`}
+                  className="group block p-4 rounded-xl border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50 transition cursor-pointer"
+                >
+                  {content}
+                </Link>
+              ) : (
+                <div className="group p-4 rounded-xl border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50 transition">
+                  {content}
+                </div>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </aside>
   );

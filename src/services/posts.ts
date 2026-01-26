@@ -29,16 +29,20 @@ export interface Post {
   content: string;
   featured_image?: string;
   author_id: number;
+  editor_id?: number;
   status: 'draft' | 'publish' | 'archived';
   is_featured: boolean;
-  view_count: number;
+  views?: number; // Database column name
+  view_count?: number; // Alias for compatibility
   comment_status: 'open' | 'closed';
   meta_title?: string;
   meta_description?: string;
   published_at?: string;
+  rejection_reason?: string;
   createdAt: string;
   updatedAt: string;
   author?: Author;
+  editor?: Author;
   categories?: Category[];
   tags?: Tag[];
 }
@@ -93,6 +97,7 @@ export interface CreatePostData {
   category_ids?: number[];
   tag_ids?: number[];
   author_id?: number;
+  editor_id?: number;
 }
 
 export interface UpdatePostData extends Partial<CreatePostData> {
@@ -121,9 +126,15 @@ export const postsService = {
     return response.data;
   },
 
-  // Get popular posts
+  // Get popular posts (based on total views)
   getPopularPosts: async (limit = 5): Promise<Post[]> => {
     const response = await api.get<ApiPostsArrayResponse>(API_ENDPOINTS.POPULAR_POSTS, { limit });
+    return response.data;
+  },
+
+  // Get trending/viral posts (based on engagement in last X hours)
+  getTrendingPosts: async (limit = 5, hours = 24): Promise<Post[]> => {
+    const response = await api.get<ApiPostsArrayResponse>(API_ENDPOINTS.TRENDING_POSTS, { limit, hours });
     return response.data;
   },
 

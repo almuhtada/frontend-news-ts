@@ -1,8 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import News from "./pages/News";
-import Navbar from "./ui/navbar/Navbar";
-import Footer from "./ui/footer/Footer";
+import SearchResults from "./pages/SearchResults";
 import DetailNews from "./pages/detail/detail-news";
 import PendidikanPage from "./pages/Pendidikan";
 import AuthorPage from "./pages/AuthorPage";
@@ -23,121 +22,30 @@ import AdminAbout from "./admin/dashboard/edit-about";
 import AdminUsers from "./admin/dashboard/user-profile";
 import AdminNotifications from "./admin/dashboard/notification";
 import PageContents from "./admin/dashboard/page-contents";
+import SettingsPage from "./admin/dashboard/settings";
+import HelpPage from "./admin/dashboard/help";
 import ProtectedRoute from "./components/common/ProtectedRoute";
-
-// Layout umum untuk halaman publik
-const PublicLayout = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex flex-col min-h-screen">
-    <Navbar />
-    <div className="flex-1">{children}</div>
-    <Footer />
-  </div>
-);
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Halaman publik pakai layout dengan navbar & footer */}
-        <Route
-          path="/"
-          element={
-            <PublicLayout>
-              <Home />
-            </PublicLayout>
-          }
-        />
+        {/* Public pages - layout inside each component */}
+        <Route path="/" element={<Home />} />
+        <Route path="/news" element={<News />} />
+        <Route path="/search" element={<SearchResults />} />
+        <Route path="/detail-news/:slug" element={<DetailNews />} />
+        <Route path="/category/:slug" element={<SejarahPage />} />
+        <Route path="/author/:username" element={<AuthorPage />} />
+        <Route path="/pendidikan" element={<PendidikanPage />} />
+        <Route path="/program-pengajar" element={<ProgramPengajar />} />
+        <Route path="/tentang-pesantren" element={<TentangPesantren />} />
+        <Route path="/pendaftaran" element={<Pendaftaran />} />
+        <Route path="/prestasi-mahasantri" element={<PrestasiMahasantri />} />
+        <Route path="/publikasi-mahasantri" element={<PublikasiMahasantri />} />
+        <Route path="/griya-quran" element={<GriyaQuran />} />
 
-        <Route
-          path="/news"
-          element={
-            <PublicLayout>
-              <News />
-            </PublicLayout>
-          }
-        />
-        <Route
-          path="/detail-news/:slug"
-          element={
-            <PublicLayout>
-              <DetailNews />
-            </PublicLayout>
-          }
-        />
-        <Route
-          path="/category/:slug"
-          element={
-            <PublicLayout>
-              <SejarahPage />
-            </PublicLayout>
-          }
-        />
-        <Route
-          path="/author/:username"
-          element={
-            <PublicLayout>
-              <AuthorPage />
-            </PublicLayout>
-          }
-        />
-        <Route
-          path="/pendidikan"
-          element={
-            <PublicLayout>
-              <PendidikanPage />
-            </PublicLayout>
-          }
-        />
-        <Route
-          path="/program-pengajar"
-          element={
-            <PublicLayout>
-              <ProgramPengajar />
-            </PublicLayout>
-          }
-        />
-        <Route
-          path="/tentang-pesantren"
-          element={
-            <PublicLayout>
-              <TentangPesantren />
-            </PublicLayout>
-          }
-        />
-        <Route
-          path="/pendaftaran"
-          element={
-            <PublicLayout>
-              <Pendaftaran />
-            </PublicLayout>
-          }
-        />
-        <Route
-          path="/prestasi-mahasantri"
-          element={
-            <PublicLayout>
-              <PrestasiMahasantri />
-            </PublicLayout>
-          }
-        />
-        <Route
-          path="/publikasi-mahasantri"
-          element={
-            <PublicLayout>
-              <PublikasiMahasantri />
-            </PublicLayout>
-          }
-        />
-        <Route
-          path="/griya-quran"
-          element={
-            <PublicLayout>
-              <GriyaQuran />
-            </PublicLayout>
-          }
-        />
-
-        {/* Halaman login admin pakai layout kosong */}
+        {/* Admin pages */}
         <Route path="/login/admin" element={<LoginAdmin />} />
         <Route
           path="/admin"
@@ -200,6 +108,22 @@ function App() {
           element={
             <ProtectedRoute>
               <PageContents />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <SettingsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/help"
+          element={
+            <ProtectedRoute>
+              <HelpPage />
             </ProtectedRoute>
           }
         />

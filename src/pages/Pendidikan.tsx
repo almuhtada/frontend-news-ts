@@ -2,10 +2,20 @@ import { useCategoryData } from "../hooks/useCategoryData";
 import CategoryHero from "../components/category/CategoryHero";
 import CategoryArticles from "../components/category/CategoryArticles";
 import CategorySidebar from "../components/category/CategorySidebar";
+import Pagination from "../components/common/Pagination";
 
 const PendidikanPage = () => {
-  const { featuredArticles, articles, trendingNews, categories, loading } =
-    useCategoryData("pendidikan");
+  const {
+    featuredArticles,
+    articles,
+    trendingNews,
+    categories,
+    loading,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    totalPosts,
+  } = useCategoryData("pendidikan");
 
   if (loading) {
     return (
@@ -25,6 +35,16 @@ const PendidikanPage = () => {
           <div className="lg:col-span-3 space-y-10">
             <CategoryHero articles={featuredArticles} />
             <CategoryArticles articles={articles} />
+
+            {/* Pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalItems={totalPosts}
+              displayedCount={articles.length}
+              itemLabel="artikel"
+              onPageChange={setCurrentPage}
+            />
           </div>
 
           <CategorySidebar

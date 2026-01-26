@@ -164,6 +164,7 @@ export const useNewsPage = () => {
       excerpt: article.excerpt || "",
       status: article.status as "draft" | "publish" | "archived",
       tag_ids: tagIds,
+      rejection_reason: (article as any).rejection_reason,
     });
     setPreviewUrl(article.image || article.featured_image || "");
     setIsEditing(true);

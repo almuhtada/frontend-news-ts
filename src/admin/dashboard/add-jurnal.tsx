@@ -8,6 +8,7 @@ import {
   JurnalToast,
   useJurnalPage,
 } from "../../components/components-admin/jurnal";
+import { NewsPagination } from "../../components/components-admin/news";
 
 /**
  * Halaman Manajemen Publikasi Jurnal
@@ -34,8 +35,13 @@ const AdminPublications: React.FC = () => {
     searchQuery,
     selectedYear,
     availableYears,
+    currentPage,
+    totalPages,
+    totalPosts,
+    displayedCount,
 
     // Actions
+    setCurrentPage,
     setForm,
     setViewMode,
     setSearchQuery,
@@ -93,6 +99,15 @@ const AdminPublications: React.FC = () => {
           onEdit={openEditModal}
           onDelete={handleDelete}
           onAddFirst={openAddModal}
+        />
+
+        {/* Pagination */}
+        <NewsPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalPosts={totalPosts}
+          displayedCount={displayedCount}
+          onPageChange={setCurrentPage}
         />
       </main>
 

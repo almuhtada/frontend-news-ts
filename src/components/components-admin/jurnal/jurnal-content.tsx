@@ -96,7 +96,7 @@ const PublicationCard: React.FC<{
       </span>
 
       <a
-        href={publication.link}
+        href={publication.link ?? undefined}
         target="_blank"
         rel="noopener noreferrer"
         className="
@@ -156,7 +156,7 @@ const PublicationRow: React.FC<{
         <Trash2 className="h-4 w-4" />
       </button>
       <a
-        href={publication.link}
+        href={publication.link ?? undefined}
         target="_blank"
         rel="noopener noreferrer"
         className="rounded-md p-1 text-gray-400 hover:text-gray-600"

@@ -1,46 +1,178 @@
-import { useState } from "react";
-import { Send } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Send, Loader2 } from "lucide-react";
+import {
+  interactionService,
+  type Comment as CommentType,
+} from "../../services/interactions";
+import { getUserIdentifier } from "../../utils/userIdentifier";
 
-type Comment = {
-  id: number;
-  name: string;
-  content: string;
-  createdAt: string;
+interface Props {
+  postId: number;
+}
+
+// Strip HTML tags from content
+const stripHtml = (html: string): string => {
+  if (!html) return "";
+  // Remove HTML tags
+  let text = html.replace(/<[^>]+>/g, "");
+  // Decode HTML entities
+  text = text.replace(/&nbsp;/g, " ");
+  text = text.replace(/&amp;/g, "&");
+  text = text.replace(/&lt;/g, "<");
+  text = text.replace(/&gt;/g, ">");
+  text = text.replace(/&quot;/g, '"');
+  text = text.replace(/&#39;/g, "'");
+  // Remove again if any HTML appeared after decode
+  text = text.replace(/<[^>]+>/g, "");
+  // Clean almuhtada.org prefix if exists
+  text = text.replace(/almuhtada\.org\s*-?\s*/gi, "");
+  // Normalize whitespace
+  return text.replace(/\s+/g, " ").trim();
 };
 
-const dummyComments: Comment[] = [
-  {
-    id: 1,
-    name: "Rafa",
-    content: "Tulisan ini enak dibaca dan informatif.",
-    createdAt: "2 jam lalu",
-  },
-  {
-    id: 2,
-    name: "Anonim",
-    content: "Semoga ada pembahasan lanjutan ke depannya.",
-    createdAt: "1 jam lalu",
-  },
-];
+// URL regex patterns
+const urlSplitRegex = /(https?:\/\/[^\s<>"{}|\\^`[\]]+)/gi;
+const urlTestRegex = /^https?:\/\/[^\s<>"{}|\\^`[\]]+$/i;
 
-const ArticleComments = () => {
-  const [comments, setComments] = useState<Comment[]>(dummyComments);
+// Render text with clickable links
+const renderWithLinks = (text: string): React.ReactNode[] => {
+  const cleanText = stripHtml(text);
+  const parts = cleanText.split(urlSplitRegex);
+
+  return parts.map((part, index) => {
+    if (urlTestRegex.test(part)) {
+      return (
+        <a
+          key={index}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-emerald-600 hover:text-emerald-700 underline break-all"
+        >
+          {part}
+        </a>
+      );
+    }
+    return part;
+  });
+};
+
+// Format timestamp to Indonesian relative time
+const formatRelativeTime = (dateString: string): string => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  if (diffInSeconds < 60) return "baru saja";
+  if (diffInSeconds < 3600) {
+    const minutes = Math.floor(diffInSeconds / 60);
+    return `${minutes} menit yang lalu`;
+  }
+  if (diffInSeconds < 86400) {
+    const hours = Math.floor(diffInSeconds / 3600);
+    return `${hours} jam yang lalu`;
+  }
+  if (diffInSeconds < 2592000) {
+    const days = Math.floor(diffInSeconds / 86400);
+    return `${days} hari yang lalu`;
+  }
+
+  // Format as Indonesian date
+  return date.toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+};
+
+const ArticleComments = ({ postId }: Props) => {
+  const [comments, setComments] = useState<CommentType[]>([]);
   const [text, setText] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const submitComment = () => {
-    if (!text.trim()) return;
+  // Fetch comments on mount
+  useEffect(() => {
+    const fetchComments = async () => {
+      setLoading(true);
+      setError(null);
 
-    setComments([
-      {
-        id: Date.now(),
-        name: "Anonim",
-        content: text,
-        createdAt: "baru saja",
-      },
-      ...comments,
-    ]);
+      try {
+        const response = await interactionService.getComments(postId, "approved");
 
-    setText("");
+        if (response.success) {
+          setComments(response.data.comments);
+        }
+      } catch (err) {
+        console.error("Failed to fetch comments:", err);
+        setError("Gagal memuat komentar");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchComments();
+  }, [postId]);
+
+  const submitComment = async () => {
+    if (!text.trim()) {
+      alert("Komentar tidak boleh kosong");
+      return;
+    }
+
+    if (!name.trim()) {
+      alert("Nama tidak boleh kosong");
+      return;
+    }
+
+    if (!email.trim()) {
+      alert("Email tidak boleh kosong");
+      return;
+    }
+
+    // Simple email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert("Format email tidak valid");
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const userIdentifier = getUserIdentifier();
+
+      const response = await interactionService.createComment(postId, {
+        author_name: name.trim(),
+        author_email: email.trim(),
+        content: text.trim(),
+        author_ip: userIdentifier,
+      });
+
+      if (response.success) {
+        // Clear form
+        setText("");
+        setName("");
+        setEmail("");
+
+        // Refresh comments list to show new comment immediately
+        const commentsResponse = await interactionService.getComments(postId, "approved");
+        if (commentsResponse.success) {
+          setComments(commentsResponse.data.comments);
+        }
+
+        // Show success message
+        alert("Komentar berhasil dikirim!");
+      }
+    } catch (err) {
+      console.error("Failed to submit comment:", err);
+      alert("Gagal mengirim komentar. Silakan coba lagi.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -58,6 +190,35 @@ const ArticleComments = () => {
       {/* COMMENT FORM */}
       <div className="mb-10">
         <div className="rounded-2xl border border-gray-200 bg-white p-5">
+          {/* Name and Email inputs */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Nama Anda *"
+              className="
+                px-3 py-2 rounded-lg border border-gray-200
+                text-sm text-gray-800 placeholder:text-gray-400
+                focus:outline-none focus:border-emerald-400
+              "
+              disabled={submitting}
+            />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email Anda *"
+              className="
+                px-3 py-2 rounded-lg border border-gray-200
+                text-sm text-gray-800 placeholder:text-gray-400
+                focus:outline-none focus:border-emerald-400
+              "
+              disabled={submitting}
+            />
+          </div>
+
+          {/* Comment textarea */}
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -68,11 +229,13 @@ const ArticleComments = () => {
               placeholder:text-gray-400
               focus:outline-none
             "
+            disabled={submitting}
           />
 
           <div className="flex items-center justify-end mt-4">
             <button
               onClick={submitComment}
+              disabled={submitting}
               className="
                 inline-flex items-center gap-2
                 px-5 py-2 rounded-full
@@ -80,30 +243,90 @@ const ArticleComments = () => {
                 text-sm font-medium
                 hover:bg-emerald-700
                 transition
+                disabled:opacity-50 disabled:cursor-not-allowed
               "
             >
-              <Send className="w-4 h-4" />
-              Kirim
+              {submitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Mengirim...
+                </>
+              ) : (
+                <>
+                  <Send className="w-4 h-4" />
+                  Kirim
+                </>
+              )}
             </button>
           </div>
         </div>
       </div>
 
-      {/* COMMENT LIST */}
-      <div className="space-y-8">
-        {comments.map((c) => (
-          <article key={c.id} className="border-b border-gray-100 pb-6">
-            <div className="flex items-center justify-between mb-1">
-              <p className="text-sm font-semibold text-gray-900">{c.name}</p>
-              <span className="text-xs text-gray-400">{c.createdAt}</span>
-            </div>
+      {/* LOADING STATE */}
+      {loading && (
+        <div className="text-center py-8">
+          <Loader2 className="w-6 h-6 animate-spin mx-auto text-emerald-600" />
+          <p className="text-sm text-gray-500 mt-2">Memuat komentar...</p>
+        </div>
+      )}
 
-            <p className="text-sm text-gray-700 leading-relaxed max-w-3xl">
-              {c.content}
-            </p>
-          </article>
-        ))}
-      </div>
+      {/* ERROR STATE */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+          <p className="text-sm text-red-800">{error}</p>
+        </div>
+      )}
+
+      {/* COMMENT LIST */}
+      {!loading && comments.length === 0 && (
+        <div className="text-center py-12 bg-gray-50 rounded-lg">
+          <p className="text-sm text-gray-500">
+            Belum ada komentar. Jadilah yang pertama berkomentar!
+          </p>
+        </div>
+      )}
+
+      {!loading && comments.length > 0 && (
+        <div className="space-y-8">
+          {comments.map((c) => (
+            <article key={c.id} className="border-b border-gray-100 pb-6">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-sm font-semibold text-gray-900">
+                  {c.author_name}
+                </p>
+                <span className="text-xs text-gray-400">
+                  {formatRelativeTime(c.createdAt)}
+                </span>
+              </div>
+
+              <p className="text-sm text-gray-700 leading-relaxed max-w-3xl">
+                {renderWithLinks(c.content)}
+              </p>
+
+              {/* Nested replies */}
+              {c.replies && c.replies.length > 0 && (
+                <div className="mt-4 ml-6 space-y-4 border-l-2 border-gray-100 pl-4">
+                  {c.replies.map((reply) => (
+                    <div key={reply.id}>
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-sm font-semibold text-gray-800">
+                          {reply.author_name}
+                        </p>
+                        <span className="text-xs text-gray-400">
+                          {formatRelativeTime(reply.createdAt)}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 leading-relaxed">
+                        {renderWithLinks(reply.content)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </article>
+          ))}
+        </div>
+      )}
     </section>
   );
 };

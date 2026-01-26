@@ -22,9 +22,13 @@ export const useNotificationPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalNotifications, setTotalNotifications] = useState(0);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [previewPost, setPreviewPost] = useState<Post | null>(null);
   const [loadingPreview, setLoadingPreview] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [rejectNotificationId, setRejectNotificationId] = useState<number | null>(null);
+  const [rejectPostTitle, setRejectPostTitle] = useState<string>("");
 
   // Convert API notification to local format
   const convertNotification = (apiNotif: NotificationAPI): Notification => {
@@ -89,6 +93,7 @@ export const useNotificationPage = () => {
       setNotifications(convertedNotifications);
       setStats(statsData);
       setTotalPages(notificationsData.totalPages);
+      setTotalNotifications(notificationsData.total);
     } catch (error) {
       console.error("Error fetching notifications:", error);
     } finally {
@@ -136,17 +141,36 @@ export const useNotificationPage = () => {
     }
   };
 
-  const handleReject = async (id: number) => {
+  const handleReject = async (id: number, postTitle?: string) => {
+    // Show reject modal instead of immediately rejecting
+    setRejectNotificationId(id);
+    setRejectPostTitle(postTitle || "");
+    setShowRejectModal(true);
+  };
+
+  const handleConfirmReject = async (reason: string) => {
+    if (!rejectNotificationId) return;
+
     try {
-      await notificationsService.updateNotificationStatus(id, {
+      await notificationsService.updateNotificationStatus(rejectNotificationId, {
         status: "rejected",
+        rejection_reason: reason,
       });
       setLastAction("ditolak");
       setShowSuccess(true);
+      setShowRejectModal(false);
+      setRejectNotificationId(null);
+      setRejectPostTitle("");
       fetchNotifications();
     } catch (error) {
       console.error("Error rejecting notification:", error);
     }
+  };
+
+  const closeRejectModal = () => {
+    setShowRejectModal(false);
+    setRejectNotificationId(null);
+    setRejectPostTitle("");
   };
 
   const handleRefresh = () => {
@@ -199,9 +223,12 @@ export const useNotificationPage = () => {
     isLoading,
     currentPage,
     totalPages,
+    totalNotifications,
     showPreviewModal,
     previewPost,
     loadingPreview,
+    showRejectModal,
+    rejectPostTitle,
 
     // Actions
     setSearchQuery,
@@ -210,10 +237,12 @@ export const useNotificationPage = () => {
     setCurrentPage,
     handleApprove,
     handleReject,
+    handleConfirmReject,
     handleRefresh,
     handleMarkAllRead,
     handleViewPost,
     closePreviewModal,
+    closeRejectModal,
     resetFilters,
   };
 };

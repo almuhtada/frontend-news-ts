@@ -30,10 +30,30 @@ const formatDate = (dateString: string) => {
   });
 };
 
+const stripHtmlAndClean = (html: string): string => {
+  // Hapus semua HTML tags
+  let text = html.replace(/<[^>]+>/g, "");
+  // Decode HTML entities
+  text = text.replace(/&nbsp;/g, " ");
+  text = text.replace(/&amp;/g, "&");
+  text = text.replace(/&lt;/g, "<");
+  text = text.replace(/&gt;/g, ">");
+  text = text.replace(/&quot;/g, '"');
+  text = text.replace(/&#39;/g, "'");
+  // Hapus lagi jika ada HTML setelah decode
+  text = text.replace(/<[^>]+>/g, "");
+  // Hapus prefix almuhtada.org
+  text = text.replace(/almuhtada\.org\s*-?\s*/gi, "");
+  // Normalize whitespace
+  text = text.replace(/\s+/g, " ").trim();
+  return text;
+};
+
 const truncateText = (text: string, maxLength: number) => {
-  return text.length > maxLength
-    ? text.substring(0, maxLength) + "..."
-    : text;
+  const cleanText = stripHtmlAndClean(text);
+  return cleanText.length > maxLength
+    ? cleanText.substring(0, maxLength) + "..."
+    : cleanText;
 };
 
 const mapToDisplayArticle = (article: Article): ArticleDisplay => ({
@@ -66,21 +86,11 @@ const NewsContent: React.FC<NewsContentProps> = ({
           return (
             <NewsGridCard
               key={article.id}
-              article={{
-                id: displayArticle.id,
-                title: displayArticle.title,
-                category: displayArticle.category,
-                content: displayArticle.content,
-                image: displayArticle.image,
-                author: displayArticle.author,
-                createdAt: new Date(displayArticle.createdAt),
-                status: displayArticle.status,
-                featured: displayArticle.is_featured,
-              }}
+              article={displayArticle}
               onEdit={() => onEdit(displayArticle)}
               onDelete={onDelete}
               getCategoryColor={getCategoryColor}
-              formatDate={(date: Date) => formatDate(date.toISOString())}
+              formatDate={formatDate}
               truncateText={truncateText}
             />
           );

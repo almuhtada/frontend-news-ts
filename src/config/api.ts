@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
   POSTS: '/posts',
   POST_BY_SLUG: (slug: string) => `/posts/${slug}`,
   POPULAR_POSTS: '/posts/popular',
+  TRENDING_POSTS: '/posts/trending',
   RECENT_POSTS: '/posts/recent',
 
   // Categories
@@ -25,4 +26,8 @@ export const API_ENDPOINTS = {
 
   // Media
   MEDIA: '/media',
+
+  // Settings
+  SETTINGS: '/settings',
+  SETTINGS_SAVE: '/settings/save',
 };

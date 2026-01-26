@@ -7,7 +7,7 @@ export interface AboutSection {
   content: string;
   image_url: string | null;
   order_number: number;
-  metadata: any;
+  metadata: Record<string, unknown> | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -28,7 +28,7 @@ export interface UpsertAboutData {
   content?: string;
   image_url?: string;
   order_number?: number;
-  metadata?: any;
+  metadata?: Record<string, unknown> | null;
 }
 
 export const aboutService = {

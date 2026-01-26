@@ -1,22 +1,22 @@
 import React from "react";
 import Pagination from "../../common/Pagination";
 
-interface NewsPaginationProps {
+interface NotificationPaginationProps {
   currentPage: number;
   totalPages: number;
-  totalPosts: number;
+  totalNotifications: number;
   displayedCount: number;
   onPageChange: (page: number) => void;
 }
 
 /**
- * News Pagination Component
- * Wrapper around global Pagination component for news list
+ * Notification Pagination Component
+ * Wrapper around global Pagination component for notification list
  */
-const NewsPagination: React.FC<NewsPaginationProps> = ({
+const NotificationPagination: React.FC<NotificationPaginationProps> = ({
   currentPage,
   totalPages,
-  totalPosts,
+  totalNotifications,
   displayedCount,
   onPageChange,
 }) => {
@@ -24,12 +24,12 @@ const NewsPagination: React.FC<NewsPaginationProps> = ({
     <Pagination
       currentPage={currentPage}
       totalPages={totalPages}
-      totalItems={totalPosts}
+      totalItems={totalNotifications}
       displayedCount={displayedCount}
-      itemLabel="artikel"
+      itemLabel="notifikasi"
       onPageChange={onPageChange}
     />
   );
 };
 
-export default NewsPagination;
+export default NotificationPagination;
