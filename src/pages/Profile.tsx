@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Flame as Fire, ChevronRight } from "lucide-react";
+import PublicPageLayout from "../components/layouts/PublicPageLayout";
 import CardHeadlinerApi from "../components/components-global/card-headliner-api";
 import TrendingListApi from "../components/components-global/trending-list-api";
 import ArticleCardApi from "../components/components-global/card-artikel-api";
@@ -66,18 +67,21 @@ const ProfilePage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Memuat data...</p>
+      <PublicPageLayout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Memuat data...</p>
+          </div>
         </div>
-      </div>
+      </PublicPageLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="max-w-7xl mx-auto px-4 py-8">
+    <PublicPageLayout>
+      <div className="min-h-screen bg-gray-50">
+        <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-4 gap-10">
           {/* Konten utama */}
           <div className="lg:col-span-3 space-y-10">
@@ -171,6 +175,7 @@ const ProfilePage = () => {
         </div>
       </main>
     </div>
+    </PublicPageLayout>
   );
 };
 

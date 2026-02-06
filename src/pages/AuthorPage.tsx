@@ -1,5 +1,6 @@
 import { useAuthorData } from "../hooks/useAuthorData";
 import { Calendar, FileText, ChevronLeft, ChevronRight } from "lucide-react";
+import PublicPageLayout from "../components/layouts/PublicPageLayout";
 import NewsList from "../components/common/NewsList";
 
 const AuthorPage = () => {
@@ -16,27 +17,31 @@ const AuthorPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="text-center">
-          <div className="h-10 w-10 animate-spin rounded-full border-2 border-emerald-600 border-t-transparent mx-auto" />
-          <p className="mt-4 text-sm text-gray-600">Memuat profil penulis…</p>
+      <PublicPageLayout>
+        <div className="min-h-screen flex items-center justify-center bg-slate-50">
+          <div className="text-center">
+            <div className="h-10 w-10 animate-spin rounded-full border-2 border-emerald-600 border-t-transparent mx-auto" />
+            <p className="mt-4 text-sm text-gray-600">Memuat profil penulis…</p>
+          </div>
         </div>
-      </div>
+      </PublicPageLayout>
     );
   }
 
   if (error || !author) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Penulis Tidak Ditemukan
-          </h1>
-          <p className="text-gray-600">
-            {error || "Profil penulis tidak tersedia."}
-          </p>
+      <PublicPageLayout>
+        <div className="min-h-screen flex items-center justify-center bg-slate-50">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Penulis Tidak Ditemukan
+            </h1>
+            <p className="text-gray-600">
+              {error || "Profil penulis tidak tersedia."}
+            </p>
+          </div>
         </div>
-      </div>
+      </PublicPageLayout>
     );
   }
 
@@ -79,8 +84,9 @@ const AuthorPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      <main className="mx-auto max-w-6xl px-4 py-8">
+    <PublicPageLayout>
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+        <main className="mx-auto max-w-6xl px-4 py-8">
         {/* PROFILE HEADER */}
         <section className="mb-10 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
@@ -215,6 +221,7 @@ const AuthorPage = () => {
         )}
       </main>
     </div>
+    </PublicPageLayout>
   );
 };
 

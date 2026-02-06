@@ -176,7 +176,7 @@ const NewsSection = ({
                     className="text-sm text-gray-600 line-clamp-2 mb-4"
                     dangerouslySetInnerHTML={{
                       __html:
-                        article.excerpt || article.content.substring(0, 100),
+                        article.excerpt || article.content?.substring(0, 100) || "",
                     }}
                   />
 

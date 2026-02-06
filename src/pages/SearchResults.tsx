@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Search, Calendar, Eye } from "lucide-react";
 import { postsService, type Post } from "../services/posts";
-import Navbar from "../ui/navbar/Navbar";
-import Footer from "../ui/footer/Footer";
+import PublicPageLayout from "../components/layouts/PublicPageLayout";
 
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
@@ -49,34 +48,38 @@ const SearchResults = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Mencari artikel...</p>
+      <PublicPageLayout>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Mencari artikel...</p>
+          </div>
         </div>
-      </div>
+      </PublicPageLayout>
     );
   }
 
   if (!query) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-          <Search className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Cari Artikel
-          </h1>
-          <p className="text-gray-600">
-            Masukkan kata kunci untuk mencari artikel
-          </p>
+      <PublicPageLayout>
+        <div className="min-h-screen bg-gray-50">
+          <div className="max-w-4xl mx-auto px-4 py-16 text-center">
+            <Search className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Cari Artikel
+            </h1>
+            <p className="text-gray-600">
+              Masukkan kata kunci untuk mencari artikel
+            </p>
+          </div>
         </div>
-      </div>
+      </PublicPageLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
+    <PublicPageLayout>
+      <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Search Header */}
         <div className="mb-8">
@@ -192,8 +195,8 @@ const SearchResults = () => {
           </div>
         )}
       </div>
-      <Footer />
     </div>
+    </PublicPageLayout>
   );
 };
 
