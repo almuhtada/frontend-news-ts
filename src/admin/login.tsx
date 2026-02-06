@@ -8,12 +8,12 @@ import { API_BASE_URL, API_ENDPOINTS } from "../config/api";
 ======================= */
 
 interface LoginFormData {
-  email: string;
+  identifier: string;
   password: string;
 }
 
 interface LoginErrors {
-  email?: string;
+  identifier?: string;
   password?: string;
   general?: string;
 }
@@ -32,7 +32,7 @@ const LoginAdmin = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<LoginFormData>({
-    email: "",
+    identifier: "",
     password: "",
   });
 
@@ -63,10 +63,10 @@ const LoginAdmin = () => {
   const validateForm = (): LoginErrors => {
     const newErrors: LoginErrors = {};
 
-    if (!formData.email.trim()) {
-      newErrors.email = "Email harus diisi";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Format email tidak valid";
+    if (!formData.identifier.trim()) {
+      newErrors.identifier = "identifier harus diisi";
+    } else if (!/\S+@\S+\.\S+/.test(formData.identifier)) {
+      newErrors.identifier = "Format identifier tidak valid";
     }
 
     if (!formData.password) {
@@ -103,7 +103,7 @@ const LoginAdmin = () => {
 
       if (!response.ok) {
         setErrors({
-          general: data.message ?? "Email atau password salah",
+          general: data.message ?? "identifier atau password salah",
         });
         return;
       }
@@ -137,30 +137,30 @@ const LoginAdmin = () => {
         />
 
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
-          {/* Email */}
+          {/* identifier */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email
+              Usermame or Email
             </label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
-                type="email"
-                name="email"
-                value={formData.email}
+                type="identifier"
+                name="identifier"
+                value={formData.identifier}
                 onChange={handleChange}
-                placeholder="Masukkan email"
+                placeholder="Masukkan identifier"
                 className={`block w-full pl-10 py-3 border rounded-lg text-sm
                   focus:ring-2 focus:ring-emerald-500
                   ${
-                    errors.email
+                    errors.identifier
                       ? "border-red-500 bg-red-50"
                       : "border-gray-300"
                   }`}
               />
             </div>
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+            {errors.identifier && (
+              <p className="mt-1 text-sm text-red-600">{errors.identifier}</p>
             )}
           </div>
 
