@@ -256,7 +256,7 @@ const NewsModal: React.FC<Props> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-      <div className="bg-white w-full max-w-xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95">
+      <div className="bg-white dark:bg-gray-800 w-full max-w-xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95">
         {/* Header */}
         <div className="bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-3 relative">
           <button
@@ -282,7 +282,7 @@ const NewsModal: React.FC<Props> = ({
         <div className="p-4 overflow-y-auto flex-1 space-y-4">
           {/* Rejection Reason Alert */}
           {form.rejection_reason && (
-            <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4">
+            <div className="bg-red-50 dark:bg-red-900/30 border-2 border-red-200 dark:border-red-700 rounded-lg p-4">
               <div className="flex items-start gap-3">
                 <div className="flex-shrink-0 mt-0.5">
                   <AlertCircle className="w-5 h-5 text-red-600" />
@@ -307,7 +307,7 @@ const NewsModal: React.FC<Props> = ({
 
           {/* Judul */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
               <FileText className="w-4 h-4 text-emerald-600" />
               Judul Berita *
             </label>
@@ -315,10 +315,10 @@ const NewsModal: React.FC<Props> = ({
               value={form.title}
               onChange={(e) => onChange({ ...form, title: e.target.value })}
               placeholder="Judul berita..."
-              className="w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+              className="w-full border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2.5 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
             />
             {form.title && (
-              <div className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1">
                 <Eye className="w-3 h-3" />
                 {form.title.length} karakter
               </div>
@@ -327,7 +327,7 @@ const NewsModal: React.FC<Props> = ({
 
           {/* Kategori */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
               <Tag className="w-4 h-4 text-emerald-600" />
               Kategori *
             </label>
@@ -336,7 +336,7 @@ const NewsModal: React.FC<Props> = ({
               onChange={(e) =>
                 onChange({ ...form, category_id: e.target.value })
               }
-              className="w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+              className="w-full border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2.5 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
             >
               <option value="">Pilih Kategori</option>
               {categories.map((cat) => (
@@ -349,7 +349,7 @@ const NewsModal: React.FC<Props> = ({
 
           {/* Tags - Dropdown with Search */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
               <Tag className="w-4 h-4 text-emerald-600" />
               Tags
             </label>
@@ -382,7 +382,7 @@ const NewsModal: React.FC<Props> = ({
                 className={`flex items-center border-2 rounded-lg px-3 py-2 transition-colors ${
                   isTagDropdownOpen
                     ? "border-emerald-500 ring-2 ring-emerald-500/20"
-                    : "border-gray-200"
+                    : "border-gray-200 dark:border-gray-600"
                 }`}
               >
                 <Search className="w-4 h-4 text-gray-400 mr-2" />
@@ -395,7 +395,7 @@ const NewsModal: React.FC<Props> = ({
                   }}
                   onFocus={() => setIsTagDropdownOpen(true)}
                   placeholder="Cari atau buat tag baru..."
-                  className="flex-1 outline-none text-sm"
+                  className="flex-1 outline-none text-sm bg-transparent dark:text-gray-100 dark:placeholder-gray-400"
                 />
                 {creatingTag ? (
                   <Loader2 className="w-4 h-4 text-emerald-500 animate-spin" />
@@ -416,7 +416,7 @@ const NewsModal: React.FC<Props> = ({
 
               {/* Dropdown Menu */}
               {isTagDropdownOpen && (
-                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg max-h-48 overflow-y-auto">
                   {/* Create new tag option */}
                   {tagSearch.trim() && !exactMatch && onCreateTag && (
                     <button
@@ -466,7 +466,7 @@ const NewsModal: React.FC<Props> = ({
 
             {/* Selected count */}
             {form.tag_ids && form.tag_ids.length > 0 && (
-              <div className="text-xs text-gray-500 mt-1">
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 {form.tag_ids.length} tag dipilih
               </div>
             )}
@@ -474,15 +474,15 @@ const NewsModal: React.FC<Props> = ({
 
           {/* Isi Berita - Rich Text */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2 mb-2">
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2 mb-2">
               <FileText className="w-4 h-4 text-emerald-600" />
               Isi Berita *
             </label>
 
             {/* Toolbar - Multiple Rows */}
-            <div className="border border-gray-200 rounded-t-lg bg-gray-50">
+            <div className="border border-gray-200 dark:border-gray-600 rounded-t-lg bg-gray-50 dark:bg-gray-700">
               {/* Row 1: Text Formatting */}
-              <div className="flex flex-wrap gap-1 px-2 py-1.5 border-b border-gray-200">
+              <div className="flex flex-wrap gap-1 px-2 py-1.5 border-b border-gray-200 dark:border-gray-600">
                 <button
                   onClick={() => execCmd("bold")}
                   className="editor-btn"
@@ -613,7 +613,7 @@ const NewsModal: React.FC<Props> = ({
               ref={editorRef}
               contentEditable
               suppressContentEditableWarning
-              className="min-h-[200px] max-h-[300px] overflow-y-auto border-2 border-t-0 border-gray-200 rounded-b-lg px-3 py-2.5 focus:outline-none focus:border-emerald-500 prose prose-sm max-w-none"
+              className="min-h-[200px] max-h-[300px] overflow-y-auto border-2 border-t-0 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-b-lg px-3 py-2.5 focus:outline-none focus:border-emerald-500 prose prose-sm max-w-none"
               onInput={(e) => {
                 isUserTyping.current = true;
                 const content = (e.target as HTMLDivElement).innerHTML;
@@ -627,7 +627,7 @@ const NewsModal: React.FC<Props> = ({
             />
 
             {form.content && (
-              <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
                 <span>{plainTextLength} karakter</span>
                 <span>{Math.ceil(plainTextLength / 100)} menit baca</span>
               </div>
@@ -637,7 +637,7 @@ const NewsModal: React.FC<Props> = ({
           {/* Excerpt */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+              <label className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
                 <FileText className="w-4 h-4 text-emerald-600" />
                 Ringkasan (Excerpt)
               </label>
@@ -665,13 +665,13 @@ const NewsModal: React.FC<Props> = ({
               onChange={(e) => onChange({ ...form, excerpt: e.target.value })}
               placeholder="Ringkasan singkat berita..."
               rows={2}
-              className="w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 resize-none"
+              className="w-full border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2.5 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 resize-none"
             />
           </div>
 
           {/* Status */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
               <Tag className="w-4 h-4 text-emerald-600" />
               Status
             </label>
@@ -683,7 +683,7 @@ const NewsModal: React.FC<Props> = ({
                   status: e.target.value as "draft" | "publish" | "archived",
                 })
               }
-              className="w-full border-2 border-gray-200 rounded-lg px-3 py-2.5 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+              className="w-full border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2.5 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
             >
               <option value="draft">Draft</option>
               <option value="publish">Publish</option>
@@ -693,15 +693,15 @@ const NewsModal: React.FC<Props> = ({
 
           {/* Upload Gambar */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
               <ImageIcon className="w-4 h-4 text-emerald-600" />
               Gambar Berita
             </label>
 
             {!previewUrl ? (
-              <label className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center cursor-pointer hover:bg-emerald-50 transition-colors">
+              <label className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 flex flex-col items-center cursor-pointer hover:bg-emerald-50 dark:hover:bg-gray-700 transition-colors">
                 <Upload className="w-8 h-8 text-gray-400" />
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-gray-600 dark:text-gray-400">
                   Klik upload gambar
                 </span>
                 <input
@@ -779,9 +779,9 @@ const NewsModal: React.FC<Props> = ({
           </div>
 
           {!isFormValid && (
-            <div className="flex gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+            <div className="flex gap-2 p-3 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-lg">
               <AlertCircle className="w-4 h-4 text-amber-600" />
-              <p className="text-xs text-amber-700">
+              <p className="text-xs text-amber-700 dark:text-amber-300">
                 Judul, kategori, dan isi berita wajib diisi
               </p>
             </div>
@@ -789,15 +789,15 @@ const NewsModal: React.FC<Props> = ({
         </div>
 
         {/* Footer */}
-        <div className="bg-gray-50 border-t px-4 py-3 flex justify-between items-center">
-          <div className="text-xs text-gray-500 flex items-center gap-1">
+        <div className="bg-gray-50 dark:bg-gray-900 border-t dark:border-gray-700 px-4 py-3 flex justify-between items-center">
+          <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
             <User className="w-3 h-3" />
             Draft otomatis
           </div>
           <div className="flex gap-2">
             <button
               onClick={onClose}
-              className="px-4 py-2 border-2 border-gray-200 rounded-lg text-sm"
+              className="px-4 py-2 border-2 border-gray-200 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 rounded-lg text-sm"
             >
               Batal
             </button>
@@ -829,13 +829,23 @@ const NewsModal: React.FC<Props> = ({
             color: #4b5563;
             transition: all 0.15s;
           }
+          .dark .editor-btn {
+            color: #d1d5db;
+          }
           .editor-btn:hover {
             background: #e5e7eb;
             color: #059669;
           }
+          .dark .editor-btn:hover {
+            background: #4b5563;
+            color: #34d399;
+          }
           .editor-btn:active {
             background: #d1d5db;
             transform: scale(0.95);
+          }
+          .dark .editor-btn:active {
+            background: #374151;
           }
 
           /* Editor Content Styling */
@@ -848,17 +858,26 @@ const NewsModal: React.FC<Props> = ({
             margin: 0.5em 0;
             color: #1f2937;
           }
+          .dark [contenteditable] h1 {
+            color: #f3f4f6;
+          }
           [contenteditable] h2 {
             font-size: 1.5em;
             font-weight: bold;
             margin: 0.5em 0;
             color: #374151;
           }
+          .dark [contenteditable] h2 {
+            color: #e5e7eb;
+          }
           [contenteditable] h3 {
             font-size: 1.25em;
             font-weight: bold;
             margin: 0.5em 0;
             color: #4b5563;
+          }
+          .dark [contenteditable] h3 {
+            color: #d1d5db;
           }
           [contenteditable] p {
             margin: 0.5em 0;
@@ -885,6 +904,9 @@ const NewsModal: React.FC<Props> = ({
             color: #6b7280;
             font-style: italic;
           }
+          .dark [contenteditable] blockquote {
+            color: #9ca3af;
+          }
           [contenteditable] pre {
             background: #f3f4f6;
             padding: 1em;
@@ -893,9 +915,15 @@ const NewsModal: React.FC<Props> = ({
             font-family: monospace;
             margin: 1em 0;
           }
+          .dark [contenteditable] pre {
+            background: #374151;
+          }
           [contenteditable] a {
             color: #059669;
             text-decoration: underline;
+          }
+          .dark [contenteditable] a {
+            color: #34d399;
           }
           [contenteditable]:empty:before {
             content: 'Tulis isi berita di sini...';

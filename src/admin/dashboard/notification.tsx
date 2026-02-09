@@ -57,7 +57,7 @@ const AdminNotifications: React.FC = () => {
   } = useNotificationPage();
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-950 dark:via-gray-950 dark:to-gray-900">
       <Sidebar />
 
       {/* Success Toast */}

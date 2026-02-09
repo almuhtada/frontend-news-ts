@@ -57,7 +57,7 @@ const AdminPublications: React.FC = () => {
   // Loading state
   if (dataLoading) {
     return (
-      <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-950 dark:via-gray-950 dark:to-gray-900">
         <Sidebar />
         <main className="flex-1 p-8">
           <div className="flex items-center justify-center h-full">
@@ -69,7 +69,7 @@ const AdminPublications: React.FC = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-950 dark:via-gray-950 dark:to-gray-900">
       <Sidebar />
 
       {/* Success Toast */}

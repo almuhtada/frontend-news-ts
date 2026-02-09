@@ -163,7 +163,7 @@ const PublicationModal: React.FC<Props> = ({
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 p-4 backdrop-blur-sm">
       <div
         ref={modalRef}
-        className={`bg-white rounded-3xl shadow-2xl w-full max-w-2xl p-8 relative transform transition-all duration-200 ${
+        className={`bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-2xl p-8 relative transform transition-all duration-200 ${
           isClosing ? "scale-95 opacity-0" : "scale-100 opacity-100"
         } max-h-[90vh] overflow-y-auto`}
       >
@@ -171,7 +171,7 @@ const PublicationModal: React.FC<Props> = ({
         <button
           type="button"
           onClick={handleClose}
-          className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-xl transition-all"
+          className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-xl transition-all"
           aria-label="Tutup modal"
         >
           <X className="w-6 h-6" />
@@ -183,10 +183,10 @@ const PublicationModal: React.FC<Props> = ({
             <BookOpen className="w-7 h-7 text-white" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
               {editMode ? "Edit Publikasi" : "Tambah Publikasi Baru"}
             </h2>
-            <p className="text-gray-600 text-sm mt-1">
+            <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
               {editMode
                 ? "Perbarui informasi publikasi"
                 : "Tambahkan karya ilmiah terbaru"}
@@ -198,7 +198,7 @@ const PublicationModal: React.FC<Props> = ({
         <div className="space-y-6">
           {/* Judul */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
               Judul Publikasi
             </label>
             <div className="relative">
@@ -208,10 +208,10 @@ const PublicationModal: React.FC<Props> = ({
                 type="text"
                 value={form.title}
                 onChange={(e) => handleInputChange("title", e.target.value)}
-                className={`w-full pl-12 pr-4 py-4 border rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition-all ${
+                className={`w-full pl-12 pr-4 py-4 border rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition-all dark:bg-gray-700 dark:text-gray-100 ${
                   errors.title
                     ? "border-red-300 focus:ring-red-400"
-                    : "border-gray-200"
+                    : "border-gray-200 dark:border-gray-600"
                 }`}
                 placeholder="Contoh: Implementasi Machine Learning untuk Prediksi..."
                 maxLength={200}
@@ -224,8 +224,8 @@ const PublicationModal: React.FC<Props> = ({
               </div>
             )}
             <div className="flex justify-between mt-1">
-              <span className="text-xs text-gray-500">Minimal 10 karakter</span>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-gray-500 dark:text-gray-400">Minimal 10 karakter</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">
                 {form.title.length}/200
               </span>
             </div>
@@ -233,7 +233,7 @@ const PublicationModal: React.FC<Props> = ({
 
           {/* Penulis */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
               Penulis
             </label>
             <div className="relative">
@@ -242,10 +242,10 @@ const PublicationModal: React.FC<Props> = ({
                 type="text"
                 value={form.authors}
                 onChange={(e) => handleInputChange("authors", e.target.value)}
-                className={`w-full pl-12 pr-4 py-4 border rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition-all ${
+                className={`w-full pl-12 pr-4 py-4 border rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition-all dark:bg-gray-700 dark:text-gray-100 ${
                   errors.authors
                     ? "border-red-300 focus:ring-red-400"
-                    : "border-gray-200"
+                    : "border-gray-200 dark:border-gray-600"
                 }`}
                 placeholder="Contoh: Dr. Ahmad Wijaya, Prof. Sarah Johnson"
                 maxLength={150}
@@ -258,10 +258,10 @@ const PublicationModal: React.FC<Props> = ({
               </div>
             )}
             <div className="flex justify-between mt-1">
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-gray-500 dark:text-gray-400">
                 Pisahkan dengan koma jika lebih dari satu
               </span>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-gray-500 dark:text-gray-400">
                 {form.authors.length}/150
               </span>
             </div>
@@ -271,7 +271,7 @@ const PublicationModal: React.FC<Props> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Tahun */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Tahun Publikasi
               </label>
               <div className="relative">
@@ -282,7 +282,7 @@ const PublicationModal: React.FC<Props> = ({
                   onChange={(e) =>
                     handleInputChange("year", Number(e.target.value))
                   }
-                  className={`w-full pl-12 pr-4 py-4 border rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition-all ${
+                  className={`w-full pl-12 pr-4 py-4 border rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition-all dark:bg-gray-700 dark:text-gray-100 ${
                     errors.year
                       ? "border-red-300 focus:ring-red-400"
                       : "border-gray-200"
@@ -302,7 +302,7 @@ const PublicationModal: React.FC<Props> = ({
 
             {/* Nama Jurnal */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Nama Jurnal
               </label>
               <div className="relative">
@@ -311,7 +311,7 @@ const PublicationModal: React.FC<Props> = ({
                   type="text"
                   value={form.journal}
                   onChange={(e) => handleInputChange("journal", e.target.value)}
-                  className={`w-full pl-12 pr-4 py-4 border rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition-all ${
+                  className={`w-full pl-12 pr-4 py-4 border rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition-all dark:bg-gray-700 dark:text-gray-100 ${
                     errors.journal
                       ? "border-red-300 focus:ring-red-400"
                       : "border-gray-200"
@@ -337,7 +337,7 @@ const PublicationModal: React.FC<Props> = ({
 
           {/* Link */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
               Link Publikasi
             </label>
             <div className="relative">
@@ -346,10 +346,10 @@ const PublicationModal: React.FC<Props> = ({
                 type="url"
                 value={form.link}
                 onChange={(e) => handleInputChange("link", e.target.value)}
-                className={`w-full pl-12 pr-4 py-4 border rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition-all ${
+                className={`w-full pl-12 pr-4 py-4 border rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition-all dark:bg-gray-700 dark:text-gray-100 ${
                   errors.link
                     ? "border-red-300 focus:ring-red-400"
-                    : "border-gray-200"
+                    : "border-gray-200 dark:border-gray-600"
                 }`}
                 placeholder="https://doi.org/10.1000/example atau https://journal.example.com"
               />
@@ -360,7 +360,7 @@ const PublicationModal: React.FC<Props> = ({
                 <span>{errors.link}</span>
               </div>
             )}
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
               Masukkan URL lengkap termasuk https://
             </p>
           </div>
@@ -386,16 +386,16 @@ const PublicationModal: React.FC<Props> = ({
               </div>
 
               {showPreview && (
-                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-4 border border-blue-200">
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-2xl p-4 border border-blue-200 dark:border-blue-700">
                   <div className="flex items-start gap-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-md flex-shrink-0">
                       <BookOpen className="w-5 h-5 text-white" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-gray-800 text-sm leading-tight mb-2">
+                      <h3 className="font-semibold text-gray-800 dark:text-gray-100 text-sm leading-tight mb-2">
                         {form.title || "Judul publikasi akan muncul di sini"}
                       </h3>
-                      <div className="space-y-1 text-xs text-gray-600">
+                      <div className="space-y-1 text-xs text-gray-600 dark:text-gray-300">
                         <div className="flex items-center gap-2">
                           <Users className="w-3 h-3" />
                           <span>{form.authors || "Nama penulis"}</span>
@@ -422,7 +422,7 @@ const PublicationModal: React.FC<Props> = ({
           <button
             type="button"
             onClick={handleClose}
-            className="flex-1 px-6 py-4 border border-gray-200 text-gray-700 rounded-2xl font-semibold hover:bg-gray-50 transition-all"
+            className="flex-1 px-6 py-4 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-2xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
           >
             Batal
           </button>
@@ -448,8 +448,8 @@ const PublicationModal: React.FC<Props> = ({
         </div>
 
         {/* Form Progress Indicator */}
-        <div className="mt-6 pt-4 border-t border-gray-100">
-          <div className="flex items-center justify-between text-xs text-gray-500">
+        <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
+          <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
             <span>Progress form:</span>
             <div className="flex items-center gap-2">
               <div className="flex gap-1">

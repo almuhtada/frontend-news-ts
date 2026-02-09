@@ -7,6 +7,7 @@ import {
   Star,
 } from "lucide-react";
 import type { ArticleDisplay } from "./news/types";
+import { getImageUrl } from "../../config/api";
 
 type NewsGridCardProps = {
   article: ArticleDisplay;
@@ -30,7 +31,7 @@ const NewsGridCard = ({
     <div className="relative h-48 bg-gradient-to-br from-blue-100 to-indigo-100">
       {article.image ? (
         <img
-          src={article.image}
+          src={getImageUrl(article.image)}
           alt={article.title}
           className="w-full h-full object-cover"
         />

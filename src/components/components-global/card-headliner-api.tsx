@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Clock } from "lucide-react";
 import type { Post } from "../../services/posts";
 import { PLACEHOLDER_IMAGE_LARGE } from "../../config/constants";
+import { getImageUrl } from "../../config/api";
 
 interface CardHeadlinerApiProps {
   slides: Post[];
@@ -69,7 +70,7 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
         const categoryName = slide.categories?.[0]?.name || "Berita";
         const authorName =
           slide.author?.display_name || slide.author?.username || "Redaksi";
-        const imageUrl = slide.featured_image || PLACEHOLDER_IMAGE_LARGE;
+        const imageUrl = getImageUrl(slide.featured_image) || PLACEHOLDER_IMAGE_LARGE;
         const summary = slide.excerpt || getExcerpt(slide.content);
 
         return (

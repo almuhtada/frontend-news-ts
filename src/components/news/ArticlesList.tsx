@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Post } from "../../services/posts";
+import { getImageUrl } from "../../config/api";
 
 interface ArticlesListProps {
   articles: Post[];
@@ -29,7 +30,7 @@ const ArticlesList = ({ articles, selectedCategory, onClearFilter }: ArticlesLis
           <article key={article.id} className="flex gap-3">
             {article.featured_image && (
               <img
-                src={article.featured_image}
+                src={getImageUrl(article.featured_image)}
                 alt={article.title}
                 className="w-24 h-24 object-cover rounded"
               />

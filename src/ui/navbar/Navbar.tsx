@@ -5,9 +5,10 @@ import SearchBar from "./SearchBar";
 import Dropdown from "./Dropdown";
 import NavLink from "./Navlink";
 import DropdownItem from "./DropdownItem";
-import { Menu, X } from "lucide-react"; // ikon hamburger & close
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { categoriesService } from "../../services/categories";
 import type { Category } from "../../services/posts";
+import { useTheme } from "../../hooks/theme";
 
 const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
@@ -15,6 +16,7 @@ const Navbar = () => {
   const [activeCategory, setActiveCategory] = useState("Beranda");
   const [isOpen, setIsOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const { isDark, toggleTheme } = useTheme();
 
   const controlNavbar = () => {
     if (typeof window !== "undefined") {
@@ -49,7 +51,7 @@ const Navbar = () => {
   return (
     <>
       {/* Header */}
-      <header className="bg-[#00531b] border-b border-green-900">
+      <header className="bg-[#00531b] dark:bg-gray-900 border-b border-green-900 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
           <div className="flex items-center justify-between gap-4">
             {/* LOGO + DATE */}
@@ -70,11 +72,19 @@ const Navbar = () => {
               </span>
             </div>
 
-            {/* SEARCH + HAMBURGER */}
+            {/* SEARCH + THEME TOGGLE + HAMBURGER */}
             <div className="flex items-center gap-2 sm:gap-4">
               <div className="hidden md:block">
                 <SearchBar />
               </div>
+
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-lg hover:bg-white/10 text-white transition-colors"
+                aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+              >
+                {isDark ? <Sun size={20} /> : <Moon size={20} />}
+              </button>
 
               <button
                 className="md:hidden p-2 rounded-lg hover:bg-white/10 text-white transition-colors"
@@ -89,16 +99,16 @@ const Navbar = () => {
       </header>
       {/* Navigation */}
       <nav
-        className={`bg-[#00531b] border-b border-gray-200 sticky top-0 z-50 transition-transform duration-300 ${
+        className={`bg-[#00531b] dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 transition-transform duration-300 ${
           showNavbar ? "translate-y-0" : "-translate-y-full"
         }`}
       >
         <div className="px-6">
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8 py-4">
+          <div className="hidden md:flex items-center gap-8 py-4 overflow-x-auto scrollbar-hide">
             <NavLink
               to="/"
-              className={`whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
+              className={`shrink-0 whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
                 activeCategory === "Beranda"
                   ? "border-white text-white"
                   : "border-transparent text-white/80 hover:text-white hover:border-white/60"
@@ -110,7 +120,7 @@ const Navbar = () => {
 
             <NavLink
               to="/pendidikan"
-              className={`whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
+              className={`shrink-0 whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
                 activeCategory === "Pendidikan"
                   ? "border-white text-white"
                   : "border-transparent text-white/80 hover:text-white hover:border-white/60"
@@ -122,7 +132,7 @@ const Navbar = () => {
 
             <NavLink
               to="/category/sejarah"
-              className={`whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
+              className={`shrink-0 whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
                 activeCategory === "sejarah"
                   ? "border-white text-white"
                   : "border-transparent text-white/80 hover:text-white hover:border-white/60"
@@ -137,7 +147,7 @@ const Navbar = () => {
               <NavLink
                 key={category.id}
                 to={`/category/${category.slug}`}
-                className={`whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
+                className={`shrink-0 whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
                   activeCategory === category.slug
                     ? "border-white text-white"
                     : "border-transparent text-white/80 hover:text-white hover:border-white/60"
@@ -150,7 +160,7 @@ const Navbar = () => {
 
             <Dropdown
               label="Profil"
-              className={`whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
+              className={`shrink-0 whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
                 activeCategory === "Profil"
                   ? "border-white text-white"
                   : "border-transparent text-white/80 hover:text-white hover:border-white/60"
@@ -178,7 +188,7 @@ const Navbar = () => {
 
           {/* Mobile Menu */}
           {isOpen && (
-            <div className="md:hidden flex flex-col space-y-4 py-4 border-t border-white/20 bg-[#00531b]">
+            <div className="md:hidden flex flex-col space-y-4 py-4 border-t border-white/20 bg-[#00531b] dark:bg-gray-900">
               <div className="px-2">
                 <SearchBar />
               </div>
@@ -278,6 +288,16 @@ const Navbar = () => {
           )}
         </div>
       </nav>
+
+      <style>{`
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </>
   );
 };

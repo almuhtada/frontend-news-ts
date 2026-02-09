@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import type { Post } from "../../services/posts";
 import { PLACEHOLDER_IMAGE_MEDIUM } from "../../config/constants";
+import { getImageUrl } from "../../config/api";
 
 interface ArticleCardApiProps {
   article: Post;
@@ -38,7 +39,7 @@ const ArticleCardApi: React.FC<ArticleCardApiProps> = ({ article, featured }) =>
   const articleDate = formatDate(article.createdAt);
   const readTime = calculateReadTime(article.content);
   const summary = article.excerpt || getExcerpt(article.content);
-  const imageUrl = article.featured_image || PLACEHOLDER_IMAGE_MEDIUM;
+  const imageUrl = getImageUrl(article.featured_image) || PLACEHOLDER_IMAGE_MEDIUM;
 
   return (
     <Link
@@ -47,7 +48,7 @@ const ArticleCardApi: React.FC<ArticleCardApiProps> = ({ article, featured }) =>
     >
       <article className="group cursor-pointer">
         <div
-          className={`bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 ${
+          className={`bg-white dark:bg-gray-900 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-800 ${
             featured ? "md:flex" : ""
           }`}
         >
@@ -73,14 +74,14 @@ const ArticleCardApi: React.FC<ArticleCardApiProps> = ({ article, featured }) =>
               featured ? "md:w-1/2 flex flex-col justify-center" : ""
             }`}
           >
-            <div className="flex items-center text-xs text-gray-500 mb-3">
+            <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3">
               <span>{articleDate}</span>
               <span className="mx-2">•</span>
               <span>{readTime}</span>
             </div>
 
             <h3
-              className={`font-bold text-gray-900 mb-3 group-hover:text-[#00531b] transition-colors leading-tight ${
+              className={`font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-[#00531b] transition-colors leading-tight ${
                 featured ? "text-xl md:text-2xl" : "text-lg"
               }`}
             >
@@ -88,7 +89,7 @@ const ArticleCardApi: React.FC<ArticleCardApiProps> = ({ article, featured }) =>
             </h3>
 
             <div
-              className="text-gray-600 text-sm mb-4 line-clamp-3"
+              className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3"
               dangerouslySetInnerHTML={{ __html: summary }}
             />
 
@@ -97,7 +98,7 @@ const ArticleCardApi: React.FC<ArticleCardApiProps> = ({ article, featured }) =>
                 <div className="w-8 h-8 bg-gray-300 rounded-full mr-3 flex items-center justify-center text-white font-semibold text-xs">
                   {authorName.charAt(0).toUpperCase()}
                 </div>
-                <span className="text-xs text-gray-500 font-medium">
+                <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
                   {authorName}
                 </span>
               </div>

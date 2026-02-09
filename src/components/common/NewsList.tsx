@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import type { Post } from "../../services/posts";
+import { getImageUrl } from "../../config/api";
 
 interface NewsListProps {
   articles: Post[];
@@ -75,21 +76,21 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
   };
 
   return (
-    <section className="rounded-2xl bg-white border border-gray-100 shadow-sm">
+    <section className="rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm">
       {/* List */}
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-gray-100 dark:divide-gray-800">
         {currentArticles.map((article) => (
           <Link
             key={article.id}
             to={`/detail-news/${article.slug}`}
-            className="group block px-6 py-5 hover:bg-emerald-50/40 transition"
+            className="group block px-6 py-5 hover:bg-emerald-50/40 dark:hover:bg-emerald-900/20 transition"
           >
             <div className="flex gap-5">
               {/* Thumbnail */}
               {article.featured_image && (
                 <div className="h-24 w-36 flex-shrink-0 overflow-hidden rounded-xl">
                   <img
-                    src={article.featured_image}
+                    src={getImageUrl(article.featured_image)}
                     alt={article.title}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
@@ -111,13 +112,13 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
                 </div>
 
                 {/* Title */}
-                <h3 className="mb-2 text-lg font-bold text-gray-900 leading-snug line-clamp-2 group-hover:text-emerald-700 transition">
+                <h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 group-hover:text-emerald-700 transition">
                   {article.title}
                 </h3>
 
                 {/* Excerpt */}
                 <div
-                  className="text-sm text-gray-600 line-clamp-2"
+                  className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2"
                   dangerouslySetInnerHTML={{
                     __html:
                       article.excerpt || article.content.substring(0, 150),
@@ -131,7 +132,7 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="border-t border-gray-100 px-6 py-5">
+        <div className="border-t border-gray-100 dark:border-gray-800 px-6 py-5">
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
             {/* Prev */}
             <button
@@ -139,7 +140,7 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
               disabled={currentPage === 1}
               className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
                 currentPage === 1
-                  ? "cursor-not-allowed bg-gray-100 text-gray-400"
+                  ? "cursor-not-allowed bg-gray-100 dark:bg-gray-800 text-gray-400"
                   : "bg-emerald-600 text-white hover:bg-emerald-500"
               }`}
             >
@@ -159,7 +160,7 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
                       ? "bg-emerald-600 text-white shadow"
                       : page === "..."
                         ? "cursor-default text-gray-400"
-                        : "bg-gray-100 text-gray-700 hover:bg-emerald-100 hover:text-emerald-700"
+                        : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 hover:text-emerald-700"
                   }`}
                 >
                   {page}

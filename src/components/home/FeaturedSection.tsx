@@ -16,15 +16,15 @@ const FeaturedSection = ({ articles, isLoading }: FeaturedSectionProps) => {
           <Fire className="h-5 w-5" />
         </div>
 
-        <h2 className="text-2xl font-bold text-gray-900">Berita Utama</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Berita Utama</h2>
 
-        <div className="flex-1 h-px bg-gradient-to-r from-emerald-200 to-transparent" />
+        <div className="flex-1 h-px bg-gradient-to-r from-emerald-200 dark:from-emerald-800 to-transparent" />
       </div>
 
       {/* Content */}
       {isLoading ? (
-        <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm animate-pulse">
-          <div className="h-[420px] rounded-xl bg-gray-200" />
+        <div className="rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm animate-pulse">
+          <div className="h-[420px] rounded-xl bg-gray-200 dark:bg-gray-700" />
         </div>
       ) : (
         <CardHeadlinerApi slides={articles} />

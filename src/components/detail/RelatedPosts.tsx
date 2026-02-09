@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Post } from "../../services/posts";
+import { getImageUrl } from "../../config/api";
 
 interface RelatedPostsProps {
   posts: Post[];
@@ -32,7 +33,7 @@ const RelatedPosts = ({ posts }: RelatedPostsProps) => {
             {post.featured_image && (
               <div className="relative h-44 overflow-hidden">
                 <img
-                  src={post.featured_image}
+                  src={getImageUrl(post.featured_image)}
                   alt={post.title}
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   draggable="false"

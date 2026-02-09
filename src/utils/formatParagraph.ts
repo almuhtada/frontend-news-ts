@@ -341,7 +341,20 @@ const stripHtml = (html: string): string => {
 };
 
 /**
- * Format content into paragraphs of ~4 sentences each
+ * Check if a paragraph is "special" (list, quote, media, etc.)
+ */
+const isSpecialParagraph = (para: string): boolean => {
+  if (!para) return true;
+  if (para === "[Media Embed]" || para === "[Video]" || para === "[Audio]") return true;
+  if (para.startsWith("•") || /^\d+[.)]\s/.test(para)) return true;
+  if (para.startsWith('"') || para.startsWith("[Gambar:")) return true;
+  if (para.includes("\n•") || /\n\d+\.\s/.test(para)) return true;
+  if (/Q\.?S\.|H\.?R\.|Swt\.|Saw\.|\.ra\b/i.test(para)) return true;
+  return false;
+};
+
+/**
+ * Format content into paragraphs of ~5 sentences each
  */
 const formatEveryFourSentences = (html: string): string[] => {
   if (!html) return [];
@@ -355,49 +368,52 @@ const formatEveryFourSentences = (html: string): string[] => {
     .map((p) => p.trim())
     .filter(Boolean);
 
+  // Merge consecutive short plain-text paragraphs into larger blocks
+  // This handles content where each sentence is separated by \r\n\r\n
+  const mergedParagraphs: string[] = [];
+  let plainBuffer = "";
+
+  for (const para of rawParagraphs) {
+    const cleaned = para.replace(/^[•·‣⁃►▸▹→-]\s*(\d+[.)]\s)/, "$1");
+
+    if (isSpecialParagraph(cleaned)) {
+      // Flush plain text buffer first
+      if (plainBuffer) {
+        mergedParagraphs.push(plainBuffer.trim());
+        plainBuffer = "";
+      }
+      mergedParagraphs.push(cleaned);
+    } else {
+      // Accumulate plain text, joining with space
+      plainBuffer += (plainBuffer ? " " : "") + cleaned;
+    }
+  }
+  // Flush remaining buffer
+  if (plainBuffer) {
+    mergedParagraphs.push(plainBuffer.trim());
+  }
+
   const result: string[] = [];
 
-  for (let para of rawParagraphs) {
+  for (const para of mergedParagraphs) {
     // Skip empty or placeholder content
     if (!para || para === "[Media Embed]" || para === "[Video]" || para === "[Audio]") {
       continue;
     }
 
-    // Clean any remaining bullet+number patterns (• 1. → 1.)
-    para = para.replace(/^[•·‣⁃►▸▹→-]\s*(\d+[.)]\s)/, "$1");
-
-    // Check if it's a list item (keep as is)
-    if (para.startsWith("•") || para.match(/^\d+[.)]\s/)) {
+    // Check if it's a special paragraph (keep as is)
+    if (isSpecialParagraph(para)) {
       result.push(para);
       continue;
     }
 
-    // Check if it's a short line or special content (keep as is)
-    if (para.length < 100 || para.startsWith('"') || para.startsWith("[Gambar:")) {
-      result.push(para);
-      continue;
-    }
-
-    // Check if paragraph contains multiple list items (keep as is)
-    if (para.includes("\n•") || para.match(/\n\d+\.\s/)) {
-      result.push(para);
-      continue;
-    }
-
-    // Cek apakah paragraf mengandung referensi Islam - jangan dipotong
-    const hasIslamicRef = /Q\.?S\.|H\.?R\.|Swt\.|Saw\.|\.ra\b/i.test(para);
-    if (hasIslamicRef) {
-      result.push(para);
-      continue;
-    }
-
-    // For regular paragraphs without Islamic references, split into sentences
+    // For regular paragraphs, split into sentences
     const sentences = para.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [para];
 
-    // Group into chunks of 4 sentences
-    for (let i = 0; i < sentences.length; i += 4) {
+    // Group into chunks of 5 sentences
+    for (let i = 0; i < sentences.length; i += 5) {
       const chunk = sentences
-        .slice(i, i + 4)
+        .slice(i, i + 5)
         .join(" ")
         .trim();
 

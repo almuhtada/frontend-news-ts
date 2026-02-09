@@ -12,6 +12,7 @@ import {
 import { Link } from "react-router-dom";
 import { useRef } from "react";
 import type { Post } from "../../services/posts";
+import { getImageUrl } from "../../config/api";
 
 interface NewsSectionProps {
   title: string;
@@ -54,14 +55,14 @@ const NewsSection = ({
     switch (badgeType) {
       case "views":
         return (
-          <div className="flex items-center gap-1 text-xs text-gray-600">
+          <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
             <Eye className="w-3 h-3" />
             <span>{article.views || 0} views</span>
           </div>
         );
       case "popular":
         return (
-          <div className="flex items-center gap-3 text-xs text-gray-600">
+          <div className="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-400">
             <div className="flex items-center gap-1">
               <Eye className="w-3 h-3" />
               <span>{article.views || 0}</span>
@@ -74,7 +75,7 @@ const NewsSection = ({
         );
       case "viral":
         return (
-          <div className="flex items-center gap-3 text-xs text-gray-600">
+          <div className="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-400">
             <div className="flex items-center gap-1">
               <Flame className="w-3 h-3 text-orange-500" />
               <span className="font-semibold text-orange-600">
@@ -89,7 +90,7 @@ const NewsSection = ({
         );
       case "new":
         return (
-          <div className="text-xs text-gray-600">
+          <div className="text-xs text-gray-600 dark:text-gray-400">
             {article.published_at
               ? new Date(article.published_at).toLocaleDateString("id-ID", {
                   day: "numeric",
@@ -114,22 +115,22 @@ const NewsSection = ({
           >
             <IconComponent className={`w-5 h-5 ${iconColor}`} />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">{title}</h2>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{title}</h2>
         </div>
 
         {/* Scroll buttons */}
         <div className="flex gap-2">
           <button
             onClick={() => scroll("left")}
-            className="w-10 h-10 rounded-full bg-white shadow-md hover:shadow-lg transition-all flex items-center justify-center hover:bg-gray-50"
+            className="w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-all flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-600" />
+            <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
           </button>
           <button
             onClick={() => scroll("right")}
-            className="w-10 h-10 rounded-full bg-white shadow-md hover:shadow-lg transition-all flex items-center justify-center hover:bg-gray-50"
+            className="w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-all flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
           >
-            <ChevronRight className="w-5 h-5 text-gray-600" />
+            <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-300" />
           </button>
         </div>
       </div>
@@ -146,12 +147,12 @@ const NewsSection = ({
             className="flex-shrink-0 w-[calc(25%-18px)] min-w-[280px] group"
           >
             <Link to={`/detail-news/${article.slug}`}>
-              <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 h-full">
+              <div className="bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 h-full">
                 {/* Image */}
                 {article.featured_image && (
                   <div className="relative h-48 overflow-hidden">
                     <img
-                      src={article.featured_image}
+                      src={getImageUrl(article.featured_image)}
                       alt={article.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     />
@@ -168,12 +169,12 @@ const NewsSection = ({
 
                 {/* Content */}
                 <div className="p-5">
-                  <h3 className="font-bold text-lg text-gray-900 line-clamp-2 mb-3 group-hover:text-green-600 transition-colors">
+                  <h3 className="font-bold text-lg text-gray-900 dark:text-gray-100 line-clamp-2 mb-3 group-hover:text-green-600 transition-colors">
                     {article.title}
                   </h3>
 
                   <div
-                    className="text-sm text-gray-600 line-clamp-2 mb-4"
+                    className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-4"
                     dangerouslySetInnerHTML={{
                       __html:
                         article.excerpt || article.content?.substring(0, 100) || "",
@@ -181,7 +182,7 @@ const NewsSection = ({
                   />
 
                   {/* Badge showing why it's in this section */}
-                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                  <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-800">
                     {getBadge(article)}
                   </div>
                 </div>

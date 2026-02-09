@@ -18,14 +18,18 @@ import {
   Layers,
   Settings,
   HelpCircle,
+  Sun,
+  Moon,
 } from "lucide-react";
 import Logo from "../../assets/image/logo1.png";
+import { useTheme } from "../../hooks/theme";
 
 const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const location = useLocation();
+  const { isDark, toggleTheme } = useTheme();
 
   const handleLogout = () => {
     setShowLogoutModal(true);
@@ -132,7 +136,7 @@ const Sidebar: React.FC = () => {
       {/* Mobile Toggle Button */}
       <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-white rounded-2xl shadow-lg border border-gray-200 hover:bg-gray-50 transition-all"
+        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
       >
         {isMobileOpen ? (
           <X className="w-5 h-5 text-gray-600" />
@@ -144,7 +148,7 @@ const Sidebar: React.FC = () => {
       {/* Desktop Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="hidden lg:block fixed top-6 left-6 z-40 p-2 bg-white rounded-xl shadow-md border border-gray-200 hover:bg-gray-50 transition-all"
+        className="hidden lg:block fixed top-6 left-6 z-40 p-2 bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
         style={{ left: isOpen ? "240px" : "20px" }}
       >
         {isOpen ? (
@@ -164,7 +168,7 @@ const Sidebar: React.FC = () => {
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className={`
-    fixed lg:static top-0 left-0 bg-gradient-to-b from-white via-slate-50 to-green-50 shadow-2xl z-40 flex flex-col
+    fixed lg:static top-0 left-0 bg-gradient-to-b from-white via-slate-50 to-green-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 shadow-2xl z-40 flex flex-col
     ${isMobileOpen ? "flex" : "hidden lg:flex"}
     ${isOpen || isMobileOpen ? "w-[280px]" : "w-0 overflow-hidden"}
   `}
@@ -174,7 +178,7 @@ const Sidebar: React.FC = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.4 }}
-          className="p-6 border-b border-gray-200/50"
+          className="p-6 border-b border-gray-200/50 dark:border-gray-700/50"
         >
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-gradient-to-br rounded-2xl flex items-center justify-center shadow-lg">
@@ -185,10 +189,10 @@ const Sidebar: React.FC = () => {
               />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-800 leading-tight">
+              <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 leading-tight">
                 Al-Muhtada
               </h2>
-              <p className="text-xs text-gray-600 font-medium">
+              <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">
                 Admin Dashboard
               </p>
             </div>
@@ -223,7 +227,7 @@ const Sidebar: React.FC = () => {
               transition={{ delay: 0.3 + sectionIndex * 0.1, duration: 0.4 }}
               className="mb-6"
             >
-              <h4 className="text-xs font-bold text-gray-400 mb-3 px-2 tracking-wider">
+              <h4 className="text-xs font-bold text-gray-400 dark:text-gray-500 mb-3 px-2 tracking-wider">
                 {section.title}
               </h4>
               <nav className="space-y-1">
@@ -244,15 +248,15 @@ const Sidebar: React.FC = () => {
                         onClick={() => setIsMobileOpen(false)}
                         className={`group flex items-center gap-3 px-3 py-3 rounded-2xl text-sm font-medium transition-all duration-200 ${
                           isActive
-                            ? `${item.bgColor} ${item.color} shadow-md`
-                            : "text-gray-700 hover:bg-gray-100"
+                            ? `${item.bgColor} dark:bg-opacity-20 ${item.color} shadow-md`
+                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                         }`}
                       >
                         <div
                           className={`p-2 rounded-xl ${
                             isActive
-                              ? "bg-white/50"
-                              : "bg-gray-100 group-hover:bg-white"
+                              ? "bg-white/50 dark:bg-white/10"
+                              : "bg-gray-100 dark:bg-gray-800 group-hover:bg-white dark:group-hover:bg-gray-700"
                           } transition-all`}
                         >
                           <item.icon className="w-4 h-4" />
@@ -275,13 +279,23 @@ const Sidebar: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.4 }}
-          className="p-4 border-t border-gray-200/50 space-y-2"
+          className="p-4 border-t border-gray-200/50 dark:border-gray-700/50 space-y-2"
         >
+          <button
+            onClick={toggleTheme}
+            className="w-full flex items-center gap-3 px-3 py-3 rounded-2xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all group"
+          >
+            <div className="p-2 rounded-xl bg-gray-100 dark:bg-gray-800 group-hover:bg-white dark:group-hover:bg-gray-700 transition-all">
+              {isDark ? <Sun className="w-4 h-4 text-yellow-500" /> : <Moon className="w-4 h-4 text-gray-600" />}
+            </div>
+            <span>{isDark ? "Mode Terang" : "Mode Gelap"}</span>
+          </button>
+
           <Link
             to="/help"
-            className="flex items-center gap-3 px-3 py-3 rounded-2xl text-sm font-medium text-gray-700 hover:bg-gray-100 transition-all"
+            className="flex items-center gap-3 px-3 py-3 rounded-2xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
           >
-            <div className="p-2 rounded-xl bg-gray-100">
+            <div className="p-2 rounded-xl bg-gray-100 dark:bg-gray-800">
               <HelpCircle className="w-4 h-4" />
             </div>
             <span>Bantuan & Dukungan</span>
@@ -289,9 +303,9 @@ const Sidebar: React.FC = () => {
 
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-3 rounded-2xl text-sm font-medium text-red-600 hover:bg-red-50 transition-all group"
+            className="w-full flex items-center gap-3 px-3 py-3 rounded-2xl text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all group"
           >
-            <div className="p-2 rounded-xl bg-red-100 group-hover:bg-red-200 transition-all">
+            <div className="p-2 rounded-xl bg-red-100 dark:bg-red-900/30 group-hover:bg-red-200 dark:group-hover:bg-red-900/50 transition-all">
               <LogOut className="w-4 h-4" />
             </div>
             <span>Keluar</span>
@@ -305,7 +319,7 @@ const Sidebar: React.FC = () => {
           transition={{ delay: 1, duration: 0.4 }}
           className="p-4 text-center"
         >
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             © 2025 Pesantren Riset Al-Muhtada
           </p>
         </motion.div>
@@ -318,24 +332,24 @@ const Sidebar: React.FC = () => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.2 }}
-            className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl"
+            className="bg-white dark:bg-gray-800 rounded-3xl p-6 max-w-md w-full shadow-2xl"
           >
             <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-2xl flex items-center justify-center">
                 <LogOut className="w-6 h-6 text-red-600" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-800">
+                <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">
                   Konfirmasi Keluar
                 </h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   Apakah Anda yakin ingin keluar?
                 </p>
               </div>
             </div>
 
-            <div className="bg-gray-50 rounded-2xl p-4 mb-6">
-              <p className="text-sm text-gray-600 leading-relaxed">
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-2xl p-4 mb-6">
+              <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
                 Anda akan keluar dari dashboard admin dan perlu login kembali
                 untuk mengakses sistem.
               </p>
@@ -344,7 +358,7 @@ const Sidebar: React.FC = () => {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowLogoutModal(false)}
-                className="flex-1 px-4 py-3 border border-gray-200 text-gray-700 rounded-2xl font-medium hover:bg-gray-50 transition-all"
+                className="flex-1 px-4 py-3 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-2xl font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
               >
                 Batal
               </button>

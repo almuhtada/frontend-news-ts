@@ -33,7 +33,7 @@ const AdminAbout: React.FC = () => {
   ========================== */
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-green-100">
+      <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-green-100 dark:from-gray-950 dark:via-gray-950 dark:to-gray-900">
         <Sidebar />
         <main className="flex flex-1 items-center justify-center">
           <div className="flex flex-col items-center gap-3">
@@ -46,7 +46,7 @@ const AdminAbout: React.FC = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-green-100">
+    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-green-100 dark:from-gray-950 dark:via-gray-950 dark:to-gray-900">
       {/* Sidebar */}
       <Sidebar />
 

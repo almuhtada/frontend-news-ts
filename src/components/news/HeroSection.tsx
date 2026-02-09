@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Post } from "../../services/posts";
+import { getImageUrl } from "../../config/api";
 
 interface HeroSectionProps {
   story: Post;
@@ -11,7 +12,7 @@ const HeroSection = ({ story, formatTimeAgo }: HeroSectionProps) => {
     <article className="bg-white rounded shadow overflow-hidden md:flex">
       {story.featured_image && (
         <img
-          src={story.featured_image}
+          src={getImageUrl(story.featured_image)}
           alt={story.title}
           className="w-full md:w-1/2 object-cover h-64 md:h-auto"
         />

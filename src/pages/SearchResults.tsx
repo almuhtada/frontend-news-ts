@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Search, Calendar, Eye } from "lucide-react";
 import { postsService, type Post } from "../services/posts";
+import { getImageUrl } from "../config/api";
 import PublicPageLayout from "../components/layouts/PublicPageLayout";
 
 const SearchResults = () => {
@@ -49,10 +50,10 @@ const SearchResults = () => {
   if (loading) {
     return (
       <PublicPageLayout>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Mencari artikel...</p>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">Mencari artikel...</p>
           </div>
         </div>
       </PublicPageLayout>
@@ -62,13 +63,13 @@ const SearchResults = () => {
   if (!query) {
     return (
       <PublicPageLayout>
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
           <div className="max-w-4xl mx-auto px-4 py-16 text-center">
             <Search className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
               Cari Artikel
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               Masukkan kata kunci untuk mencari artikel
             </p>
           </div>
@@ -79,28 +80,28 @@ const SearchResults = () => {
 
   return (
     <PublicPageLayout>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Search Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-2 text-gray-600 mb-2">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-2">
             <Search className="w-5 h-5" />
             <span className="text-sm">Hasil pencarian untuk:</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             "{query}"
           </h1>
-          <p className="text-gray-600">Ditemukan {totalResults} artikel</p>
+          <p className="text-gray-600 dark:text-gray-400">Ditemukan {totalResults} artikel</p>
         </div>
 
         {/* Results */}
         {posts.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm p-12 text-center">
             <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
               Tidak ada hasil
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
               Tidak ditemukan artikel yang sesuai dengan pencarian Anda.
             </p>
             <Link
@@ -115,7 +116,7 @@ const SearchResults = () => {
             {posts.map((post) => (
               <article
                 key={post.id}
-                className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden group"
+                className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden group"
               >
                 <Link to={`/detail-news/${post.slug}`} className="block">
                   <div className="grid md:grid-cols-[200px_1fr] gap-6 p-6">
@@ -123,7 +124,7 @@ const SearchResults = () => {
                     {post.featured_image && (
                       <div className="w-full h-48 md:h-full rounded-lg overflow-hidden bg-gray-100">
                         <img
-                          src={post.featured_image}
+                          src={getImageUrl(post.featured_image)}
                           alt={post.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
@@ -143,13 +144,13 @@ const SearchResults = () => {
                         )}
 
                         {/* Title */}
-                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2">
+                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2">
                           {post.title}
                         </h2>
 
                         {/* Excerpt */}
                         {post.excerpt && (
-                          <p className="text-gray-600 line-clamp-2 mb-4">
+                          <p className="text-gray-600 dark:text-gray-400 line-clamp-2 mb-4">
                             {post.excerpt}
                           </p>
                         )}

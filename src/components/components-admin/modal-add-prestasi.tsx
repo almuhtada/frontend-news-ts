@@ -65,27 +65,27 @@ const AchievementModal: React.FC<Props> = ({
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 p-4">
       <div
         ref={modalRef}
-        className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl p-8 relative animate-modal-in max-h-[90vh] overflow-y-auto"
+        className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-2xl p-8 relative animate-modal-in max-h-[90vh] overflow-y-auto"
       >
         {/* Close Button */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-xl transition-all"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-xl transition-all"
           aria-label="Tutup modal"
         >
           <X className="w-6 h-6" />
         </button>
 
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center">
-            <Award className="w-6 h-6 text-emerald-600" />
+          <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/50 rounded-2xl flex items-center justify-center">
+            <Award className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-800">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">
               {editMode ? "Edit Prestasi" : "Tambah Prestasi Baru"}
             </h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               {editMode
                 ? "Perbarui informasi prestasi"
                 : "Tambahkan pencapaian terbaru mahasiswa"}
@@ -97,7 +97,7 @@ const AchievementModal: React.FC<Props> = ({
         <div className="space-y-6">
           {/* Nama Mahasiswa */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
               Nama Mahasiswa
             </label>
             <input
@@ -105,10 +105,10 @@ const AchievementModal: React.FC<Props> = ({
               placeholder="Contoh: Muhammad Fattahul Alim"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className={`w-full px-4 py-3 border rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-emerald-400 outline-none transition-all ${
+              className={`w-full px-4 py-3 border rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-emerald-400 outline-none transition-all dark:bg-gray-700 dark:text-gray-100 ${
                 errors.name
                   ? "border-red-300 focus:ring-red-400"
-                  : "border-gray-200"
+                  : "border-gray-200 dark:border-gray-600"
               }`}
             />
             {errors.name && (
@@ -121,7 +121,7 @@ const AchievementModal: React.FC<Props> = ({
 
           {/* Tahun */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
               Tahun Prestasi
             </label>
             <div className="relative">
@@ -134,8 +134,8 @@ const AchievementModal: React.FC<Props> = ({
                 disabled={editMode}
                 min="1900"
                 max={new Date().getFullYear() + 10}
-                className={`w-full pl-10 pr-4 py-3 border rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-emerald-400 outline-none transition-all ${
-                  editMode ? "bg-gray-100 cursor-not-allowed" : "bg-white"
+                className={`w-full pl-10 pr-4 py-3 border rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-emerald-400 outline-none transition-all dark:text-gray-100 ${
+                  editMode ? "bg-gray-100 dark:bg-gray-600 cursor-not-allowed" : "bg-white dark:bg-gray-700"
                 } ${
                   errors.year
                     ? "border-red-300 focus:ring-red-400"
@@ -175,8 +175,8 @@ const AchievementModal: React.FC<Props> = ({
             </div>
 
             {showPreview && text ? (
-              <div className="mb-3 p-4 bg-emerald-50 rounded-xl border border-emerald-200">
-                <p className="text-sm text-gray-700 font-medium">Preview:</p>
+              <div className="mb-3 p-4 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl border border-emerald-200 dark:border-emerald-700">
+                <p className="text-sm text-gray-700 dark:text-gray-200 font-medium">Preview:</p>
                 <div className="flex items-center gap-2 mt-2">
                   <Star className="w-4 h-4 text-yellow-500" />
                   <span className="text-sm">{text}</span>
@@ -191,10 +191,10 @@ const AchievementModal: React.FC<Props> = ({
               placeholder="Contoh: 🏆 Juara 1 Hackathon Nasional"
               rows={4}
               maxLength={500}
-              className={`w-full border rounded-2xl px-4 py-3 text-sm shadow-sm focus:ring-2 focus:ring-emerald-400 outline-none transition-all resize-none ${
+              className={`w-full border rounded-2xl px-4 py-3 text-sm shadow-sm focus:ring-2 focus:ring-emerald-400 outline-none transition-all resize-none dark:bg-gray-700 dark:text-gray-100 ${
                 errors.text
                   ? "border-red-300 focus:ring-red-400"
-                  : "border-gray-200"
+                  : "border-gray-200 dark:border-gray-600"
               }`}
             />
             {errors.text && (
@@ -206,14 +206,14 @@ const AchievementModal: React.FC<Props> = ({
 
             {!editMode && text.length < 5 && (
               <div className="mt-3">
-                <p className="text-xs text-gray-600 mb-2">Contoh prestasi:</p>
+                <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">Contoh prestasi:</p>
                 <div className="flex flex-wrap gap-2">
                   {achievementSuggestions.map((suggestion, i) => (
                     <button
                       key={i}
                       type="button"
                       onClick={() => setText(suggestion)}
-                      className="text-xs bg-gray-100 hover:bg-emerald-100 text-gray-600 hover:text-emerald-700 px-3 py-1 rounded-full transition-all"
+                      className="text-xs bg-gray-100 dark:bg-gray-700 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-gray-600 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-400 px-3 py-1 rounded-full transition-all"
                     >
                       {suggestion}
                     </button>
@@ -229,7 +229,7 @@ const AchievementModal: React.FC<Props> = ({
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 px-6 py-3 border border-gray-200 text-gray-700 rounded-2xl font-medium hover:bg-gray-50 transition-all"
+            className="flex-1 px-6 py-3 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-2xl font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
           >
             Batal
           </button>

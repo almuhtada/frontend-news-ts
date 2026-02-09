@@ -174,7 +174,7 @@ const PageContents: React.FC = () => {
   ];
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-950 dark:to-gray-900">
       <Sidebar />
       <main className="flex-1 p-6 md:p-8 lg:p-10">
         {/* Header */}

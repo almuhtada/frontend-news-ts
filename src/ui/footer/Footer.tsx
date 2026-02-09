@@ -60,7 +60,7 @@ const Footer = () => {
   const hasSocialLinks = settings.facebook || settings.instagram || settings.youtube || settings.twitter;
 
   return (
-    <footer className="bg-emerald-950 text-white/80 mt-12">
+    <footer className="bg-emerald-950 dark:bg-gray-900 text-white/80 mt-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 px-4 sm:px-6 py-12">
         {/* Logo + Kontak */}
         <div className="sm:col-span-2 md:col-span-1">
@@ -184,7 +184,7 @@ const Footer = () => {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-white/10">
+      <div className="border-t border-white/10 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-6 py-4 text-center text-xs text-white/50">
           © {new Date().getFullYear()} {settings.siteName} — All rights reserved.
         </div>

@@ -199,12 +199,12 @@ const Home: React.FC = () => {
   // Show loading state
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col lg:flex-row bg-slate-50">
+      <div className="min-h-screen flex flex-col lg:flex-row bg-slate-50 dark:bg-gray-950">
         <Sidebar />
         <main className="flex-1 px-4 sm:px-6 py-6 sm:py-8 flex items-center justify-center">
           <div className="text-center">
             <Loader className="w-12 h-12 animate-spin text-blue-600 mx-auto mb-4" />
-            <p className="text-gray-600">Memuat data dashboard...</p>
+            <p className="text-gray-600 dark:text-gray-400">Memuat data dashboard...</p>
           </div>
         </main>
       </div>
@@ -221,7 +221,7 @@ const Home: React.FC = () => {
   const teamProductivity = getTeamProductivity();
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-slate-50">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-slate-50 dark:bg-gray-950">
       <Sidebar />
 
       <main className="flex-1 px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8 lg:space-y-10 overflow-x-hidden">
@@ -266,18 +266,18 @@ const Home: React.FC = () => {
           {/* ===== Views + Category Pie ===== */}
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 sm:gap-8">
             {/* Views Chart (lebar) */}
-            <div className="xl:col-span-2 bg-white rounded-xl shadow-sm p-4 sm:p-6 overflow-x-auto">
+            <div className="xl:col-span-2 bg-white dark:bg-gray-900 rounded-xl shadow-sm p-4 sm:p-6 overflow-x-auto">
               <ViewsChart data={viewsData} />
             </div>
 
             {/* Category Pie */}
-            <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-4 sm:p-6">
               <CategoryPie data={categoryData} />
             </div>
           </div>
 
           {/* ===== Category Engagement (FULL WIDTH) ===== */}
-          <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 overflow-x-auto">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-4 sm:p-6 overflow-x-auto">
             <CategoryEngagementBar data={categoryEngagementData} />
           </div>
         </section>

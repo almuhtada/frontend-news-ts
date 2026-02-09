@@ -64,15 +64,11 @@ const LoginAdmin = () => {
     const newErrors: LoginErrors = {};
 
     if (!formData.identifier.trim()) {
-      newErrors.identifier = "identifier harus diisi";
-    } else if (!/\S+@\S+\.\S+/.test(formData.identifier)) {
-      newErrors.identifier = "Format identifier tidak valid";
+      newErrors.identifier = "Username atau email harus diisi";
     }
 
     if (!formData.password) {
       newErrors.password = "Password harus diisi";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password minimal 6 karakter";
     }
 
     return newErrors;
@@ -126,8 +122,8 @@ const LoginAdmin = () => {
   ======================= */
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
-      <div className="w-full max-w-sm bg-white rounded-xl shadow-lg p-6 flex flex-col items-center">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-950 px-4">
+      <div className="w-full max-w-sm bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6 flex flex-col items-center">
         <h4 className="text-xl font-semibold mb-4">Login Dashboard</h4>
 
         <img
@@ -145,7 +141,7 @@ const LoginAdmin = () => {
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
-                type="identifier"
+                type="text"
                 name="identifier"
                 value={formData.identifier}
                 onChange={handleChange}

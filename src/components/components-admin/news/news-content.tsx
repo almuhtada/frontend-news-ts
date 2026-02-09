@@ -1,6 +1,7 @@
 import NewsGridCard from "../grid-card";
 import NewsTable from "../table-news";
 import type { Article, ArticleDisplay } from "./types";
+import { getImageUrl } from "../../../config/api";
 
 interface NewsContentProps {
   articles: Article[];
@@ -108,7 +109,7 @@ const NewsContent: React.FC<NewsContentProps> = ({
           title: displayArticle.title,
           category: displayArticle.category,
           content: displayArticle.content,
-          image: displayArticle.image,
+          image: getImageUrl(displayArticle.image),
           author: displayArticle.author,
           createdAt: new Date(displayArticle.createdAt),
           status: displayArticle.status,

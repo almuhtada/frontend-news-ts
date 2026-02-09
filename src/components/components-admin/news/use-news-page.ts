@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { postsService, type CreatePostData } from "../../../services/posts";
 import { categoriesService } from "../../../services/categories";
 import { tagsService } from "../../../services/tags";
-import { API_BASE_URL } from "../../../config/api";
+import { API_BASE_URL, SERVER_BASE_URL, getImageUrl } from "../../../config/api";
 import type { Article, ArticleDisplay, NewsFormData } from "./types";
 
 const INITIAL_FORM: NewsFormData = {
@@ -112,10 +112,18 @@ export const useNewsPage = () => {
 
     try {
       setSaving(true);
-      let featuredImage = previewUrl;
+      let featuredImage = "";
 
       if (imageFile) {
+        // Upload image baru, simpan path relatif dari response
         featuredImage = await uploadImage(imageFile);
+      } else if (previewUrl) {
+        // Tidak ganti image, kembalikan ke path relatif untuk disimpan di DB
+        if (previewUrl.startsWith(SERVER_BASE_URL)) {
+          featuredImage = previewUrl.replace(SERVER_BASE_URL, "");
+        } else {
+          featuredImage = previewUrl;
+        }
       }
 
       const postData: CreatePostData = {
@@ -166,7 +174,8 @@ export const useNewsPage = () => {
       tag_ids: tagIds,
       rejection_reason: (article as any).rejection_reason,
     });
-    setPreviewUrl(article.image || article.featured_image || "");
+    setImageFile(null);
+    setPreviewUrl(getImageUrl(article.image || article.featured_image));
     setIsEditing(true);
     setEditingId(article.id);
     setIsModalOpen(true);

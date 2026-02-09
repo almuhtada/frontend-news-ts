@@ -69,7 +69,7 @@ const Home = () => {
               {/* All News List with Pagination */}
               <div className="mt-8 lg:mt-12">
                 <div className="flex items-center gap-3 mb-6">
-                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
                     Semua Berita
                   </h2>
                 </div>

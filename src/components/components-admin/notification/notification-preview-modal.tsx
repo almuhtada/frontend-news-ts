@@ -1,5 +1,6 @@
 import { Eye, X, RefreshCw, User, Calendar, FileText } from "lucide-react";
 import type { Post } from "../../../services/posts";
+import { getImageUrl } from "../../../config/api";
 
 interface NotificationPreviewModalProps {
   isOpen: boolean;
@@ -18,7 +19,7 @@ const NotificationPreviewModal: React.FC<NotificationPreviewModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
         {/* Modal Header */}
         <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -41,7 +42,7 @@ const NotificationPreviewModal: React.FC<NotificationPreviewModalProps> = ({
             <div className="flex items-center justify-center py-16">
               <div className="text-center">
                 <RefreshCw className="w-12 h-12 text-green-500 animate-spin mx-auto mb-4" />
-                <p className="text-gray-600">Memuat berita...</p>
+                <p className="text-gray-600 dark:text-gray-400">Memuat berita...</p>
               </div>
             </div>
           ) : post ? (
@@ -49,24 +50,24 @@ const NotificationPreviewModal: React.FC<NotificationPreviewModalProps> = ({
               {/* Featured Image */}
               {post.featured_image && (
                 <img
-                  src={post.featured_image}
+                  src={getImageUrl(post.featured_image)}
                   alt={post.title}
                   className="w-full h-64 object-cover rounded-2xl mb-6"
                 />
               )}
 
               {/* Title */}
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
                 {post.title}
               </h1>
 
               {/* Meta Info */}
-              <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-200">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+              <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                   <User className="w-4 h-4" />
                   <span>{post.author?.username || "Unknown"}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                   <Calendar className="w-4 h-4" />
                   <span>
                     {new Date(post.createdAt).toLocaleDateString("id-ID", {
@@ -91,8 +92,8 @@ const NotificationPreviewModal: React.FC<NotificationPreviewModalProps> = ({
 
               {/* Excerpt */}
               {post.excerpt && (
-                <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-xl mb-6">
-                  <p className="text-gray-700 italic">{post.excerpt}</p>
+                <div className="bg-green-50 dark:bg-green-900/30 border-l-4 border-green-500 p-4 rounded-r-xl mb-6">
+                  <p className="text-gray-700 dark:text-gray-300 italic">{post.excerpt}</p>
                 </div>
               )}
 
@@ -104,8 +105,8 @@ const NotificationPreviewModal: React.FC<NotificationPreviewModalProps> = ({
 
               {/* Categories */}
               {post.categories && post.categories.length > 0 && (
-                <div className="mt-8 pt-6 border-t border-gray-200">
-                  <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">
                     Kategori:
                   </h3>
                   <div className="flex flex-wrap gap-2">
@@ -124,14 +125,14 @@ const NotificationPreviewModal: React.FC<NotificationPreviewModalProps> = ({
               {/* Tags */}
               {post.tags && post.tags.length > 0 && (
                 <div className="mt-4">
-                  <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">
                     Tags:
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {post.tags.map((tag) => (
                       <span
                         key={tag.id}
-                        className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                        className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm"
                       >
                         #{tag.name}
                       </span>
@@ -143,7 +144,7 @@ const NotificationPreviewModal: React.FC<NotificationPreviewModalProps> = ({
           ) : (
             <div className="text-center py-16">
               <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">Tidak dapat memuat berita</p>
+              <p className="text-gray-600 dark:text-gray-400">Tidak dapat memuat berita</p>
             </div>
           )}
         </div>

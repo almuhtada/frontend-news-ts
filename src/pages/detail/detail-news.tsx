@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import { useDetailData } from "../../hooks/useDetailData";
 import PublicPageLayout from "../../components/layouts/PublicPageLayout";
 
@@ -16,7 +16,7 @@ import ArticleLike from "../../components/detail/ArticleLike";
 import ArticleComments from "../../components/detail/ArticleComments";
 
 // Harus sama dengan PARAGRAPHS_PER_PAGE di ArticleContent.tsx
-const PARAGRAPHS_PER_PAGE = 10;
+const PARAGRAPHS_PER_PAGE = 3;
 
 const DetailNews = () => {
   const {
@@ -31,7 +31,7 @@ const DetailNews = () => {
     words,
   } = useDetailData();
 
-  // Format konten berita: 1 paragraf = 4 kalimat
+  // Format konten berita: 1 paragraf = 5 kalimat
   const formattedParagraphs = useMemo(() => {
     if (!post?.content) return [];
     return formatEveryFourSentences(post.content);
@@ -42,6 +42,13 @@ const DetailNews = () => {
     return Math.max(1, Math.ceil(formattedParagraphs.length / PARAGRAPHS_PER_PAGE));
   }, [formattedParagraphs]);
 
+  const handleNextPage = useCallback(() => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [currentPage, totalPages, setCurrentPage]);
+
   // Loading state
   if (loading) {
     return (
@@ -49,7 +56,7 @@ const DetailNews = () => {
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto" />
-            <p className="mt-4 text-gray-600">Memuat artikel...</p>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">Memuat artikel...</p>
           </div>
         </div>
       </PublicPageLayout>
@@ -62,10 +69,10 @@ const DetailNews = () => {
       <PublicPageLayout>
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-800 mb-4">
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               Artikel Tidak Ditemukan
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               {error || "Artikel yang Anda cari tidak tersedia."}
             </p>
           </div>
@@ -77,7 +84,7 @@ const DetailNews = () => {
   return (
     <PublicPageLayout>
       <div
-        className="min-h-screen bg-gray-50"
+        className="min-h-screen bg-gray-50 dark:bg-gray-950"
         style={{
           userSelect: "none",
           WebkitUserSelect: "none",
@@ -85,7 +92,7 @@ const DetailNews = () => {
           msUserSelect: "none",
         }}
       >
-        <div className="max-w-6xl mx-auto px-4 py-6 sm:px-6 sm:py-8 bg-white">
+        <div className="max-w-6xl mx-auto px-4 py-6 sm:px-6 sm:py-8 bg-white dark:bg-gray-900">
           {/* Header + Like */}
           <div className="flex flex-col md:flex-row md:items-start gap-4">
             <div className="flex-1 min-w-0">
@@ -107,12 +114,14 @@ const DetailNews = () => {
           {/* Social Share */}
           <SocialShare />
 
-          {/* Konten Artikel (berbasis paragraf) */}
+          {/* Konten Artikel (berbasis paragraf, 3 per halaman) */}
           <ArticleContent
             currentPage={currentPage}
             totalPages={totalPages}
             words={words}
             paragraphs={formattedParagraphs}
+            excerpt={post.excerpt}
+            onNextPage={handleNextPage}
           />
 
           {/* Pagination */}

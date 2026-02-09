@@ -1,11 +1,12 @@
 import type { Post } from "../../services/posts";
+import { getImageUrl } from "../../config/api";
 
 interface FeaturedImageProps {
   post: Post;
 }
 
 const FeaturedImage = ({ post }: FeaturedImageProps) => {
-  const imageUrl = post.featured_image ?? "";
+  const imageUrl = getImageUrl(post.featured_image);
 
   if (!imageUrl) return null;
 

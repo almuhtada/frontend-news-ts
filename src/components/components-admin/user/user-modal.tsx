@@ -26,22 +26,22 @@ const UserModal: React.FC<UserModalProps> = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 px-4">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 relative animate-in fade-in zoom-in duration-200">
+      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-md p-8 relative animate-in fade-in zoom-in duration-200">
         {/* Close Button */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-2 rounded-full transition-all"
+          className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-gray-700 p-2 rounded-full transition-all"
           aria-label="Tutup modal"
         >
           <X className="w-5 h-5" />
         </button>
 
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-slate-800 mb-2">
+          <h2 className="text-2xl font-bold text-slate-800 dark:text-gray-100 mb-2">
             {editMode ? "Edit User" : "Tambah User Baru"}
           </h2>
-          <p className="text-slate-600">
+          <p className="text-slate-600 dark:text-gray-400">
             {editMode
               ? "Perbarui informasi user"
               : "Isi data user yang akan ditambahkan"}
@@ -51,54 +51,54 @@ const UserModal: React.FC<UserModalProps> = ({
         {/* Form */}
         <div className="space-y-5">
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
+            <label className="block text-sm font-semibold text-slate-700 dark:text-gray-200 mb-2">
               Username
             </label>
             <input
               type="text"
               value={form.username}
               onChange={(e) => onFormChange({ ...form, username: e.target.value })}
-              className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all placeholder-slate-400"
+              className="w-full border border-slate-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-xl px-4 py-3 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all placeholder-slate-400 dark:placeholder-gray-400"
               placeholder="Masukkan username"
               disabled={editMode}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
+            <label className="block text-sm font-semibold text-slate-700 dark:text-gray-200 mb-2">
               Email Address
             </label>
             <input
               type="email"
               value={form.email}
               onChange={(e) => onFormChange({ ...form, email: e.target.value })}
-              className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all placeholder-slate-400"
+              className="w-full border border-slate-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-xl px-4 py-3 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all placeholder-slate-400 dark:placeholder-gray-400"
               placeholder="user@example.com"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
+            <label className="block text-sm font-semibold text-slate-700 dark:text-gray-200 mb-2">
               Password {editMode && <span className="text-slate-400 font-normal">(kosongkan jika tidak ingin mengubah)</span>}
             </label>
             <input
               type="password"
               value={form.password || ""}
               onChange={(e) => onFormChange({ ...form, password: e.target.value })}
-              className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all placeholder-slate-400"
+              className="w-full border border-slate-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-xl px-4 py-3 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all placeholder-slate-400 dark:placeholder-gray-400"
               placeholder={editMode ? "Masukkan password baru" : "Masukkan password"}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
+            <label className="block text-sm font-semibold text-slate-700 dark:text-gray-200 mb-2">
               Role
             </label>
             <select
               aria-label="Pilih role user"
               value={form.role}
               onChange={(e) => onFormChange({ ...form, role: e.target.value as Role })}
-              className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all"
+              className="w-full border border-slate-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-xl px-4 py-3 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all"
             >
               <option value="administrator">Administrator</option>
               <option value="editor">Editor</option>
@@ -113,7 +113,7 @@ const UserModal: React.FC<UserModalProps> = ({
         <div className="flex gap-3 mt-8">
           <button
             onClick={onClose}
-            className="flex-1 px-6 py-3 border border-slate-200 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-all duration-150"
+            className="flex-1 px-6 py-3 border border-slate-200 dark:border-gray-600 text-slate-700 dark:text-gray-300 rounded-xl font-semibold hover:bg-slate-50 dark:hover:bg-gray-700 transition-all duration-150"
           >
             Batal
           </button>
