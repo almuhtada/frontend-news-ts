@@ -8,7 +8,7 @@ import DropdownItem from "./DropdownItem";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { categoriesService } from "../../services/categories";
 import type { Category } from "../../services/posts";
-import { useTheme } from "../../hooks/theme";
+import { useTheme } from "../../hooks/useTheme";
 
 const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
