@@ -28,7 +28,7 @@ const Dropdown = ({ label, children }: DropdownProps) => {
   }, []);
 
   return (
-    <div ref={dropdownRef} className="relative">
+    <div ref={dropdownRef} className="relative z-[120]">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="whitespace-nowrap pb-2 text-sm font-medium text-white hover:text-white hover:border-white/60"
@@ -37,7 +37,7 @@ const Dropdown = ({ label, children }: DropdownProps) => {
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
+        <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-[130]">
           <div className="flex flex-col">{children}</div>
         </div>
       )}

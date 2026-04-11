@@ -105,7 +105,7 @@ const Navbar = () => {
       >
         <div className="px-6">
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-8 py-4 overflow-x-auto scrollbar-hide">
+          <div className="hidden md:flex items-center gap-8 py-4 overflow-visible scrollbar-hide">
             <NavLink
               to="/"
               className={`shrink-0 whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
