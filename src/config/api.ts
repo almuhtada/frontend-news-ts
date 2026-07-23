@@ -46,4 +46,27 @@ export const API_ENDPOINTS = {
   // Settings
   SETTINGS: "/settings",
   SETTINGS_SAVE: "/settings/save",
+
+  // ── Recommendation System ────────────────────────────────────────
+  /** Related posts untuk Detail News page — berbasis kategori/tag/author */
+  RELATED_POSTS: (postId: number) => `/recommendations/related/${postId}`,
+
+  /** Personalized / trending feed untuk Home page */
+  RECOMMENDED_POSTS: "/recommendations/home",
+
+  /** Trending dalam satu kategori — widget sidebar Detail page */
+  TRENDING_BY_CATEGORY: (categoryId: number) =>
+    `/recommendations/trending-category/${categoryId}`,
+
+  /** Hot tags dari artikel trending — widget "Topik Hangat" */
+  HOT_TOPICS: "/recommendations/hot-topics",
+
+  /** Track view — dipanggil saat user buka artikel */
+  TRACK_VIEW: "/recommendations/track-view",
+
+  /** Bookmark: toggle, cek status, daftar */
+  TOGGLE_BOOKMARK: (postId: number) => `/recommendations/bookmark/${postId}`,
+  BOOKMARK_STATUS: (postId: number) => `/recommendations/bookmark/${postId}`,
+  USER_BOOKMARKS: "/recommendations/bookmarks",
 };
+

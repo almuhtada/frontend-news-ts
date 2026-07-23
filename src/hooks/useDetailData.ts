@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { postsService } from "../services/posts";
+import { recommendationsService } from "../services/recommendations";
 import type { Post } from "../services/posts";
 
 export const useDetailData = () => {
@@ -23,9 +24,21 @@ export const useDetailData = () => {
         const postData = await postsService.getPostBySlug(slug);
         setPost(postData);
 
-        // Fetch related posts
-        const related = await postsService.getRecentPosts(4);
-        setRelatedPosts(related.filter((p) => p.slug !== slug).slice(0, 3));
+        // Track view untuk sistem rekomendasi (fire-and-forget)
+        // Tidak perlu await — tidak boleh blocking
+        recommendationsService.trackView(postData.id);
+
+        // Fetch related posts menggunakan endpoint rekomendasi yang sesungguhnya.
+        // Strategi bobot ditangani di backend:
+        //   - Kategori sama  → ~65% slot (prioritas tertinggi)
+        //   - Tag sama       → ~25% slot
+        //   - Author sama    → ~10% slot
+        //   - Fallback trending jika kurang
+        const related = await recommendationsService.getRelatedPosts(
+          postData.id,
+          6
+        );
+        setRelatedPosts(related.filter((p) => p.slug !== slug).slice(0, 6));
       } catch (err) {
         console.error("Error fetching post:", err);
         setError("Gagal memuat artikel. Silakan coba lagi.");

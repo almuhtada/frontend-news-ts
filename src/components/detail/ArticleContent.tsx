@@ -1,4 +1,5 @@
 import DOMPurify from "dompurify";
+import { Clock, BookOpen, FileText, ChevronDown } from "lucide-react";
 
 interface ArticleContentProps {
   currentPage: number;
@@ -123,17 +124,17 @@ const ArticleContent = ({
       {/* META BAR */}
       <div className="mt-8 mb-6 flex flex-wrap items-center gap-2 sm:gap-3 text-sm text-gray-500">
         <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full font-medium">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <Clock className="w-3.5 h-3.5" />
           {readTime} menit baca
         </div>
         {totalPages > 1 && (
           <div className="flex items-center gap-1.5 bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full font-medium">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+            <BookOpen className="w-3.5 h-3.5" />
             Halaman {currentPage}/{totalPages}
           </div>
         )}
         <div className="flex items-center gap-1.5 bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full font-medium">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <FileText className="w-3.5 h-3.5" />
           {words.length} kata
         </div>
       </div>
@@ -142,7 +143,7 @@ const ArticleContent = ({
       {excerpt && currentPage === 1 && (
         <div className="mb-8 rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-50 p-5 sm:p-6">
           <div className="flex items-center gap-2 mb-3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <FileText className="w-4.5 h-4.5 text-emerald-600" />
             <h3 className="text-sm font-bold text-emerald-800 uppercase tracking-wider">Ringkasan</h3>
           </div>
           <p className="text-gray-700 leading-relaxed text-[0.95rem]">{excerpt}</p>
@@ -176,7 +177,7 @@ const ArticleContent = ({
               className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3 rounded-full transition-all shadow-lg shadow-emerald-200 hover:shadow-emerald-300 hover:-translate-y-0.5"
             >
               Lanjutkan Membaca
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              <ChevronDown className="w-4.5 h-4.5" />
             </button>
           </div>
         </div>

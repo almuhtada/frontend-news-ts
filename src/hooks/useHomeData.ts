@@ -2,14 +2,9 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Star, Zap, Users, Search, TrendingUp } from "lucide-react";
 import { postsService } from "../services/posts";
 import { categoriesService } from "../services/categories";
+import { recommendationsService } from "../services/recommendations";
 import type { Post, Category } from "../services/posts";
-
-interface HotTopic {
-  title: string;
-  count: number;
-  trend: string;
-  slug: string;
-}
+import type { HotTopic } from "../types";
 
 export const useHomeData = () => {
   const [activeCategory, setActiveCategory] = useState("semua");
@@ -20,6 +15,11 @@ export const useHomeData = () => {
   const [viralNews, setViralNews] = useState<Post[]>([]);
   const [recentNews, setRecentNews] = useState<Post[]>([]);
   const [allNews, setAllNews] = useState<Post[]>([]);
+
+  // ── Rekomendasi personal / trending (baru) ──────────────────────
+  const [recommendedNews, setRecommendedNews] = useState<Post[]>([]);
+  const [isPersonalized, setIsPersonalized] = useState(false);
+
   const [categories, setCategories] = useState<Array<{
     id: string;
     label: string;
@@ -27,6 +27,8 @@ export const useHomeData = () => {
   }>>([
     { id: "semua", label: "Semua", icon: Star },
   ]);
+
+  // Hot topics berbasis trending tags dari BE (bukan hanya post_count)
   const [hotTopics, setHotTopics] = useState<HotTopic[]>([]);
 
   // Infinite scroll states
@@ -40,7 +42,7 @@ export const useHomeData = () => {
       try {
         setIsLoading(true);
 
-        // Fetch categories from backend
+        // Fetch categories dari backend
         const categoriesData = await categoriesService.getCategories();
 
         const categoryIcons = [Star, Zap, Users, Search, TrendingUp];
@@ -54,67 +56,102 @@ export const useHomeData = () => {
         ];
         setCategories(formattedCategories);
 
-        // Format hot topics dari categories dengan post_count terbanyak
-        type CategoryWithCount = Category & { post_count?: number | string };
-        const categoriesWithCount = categoriesData
-          .filter((cat: CategoryWithCount) => {
-            const count = typeof cat.post_count === 'string'
-              ? parseInt(cat.post_count)
-              : (cat.post_count || 0);
-            return count > 0;
-          })
-          .sort((a: CategoryWithCount, b: CategoryWithCount) => {
-            const countA = typeof a.post_count === 'string'
-              ? parseInt(a.post_count)
-              : (a.post_count || 0);
-            const countB = typeof b.post_count === 'string'
-              ? parseInt(b.post_count)
-              : (b.post_count || 0);
-            return countB - countA;
-          })
-          .slice(0, 5)
-          .map((cat: CategoryWithCount) => {
-            const count = typeof cat.post_count === 'string'
-              ? parseInt(cat.post_count)
-              : (cat.post_count || 0);
-            return {
-              title: cat.name,
-              count: count,
-              trend: "+0%",
+        // ── Hot Topics dari BE (trending tags, bukan category post_count) ──
+        // Fetch paralel untuk performa
+        const [
+          featured,
+          popular,
+          viral,
+          recentPosts,
+          allNewsPosts,
+          allPosts,
+          recommended,
+          hotTopicsData,
+        ] = await Promise.allSettled([
+          postsService.getPosts({ featured: true, limit: 5, status: "publish" }),
+          postsService.getPopularPosts(4),
+          postsService.getTrendingPosts(4, 24),
+          postsService.getRecentPosts(4),
+          postsService.getRecentPosts(50),
+          postsService.getRecentPosts(12),
+          recommendationsService.getRecommendedPosts(8),
+          recommendationsService.getHotTopics(8, 24),
+        ]);
+
+        // Set featured
+        if (featured.status === "fulfilled") {
+          setFeaturedArticles(featured.value.posts);
+        }
+
+        // Set trending (popular by views)
+        if (popular.status === "fulfilled") {
+          setTrendingNews(popular.value);
+        }
+
+        // Set viral (engagement score 24h)
+        if (viral.status === "fulfilled") {
+          setViralNews(viral.value);
+        }
+
+        // Set recent
+        if (recentPosts.status === "fulfilled") {
+          setRecentNews(recentPosts.value);
+        }
+
+        // Set all news
+        if (allNewsPosts.status === "fulfilled") {
+          setAllNews(allNewsPosts.value);
+        }
+
+        // Set articles dengan infinite scroll
+        if (allPosts.status === "fulfilled") {
+          setArticles(allPosts.value);
+          setHasMore(allPosts.value.length === 12);
+        }
+
+        // ── Recommended feed (personalized / fallback trending) ──────
+        if (recommended.status === "fulfilled") {
+          setRecommendedNews(recommended.value.posts);
+          setIsPersonalized(recommended.value.personalized);
+        }
+
+        // ── Hot Topics dari trending tags ───────────────────────────
+        if (hotTopicsData.status === "fulfilled" && hotTopicsData.value.length > 0) {
+          setHotTopics(hotTopicsData.value);
+        } else {
+          // Fallback: gunakan kategori dengan post_count terbanyak
+          type CategoryWithCount = Category & { post_count?: number | string };
+          const fallbackTopics = (categoriesData as CategoryWithCount[])
+            .filter((cat) => {
+              const count =
+                typeof cat.post_count === "string"
+                  ? parseInt(cat.post_count)
+                  : cat.post_count || 0;
+              return count > 0;
+            })
+            .sort((a, b) => {
+              const countA =
+                typeof a.post_count === "string"
+                  ? parseInt(a.post_count)
+                  : a.post_count || 0;
+              const countB =
+                typeof b.post_count === "string"
+                  ? parseInt(b.post_count)
+                  : b.post_count || 0;
+              return countB - countA;
+            })
+            .slice(0, 8)
+            .map((cat) => ({
+              id: cat.id,
+              name: cat.name,
               slug: cat.slug,
-            };
-          });
-
-        setHotTopics(categoriesWithCount);
-
-        // Fetch featured posts (limit 5 untuk carousel)
-        const featured = await postsService.getPosts({
-          featured: true,
-          limit: 5,
-          status: "publish",
-        });
-        setFeaturedArticles(featured.posts);
-
-        // Fetch popular posts untuk trending (limit 4) - based on total views
-        const popular = await postsService.getPopularPosts(4);
-        setTrendingNews(popular);
-
-        // Fetch viral/trending posts (limit 4) - based on engagement score in last 24 hours
-        const viral = await postsService.getTrendingPosts(4, 24);
-        setViralNews(viral);
-
-        // Fetch recent posts untuk berita terbaru (limit 4)
-        const recentPosts = await postsService.getRecentPosts(4);
-        setRecentNews(recentPosts);
-
-        // Fetch all posts untuk pagination list (limit 50)
-        const allNewsPosts = await postsService.getRecentPosts(50);
-        setAllNews(allNewsPosts);
-
-        // Fetch all posts untuk initial load (limit 12)
-        const allPosts = await postsService.getRecentPosts(12);
-        setArticles(allPosts);
-        setHasMore(allPosts.length === 12);
+              post_count:
+                typeof cat.post_count === "string"
+                  ? parseInt(cat.post_count)
+                  : cat.post_count || 0,
+            }));
+          setHotTopics(fallbackTopics);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -193,6 +230,9 @@ export const useHomeData = () => {
     viralNews,
     recentNews,
     allNews,
+    // Rekomendasi personal / trending (baru)
+    recommendedNews,
+    isPersonalized,
     categories,
     hotTopics,
     loadingMore,

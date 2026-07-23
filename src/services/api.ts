@@ -66,14 +66,27 @@ class ApiService {
     }
   }
 
-  async get<T>(endpoint: string, params?: Record<string, string | number | boolean>): Promise<T> {
-    return this.request<T>(endpoint, { method: 'GET', params });
+  async get<T>(
+    endpoint: string,
+    params?: Record<string, string | number | boolean>,
+    options?: { headers?: Record<string, string> }
+  ): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'GET',
+      params,
+      headers: options?.headers,
+    });
   }
 
-  async post<T>(endpoint: string, data?: unknown): Promise<T> {
+  async post<T>(
+    endpoint: string,
+    data?: unknown,
+    options?: { headers?: Record<string, string> }
+  ): Promise<T> {
     return this.request<T>(endpoint, {
       method: 'POST',
       body: JSON.stringify(data),
+      headers: options?.headers,
     });
   }
 
@@ -90,3 +103,4 @@ class ApiService {
 }
 
 export const api = new ApiService(API_BASE_URL);
+

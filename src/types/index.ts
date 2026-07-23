@@ -63,6 +63,10 @@ export interface Post {
   editor?: Author;
   categories?: Category[];
   tags?: Tag[];
+  // Engagement fields dari rekomendasi (opsional)
+  engagement_score?: number;
+  likes_count?: number;
+  comments_count?: number;
 }
 
 export interface Comment {
@@ -92,6 +96,37 @@ export interface Comment {
     title: string;
     slug: string;
   };
+}
+
+// ─────────────────────────────────────────────
+// RECOMMENDATION TYPES
+// ─────────────────────────────────────────────
+
+/** Response dari GET /api/recommendations/home */
+export interface RecommendedPostsResponse {
+  posts: Post[];
+  /** true = personalized berdasarkan histori user, false = trending global */
+  personalized: boolean;
+}
+
+/** Satu item Hot Topic dari GET /api/recommendations/hot-topics */
+export interface HotTopic {
+  id: number;
+  name: string;
+  slug: string;
+  post_count: number;
+}
+
+/** Response dari GET /api/recommendations/bookmark/:postId */
+export interface BookmarkStatus {
+  bookmarked: boolean;
+  bookmarkCount: number;
+}
+
+/** Response dari GET /api/recommendations/bookmarks */
+export interface UserBookmarksResponse {
+  bookmarks: Post[];
+  total: number;
 }
 
 // ─────────────────────────────────────────────
@@ -230,3 +265,4 @@ export interface ThemeContextType {
   isDark: boolean;
   toggleTheme: () => void;
 }
+

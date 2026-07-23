@@ -150,14 +150,14 @@ const TentangPesantren = () => {
               {/* Ustadz */}
               {(founderUstadz || FALLBACK_ABOUT.founderUstadz) && (
                 <div className="bg-white shadow-lg rounded-2xl p-6 hover:shadow-xl transition">
-                  {founderUstadz.image_url && (
+                  {founderUstadz && founderUstadz.image_url && (
                     <img
                       src={getImageUrl(founderUstadz.image_url)}
                       alt={founderUstadz.title}
                       className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
                       onError={(e) => {
-                        // Fallback to placeholder if image fails to load
-                        e.currentTarget.src = "https://via.placeholder.com/150";
+                        // Fallback to local SVG placeholder if image fails to load
+                        e.currentTarget.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23cccccc'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
                       }}
                     />
                   )}
@@ -165,7 +165,8 @@ const TentangPesantren = () => {
                     {founderUstadz?.title || FALLBACK_ABOUT.founderUstadz.title}
                   </h3>
                   <p className="text-gray-600 text-sm mt-3 leading-relaxed text-justify">
-                    {founderUstadz?.content || FALLBACK_ABOUT.founderUstadz.content}
+                    {founderUstadz?.content ||
+                      FALLBACK_ABOUT.founderUstadz.content}
                   </p>
                 </div>
               )}
@@ -173,22 +174,24 @@ const TentangPesantren = () => {
               {/* Ustadzah */}
               {(founderUstadzah || FALLBACK_ABOUT.founderUstadzah) && (
                 <div className="bg-white shadow-lg rounded-2xl p-6 hover:shadow-xl transition">
-                  {founderUstadzah.image_url && (
+                  {founderUstadzah && founderUstadzah.image_url && (
                     <img
                       src={getImageUrl(founderUstadzah.image_url)}
                       alt={founderUstadzah.title}
                       className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
                       onError={(e) => {
-                        // Fallback to placeholder if image fails to load
-                        e.currentTarget.src = "https://via.placeholder.com/150";
+                        // Fallback to local SVG placeholder if image fails to load
+                        e.currentTarget.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23cccccc'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
                       }}
                     />
                   )}
                   <h3 className="text-lg font-bold text-center text-gray-800">
-                    {founderUstadzah?.title || FALLBACK_ABOUT.founderUstadzah.title}
+                    {founderUstadzah?.title ||
+                      FALLBACK_ABOUT.founderUstadzah.title}
                   </h3>
                   <p className="text-gray-600 text-sm mt-3 leading-relaxed text-justify">
-                    {founderUstadzah?.content || FALLBACK_ABOUT.founderUstadzah.content}
+                    {founderUstadzah?.content ||
+                      FALLBACK_ABOUT.founderUstadzah.content}
                   </p>
                 </div>
               )}

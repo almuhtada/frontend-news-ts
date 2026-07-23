@@ -22,6 +22,7 @@ export { pageContentsService } from "./pageContents";
 export { notificationsService } from "./notifications";
 export { statsService } from "./stats";
 export { usersService } from "./users";
+export { recommendationsService } from "./recommendations";
 
 // Re-export types dari centralized types
 export type {
@@ -43,4 +44,10 @@ export type {
   ApiResponse,
   PaginationMeta,
   PaginatedResponse,
+  // Recommendation types
+  RecommendedPostsResponse,
+  HotTopic,
+  BookmarkStatus,
+  UserBookmarksResponse,
 } from "../types";
+

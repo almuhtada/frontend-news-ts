@@ -354,6 +354,24 @@ const isSpecialParagraph = (para: string): boolean => {
 };
 
 /**
+ * Split sentences without breaking Islamic honorifics such as "r.a.".
+ */
+const splitIntoSentences = (text: string): string[] => {
+  const protectedText = text.replace(
+    /\b(?:[Rr]\s*\.\s*[Aa]|[Ss]\s*\.\s*[Aa]\s*\.\s*[Ww]|[Ss][Ww][Tt]|[Ss][Aa][Ww]|[Qq][Ss]|[Hh][Rr])\.(?=[\s,;:)]|$)|\b(?:[A-Za-z]\.)+[A-Za-z]+\.?(?=[\s,;:)]|$)|\b[A-Z]\.(?=\s+[A-Z])/g,
+    (abbreviation) => abbreviation.replace(/\./g, "\uE000"),
+  );
+
+  return (protectedText.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [protectedText])
+    .map((sentence) => sentence.replace(/\uE000/g, "."));
+};
+/** Keep a Quran verse and its translation on the same pagination block. */
+const ARABIC_TEXT_REGEX = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/;
+const isVerseTranslation = (text: string): boolean =>
+  /^artinya\s*:/i.test(text) ||
+  (/(?:Q\.?\s*S\.?|Al[-\s]?Baqarah)/i.test(text) && /^[“"']/.test(text.trim()));
+
+/**
  * Format content into paragraphs of ~5 sentences each
  */
 const formatEveryFourSentences = (html: string): string[] => {
@@ -373,8 +391,26 @@ const formatEveryFourSentences = (html: string): string[] => {
   const mergedParagraphs: string[] = [];
   let plainBuffer = "";
 
-  for (const para of rawParagraphs) {
+  for (let index = 0; index < rawParagraphs.length; index++) {
+    const para = rawParagraphs[index];
     const cleaned = para.replace(/^[•·‣⁃►▸▹→-]\s*(\d+[.)]\s)/, "$1");
+    const nextParagraph = rawParagraphs[index + 1]?.trim();
+
+    // Treat an Arabic verse and its translation as one block so pagination
+    // never separates them onto different pages.
+    if (
+      ARABIC_TEXT_REGEX.test(cleaned) &&
+      nextParagraph &&
+      isVerseTranslation(nextParagraph)
+    ) {
+      if (plainBuffer) {
+        mergedParagraphs.push(plainBuffer.trim());
+        plainBuffer = "";
+      }
+      mergedParagraphs.push(`${cleaned}\n${nextParagraph}`);
+      index++;
+      continue;
+    }
 
     if (isSpecialParagraph(cleaned)) {
       // Flush plain text buffer first
@@ -408,7 +444,7 @@ const formatEveryFourSentences = (html: string): string[] => {
     }
 
     // For regular paragraphs, split into sentences
-    const sentences = para.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [para];
+    const sentences = splitIntoSentences(para);
 
     // Group into chunks of 5 sentences
     for (let i = 0; i < sentences.length; i += 5) {

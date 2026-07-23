@@ -37,7 +37,9 @@ const Navbar = () => {
         // Filter hanya category yang memiliki posts
         const categoriesWithPosts = categoriesData.filter(
           (cat: Category & { post_count?: string }) =>
-            cat.post_count && parseInt(cat.post_count) > 0,
+            cat.post_count &&
+            parseInt(cat.post_count) > 0 &&
+            !["pendidikan", "sejarah"].includes(cat.slug.toLowerCase()),
         );
         setCategories(categoriesWithPosts);
       } catch (error) {
@@ -87,7 +89,7 @@ const Navbar = () => {
               </button>
 
               <button
-                className="md:hidden p-2 rounded-lg hover:bg-white/10 text-white transition-colors"
+                className="2xl:hidden p-2 rounded-lg hover:bg-white/10 text-white transition-colors"
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label={isOpen ? "Close menu" : "Open menu"}
               >
@@ -105,7 +107,7 @@ const Navbar = () => {
       >
         <div className="px-6">
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-8 py-4 overflow-visible scrollbar-hide">
+          <div className="hidden 2xl:flex flex-wrap items-center gap-x-5 gap-y-2 py-3 2xl:gap-x-8">
             <NavLink
               to="/"
               className={`shrink-0 whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
@@ -188,7 +190,7 @@ const Navbar = () => {
 
           {/* Mobile Menu */}
           {isOpen && (
-            <div className="md:hidden flex flex-col space-y-4 py-4 border-t border-white/20 bg-[#00531b] dark:bg-gray-900">
+            <div className="2xl:hidden flex flex-col space-y-4 py-4 border-t border-white/20 bg-[#00531b] dark:bg-gray-900">
               <div className="px-2">
                 <SearchBar />
               </div>

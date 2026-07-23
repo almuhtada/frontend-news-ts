@@ -1,6 +1,8 @@
 import { useMemo, useCallback } from "react";
 import { useDetailData } from "../../hooks/useDetailData";
 import PublicPageLayout from "../../components/layouts/PublicPageLayout";
+import SEO from "../../components/common/SEO";
+import { getImageUrl } from "../../config/api"; // pastikan helper getImageUrl terimport
 
 import ArticleHeader from "../../components/detail/ArticleHeader";
 import AuthorInfo from "../../components/detail/AuthorInfo";
@@ -83,6 +85,13 @@ const DetailNews = () => {
 
   return (
     <PublicPageLayout>
+      <SEO
+        title={post.title}
+        description={post.excerpt || post.content ? post.content.replace(/<[^>]*>/g, "").slice(0, 160) : ""}
+        image={getImageUrl(post.featured_image)}
+        url={`https://almuhtada.org/detail-news/${post.slug}`}
+        type="article"
+      />
       <div
         className="min-h-screen bg-gray-50 dark:bg-gray-950"
         style={{

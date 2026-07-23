@@ -18,13 +18,9 @@ const HeroSection = ({ story, formatTimeAgo }: HeroSectionProps) => {
         />
       )}
       <div className="p-6 flex-1">
-        <div className="text-sm text-yellow-600 font-semibold">
-          TOP STORIES
-        </div>
+        <div className="text-sm text-yellow-600 font-semibold">TOP STORIES</div>
         <h1 className="mt-2 text-2xl md:text-3xl font-bold">
-          <Link to={`/detail-news/${story.slug}`}>
-            {story.title}
-          </Link>
+          <Link to={`/detail-news/${story.slug}`}>{story.title}</Link>
         </h1>
         <p className="mt-3 text-gray-600">
           {story.excerpt || story.content.substring(0, 150) + "..."}
