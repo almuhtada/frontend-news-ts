@@ -12,6 +12,7 @@
 
 export interface Author {
   id: number;
+  uuid?: string;
   username: string;
   email: string;
   display_name: string;
@@ -24,6 +25,7 @@ export interface Author {
 
 export interface Category {
   id: number;
+  uuid?: string;
   name: string;
   slug: string;
   description?: string;
@@ -34,12 +36,14 @@ export interface Category {
 
 export interface Tag {
   id: number;
+  uuid?: string;
   name: string;
   slug: string;
 }
 
 export interface Post {
   id: number;
+  uuid: string;
   title: string;
   slug: string;
   excerpt?: string;
@@ -71,6 +75,7 @@ export interface Post {
 
 export interface Comment {
   id: number;
+  uuid?: string;
   post_id: number;
   parent_id: number | null;
   author_name: string;

@@ -24,7 +24,7 @@ const PendidikanPage = () => {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Memuat data...</p>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">Memuat data...</p>
           </div>
         </div>
       </PublicPageLayout>
@@ -33,7 +33,7 @@ const PendidikanPage = () => {
 
   return (
     <PublicPageLayout>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
         <main className="max-w-7xl mx-auto px-4 py-8">
           <div className="grid lg:grid-cols-4 gap-10">
             <div className="lg:col-span-3 space-y-10">

@@ -5,12 +5,21 @@ import PublicPageLayout from "../components/layouts/PublicPageLayout";
 import CardHeadlinerApi from "../components/components-global/card-headliner-api";
 import TrendingListApi from "../components/components-global/trending-list-api";
 import ArticleCardApi from "../components/components-global/card-artikel-api";
+import { useSettings } from "../hooks/useSettings";
 import { postsService } from "../services/posts";
 import { categoriesService } from "../services/categories";
 import type { Post, Category } from "../services/posts";
 
 const ProfilePage = () => {
   const { slug } = useParams<{ slug?: string }>();
+  const { settings } = useSettings();
+
+  const socialLinks = [
+    { name: "Facebook", url: settings.facebook, color: "bg-blue-600" },
+    { name: "Twitter", url: settings.twitter, color: "bg-sky-500" },
+    { name: "Instagram", url: settings.instagram, color: "bg-pink-500" },
+    { name: "YouTube", url: settings.youtube, color: "bg-red-600" },
+  ].filter((s) => s.url);
   const [featuredArticles, setFeaturedArticles] = useState<Post[]>([]);
   const [articles, setArticles] = useState<Post[]>([]);
   const [trendingNews, setTrendingNews] = useState<Post[]>([]);
@@ -80,7 +89,7 @@ const ProfilePage = () => {
 
   return (
     <PublicPageLayout>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
         <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-4 gap-10">
           {/* Konten utama */}
@@ -97,20 +106,20 @@ const ProfilePage = () => {
           {/* Sidebar kanan */}
           <aside className="lg:col-span-1 space-y-8">
             {/* Trending Section */}
-            <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
               <div className="p-4">
                 <TrendingListApi items={trendingNews} />
               </div>
             </div>
 
             {/* Hot Topics */}
-            <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-6">
+            <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
               <div className="flex items-center gap-2 mb-6">
                 <div className="w-6 h-6 bg-gradient-to-br from-emerald-500 to-green-700 rounded-xl flex items-center justify-center transition hover:scale-105 hover:shadow-md">
                   <Fire className="w-4 h-4 text-white" />
                 </div>
 
-                <h3 className="text-lg font-bold text-gray-800">
+                <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">
                   Topik Hangat
                 </h3>
               </div>
@@ -144,33 +153,32 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            {/* Social Media */}
-            <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">
-                Ikuti Kami
-              </h3>
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  { name: "Facebook", color: "bg-blue-600", followers: "12K" },
-                  { name: "Twitter", color: "bg-sky-500", followers: "8.5K" },
-                  { name: "Instagram", color: "bg-pink-500", followers: "15K" },
-                  { name: "YouTube", color: "bg-red-600", followers: "6.2K" },
-                ].map((social, index) => (
-                  <div key={index} className="text-center">
-                    <div
-                      className={`${social.color} text-white p-3 rounded-2xl mb-2 hover:scale-105 transition-transform cursor-pointer`}
+            {socialLinks.length > 0 && (
+              <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-6">
+                <h3 className="text-lg font-bold text-gray-800 mb-4">
+                  Ikuti Kami
+                </h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {socialLinks.map((social, index) => (
+                    <a
+                      key={index}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-center"
                     >
-                      <span className="font-semibold text-sm">
-                        {social.name}
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-600">
-                      {social.followers} followers
-                    </p>
-                  </div>
-                ))}
+                      <div
+                        className={`${social.color} text-white p-3 rounded-2xl mb-2 hover:scale-105 transition-transform cursor-pointer`}
+                      >
+                        <span className="font-semibold text-sm">
+                          {social.name}
+                        </span>
+                      </div>
+                    </a>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </aside>
         </div>
       </main>

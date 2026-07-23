@@ -7,7 +7,7 @@ import {
 import { getUserIdentifier } from "../../utils/userIdentifier";
 
 interface Props {
-  postId: number;
+  postUuid: string;
 }
 
 // Strip HTML tags from content
@@ -85,7 +85,7 @@ const formatRelativeTime = (dateString: string): string => {
   });
 };
 
-const ArticleComments = ({ postId }: Props) => {
+const ArticleComments = ({ postUuid }: Props) => {
   const [comments, setComments] = useState<CommentType[]>([]);
   const [text, setText] = useState("");
   const [name, setName] = useState("");
@@ -101,7 +101,7 @@ const ArticleComments = ({ postId }: Props) => {
       setError(null);
 
       try {
-        const response = await interactionService.getComments(postId, "approved");
+        const response = await interactionService.getComments(postUuid, "approved");
 
         if (response.success) {
           setComments(response.data.comments);
@@ -115,7 +115,7 @@ const ArticleComments = ({ postId }: Props) => {
     };
 
     fetchComments();
-  }, [postId]);
+  }, [postUuid]);
 
   const submitComment = async () => {
     if (!text.trim()) {
@@ -145,7 +145,7 @@ const ArticleComments = ({ postId }: Props) => {
     try {
       const userIdentifier = getUserIdentifier();
 
-      const response = await interactionService.createComment(postId, {
+      const response = await interactionService.createComment(postUuid, {
         author_name: name.trim(),
         author_email: email.trim(),
         content: text.trim(),
@@ -159,7 +159,7 @@ const ArticleComments = ({ postId }: Props) => {
         setEmail("");
 
         // Refresh comments list to show new comment immediately
-        const commentsResponse = await interactionService.getComments(postId, "approved");
+        const commentsResponse = await interactionService.getComments(postUuid, "approved");
         if (commentsResponse.success) {
           setComments(commentsResponse.data.comments);
         }
@@ -179,9 +179,9 @@ const ArticleComments = ({ postId }: Props) => {
     <section className="mt-14">
       {/* SECTION TITLE */}
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 tracking-tight">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 tracking-tight">
           Komentar
-          <span className="ml-2 text-sm font-normal text-gray-500">
+          <span className="ml-2 text-sm font-normal text-gray-500 dark:text-gray-400">
             ({comments.length})
           </span>
         </h3>
@@ -189,7 +189,7 @@ const ArticleComments = ({ postId }: Props) => {
 
       {/* COMMENT FORM */}
       <div className="mb-10">
-        <div className="rounded-2xl border border-gray-200 bg-white p-5">
+        <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5">
           {/* Name and Email inputs */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
             <input
@@ -198,8 +198,8 @@ const ArticleComments = ({ postId }: Props) => {
               onChange={(e) => setName(e.target.value)}
               placeholder="Nama Anda *"
               className="
-                px-3 py-2 rounded-lg border border-gray-200
-                text-sm text-gray-800 placeholder:text-gray-400
+                px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600
+                text-sm text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500
                 focus:outline-none focus:border-emerald-400
               "
               disabled={submitting}
@@ -210,8 +210,8 @@ const ArticleComments = ({ postId }: Props) => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email Anda *"
               className="
-                px-3 py-2 rounded-lg border border-gray-200
-                text-sm text-gray-800 placeholder:text-gray-400
+                px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600
+                text-sm text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500
                 focus:outline-none focus:border-emerald-400
               "
               disabled={submitting}
@@ -225,8 +225,8 @@ const ArticleComments = ({ postId }: Props) => {
             placeholder="Tulis pendapat Anda secara sopan dan relevan…"
             rows={3}
             className="
-              w-full resize-none bg-transparent text-sm text-gray-800
-              placeholder:text-gray-400
+              w-full resize-none bg-transparent text-sm text-gray-800 dark:text-gray-200
+              placeholder:text-gray-400 dark:placeholder:text-gray-500
               focus:outline-none
             "
             disabled={submitting}
@@ -266,21 +266,21 @@ const ArticleComments = ({ postId }: Props) => {
       {loading && (
         <div className="text-center py-8">
           <Loader2 className="w-6 h-6 animate-spin mx-auto text-emerald-600" />
-          <p className="text-sm text-gray-500 mt-2">Memuat komentar...</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Memuat komentar...</p>
         </div>
       )}
 
       {/* ERROR STATE */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-          <p className="text-sm text-red-800">{error}</p>
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+          <p className="text-sm text-red-800 dark:text-red-300">{error}</p>
         </div>
       )}
 
       {/* COMMENT LIST */}
       {!loading && comments.length === 0 && (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <p className="text-sm text-gray-500">
+        <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             Belum ada komentar. Jadilah yang pertama berkomentar!
           </p>
         </div>
@@ -289,9 +289,9 @@ const ArticleComments = ({ postId }: Props) => {
       {!loading && comments.length > 0 && (
         <div className="space-y-8">
           {comments.map((c) => (
-            <article key={c.id} className="border-b border-gray-100 pb-6">
+            <article key={c.id} className="border-b border-gray-100 dark:border-gray-700 pb-6">
               <div className="flex items-center justify-between mb-1">
-                <p className="text-sm font-semibold text-gray-900">
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                   {c.author_name}
                 </p>
                 <span className="text-xs text-gray-400">
@@ -299,24 +299,24 @@ const ArticleComments = ({ postId }: Props) => {
                 </span>
               </div>
 
-              <p className="text-sm text-gray-700 leading-relaxed max-w-3xl">
+              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed max-w-3xl">
                 {renderWithLinks(c.content)}
               </p>
 
               {/* Nested replies */}
               {c.replies && c.replies.length > 0 && (
-                <div className="mt-4 ml-6 space-y-4 border-l-2 border-gray-100 pl-4">
+                <div className="mt-4 ml-6 space-y-4 border-l-2 border-gray-100 dark:border-gray-700 pl-4">
                   {c.replies.map((reply) => (
                     <div key={reply.id}>
                       <div className="flex items-center justify-between mb-1">
-                        <p className="text-sm font-semibold text-gray-800">
+                        <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
                           {reply.author_name}
                         </p>
                         <span className="text-xs text-gray-400">
                           {formatRelativeTime(reply.createdAt)}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 leading-relaxed">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                         {renderWithLinks(reply.content)}
                       </p>
                     </div>

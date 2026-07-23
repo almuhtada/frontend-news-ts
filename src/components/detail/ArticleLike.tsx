@@ -4,11 +4,11 @@ import { interactionService } from "../../services/interactions";
 import { getUserIdentifier } from "../../utils/userIdentifier";
 
 interface Props {
-  postId: number;
+  postUuid: string;
   initialCount?: number;
 }
 
-const ArticleLike = ({ postId, initialCount = 0 }: Props) => {
+const ArticleLike = ({ postUuid, initialCount = 0 }: Props) => {
   const [liked, setLiked] = useState(false);
   const [count, setCount] = useState(initialCount);
   const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ const ArticleLike = ({ postId, initialCount = 0 }: Props) => {
     const fetchLikeData = async () => {
       try {
         const userIdentifier = getUserIdentifier();
-        const response = await interactionService.getLikes(postId, userIdentifier);
+        const response = await interactionService.getLikes(postUuid, userIdentifier);
 
         if (response.success) {
           setLiked(response.data.liked);
@@ -30,7 +30,7 @@ const ArticleLike = ({ postId, initialCount = 0 }: Props) => {
     };
 
     fetchLikeData();
-  }, [postId]);
+  }, [postUuid]);
 
   const toggleLike = async () => {
     if (loading) return;
@@ -46,7 +46,7 @@ const ArticleLike = ({ postId, initialCount = 0 }: Props) => {
 
     try {
       const userIdentifier = getUserIdentifier();
-      const response = await interactionService.toggleLike(postId, userIdentifier);
+      const response = await interactionService.toggleLike(postUuid, userIdentifier);
 
       if (response.success) {
         // Update with actual data from server
@@ -79,8 +79,8 @@ const ArticleLike = ({ postId, initialCount = 0 }: Props) => {
         transition-all duration-200
         ${
           liked
-            ? "bg-emerald-50 border-emerald-300 text-gray-700"
-            : "bg-white border-gray-300 text-gray-600 hover:border-emerald-300"
+            ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-300 dark:border-emerald-700 text-gray-700 dark:text-gray-300"
+            : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:border-emerald-300"
         }
       `}
     >

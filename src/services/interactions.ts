@@ -89,7 +89,7 @@ class InteractionService {
    * @param userId - Optional user ID if logged in
    */
   async toggleLike(
-    postId: number,
+    postId: string,
     userIdentifier: string,
     userId?: number
   ): Promise<LikeResponse> {
@@ -105,7 +105,7 @@ class InteractionService {
    * @param userIdentifier - Optional user identifier to check if user has liked
    */
   async getLikes(
-    postId: number,
+    postId: string,
     userIdentifier?: string
   ): Promise<GetLikesResponse> {
     const params: Record<string, string> = userIdentifier ? { user_identifier: userIdentifier } : {};
@@ -118,7 +118,7 @@ class InteractionService {
    * @param commentData - Comment data
    */
   async createComment(
-    postId: number,
+    postId: string,
     commentData: CreateCommentData
   ): Promise<CreateCommentResponse> {
     return api.post<CreateCommentResponse>(
@@ -135,7 +135,7 @@ class InteractionService {
    * @param offset - Offset for pagination (default: 0)
    */
   async getComments(
-    postId: number,
+    postId: string,
     status: "approved" | "pending" | "spam" | "trash" = "approved",
     limit: number = 50,
     offset: number = 0

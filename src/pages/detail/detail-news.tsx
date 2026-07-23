@@ -1,8 +1,8 @@
-import { useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useDetailData } from "../../hooks/useDetailData";
 import PublicPageLayout from "../../components/layouts/PublicPageLayout";
 import SEO from "../../components/common/SEO";
-import { getImageUrl } from "../../config/api"; // pastikan helper getImageUrl terimport
+import { getImageUrl } from "../../config/api";
 
 import ArticleHeader from "../../components/detail/ArticleHeader";
 import AuthorInfo from "../../components/detail/AuthorInfo";
@@ -17,7 +17,6 @@ import formatEveryFourSentences from "../../utils/formatParagraph";
 import ArticleLike from "../../components/detail/ArticleLike";
 import ArticleComments from "../../components/detail/ArticleComments";
 
-// Harus sama dengan PARAGRAPHS_PER_PAGE di ArticleContent.tsx
 const PARAGRAPHS_PER_PAGE = 3;
 
 const DetailNews = () => {
@@ -33,15 +32,18 @@ const DetailNews = () => {
     words,
   } = useDetailData();
 
-  // Format konten berita: 1 paragraf = 5 kalimat
+  const [showAll, setShowAll] = useState(false);
+
   const formattedParagraphs = useMemo(() => {
     if (!post?.content) return [];
     return formatEveryFourSentences(post.content);
   }, [post?.content]);
 
-  // Hitung total halaman berdasarkan jumlah paragraf
   const totalPages = useMemo(() => {
-    return Math.max(1, Math.ceil(formattedParagraphs.length / PARAGRAPHS_PER_PAGE));
+    return Math.max(
+      1,
+      Math.ceil(formattedParagraphs.length / PARAGRAPHS_PER_PAGE),
+    );
   }, [formattedParagraphs]);
 
   const handleNextPage = useCallback(() => {
@@ -51,25 +53,29 @@ const DetailNews = () => {
     }
   }, [currentPage, totalPages, setCurrentPage]);
 
-  // Loading state
+  const handleShowAll = () => {
+    setShowAll(true);
+  };
+
   if (loading) {
     return (
       <PublicPageLayout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto" />
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Memuat artikel...</p>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">
+              Memuat artikel...
+            </p>
           </div>
         </div>
       </PublicPageLayout>
     );
   }
 
-  // Error / not found state
   if (error || !post) {
     return (
       <PublicPageLayout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               Artikel Tidak Ditemukan
@@ -87,7 +93,11 @@ const DetailNews = () => {
     <PublicPageLayout>
       <SEO
         title={post.title}
-        description={post.excerpt || post.content ? post.content.replace(/<[^>]*>/g, "").slice(0, 160) : ""}
+        description={
+          post.excerpt || post.content
+            ? post.content.replace(/<[^>]*>/g, "").slice(0, 160)
+            : ""
+        }
         image={getImageUrl(post.featured_image)}
         url={`https://almuhtada.org/detail-news/${post.slug}`}
         type="article"
@@ -107,7 +117,7 @@ const DetailNews = () => {
             <div className="flex-1 min-w-0">
               <ArticleHeader post={post} />
             </div>
-            <ArticleLike postId={post.id} />
+            <ArticleLike postUuid={post.uuid} />
           </div>
 
           {/* Author */}
@@ -123,7 +133,7 @@ const DetailNews = () => {
           {/* Social Share */}
           <SocialShare />
 
-          {/* Konten Artikel (berbasis paragraf, 3 per halaman) */}
+          {/* Konten Artikel */}
           <ArticleContent
             currentPage={currentPage}
             totalPages={totalPages}
@@ -131,14 +141,18 @@ const DetailNews = () => {
             paragraphs={formattedParagraphs}
             excerpt={post.excerpt}
             onNextPage={handleNextPage}
+            showAll={showAll}
+            onShowAll={handleShowAll}
           />
 
           {/* Pagination */}
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            setCurrentPage={setCurrentPage}
-          />
+          {!showAll && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              setCurrentPage={setCurrentPage}
+            />
+          )}
 
           {/* Related Posts */}
           <RelatedPosts posts={relatedPosts} />
@@ -147,7 +161,7 @@ const DetailNews = () => {
           <ArticleTags post={post} />
 
           {/* Komentar */}
-          <ArticleComments postId={post.id} />
+          <ArticleComments postUuid={post.uuid} />
         </div>
       </div>
     </PublicPageLayout>

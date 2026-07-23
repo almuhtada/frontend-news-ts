@@ -38,7 +38,7 @@ export const API_ENDPOINTS = {
 
   // Comments
   COMMENTS: "/comments",
-  POST_COMMENTS: (postId: number) => `/posts/${postId}/comments`,
+  POST_COMMENTS: (postId: string) => `/posts/${postId}/comments`,
 
   // Media
   MEDIA: "/media",
@@ -49,13 +49,13 @@ export const API_ENDPOINTS = {
 
   // ── Recommendation System ────────────────────────────────────────
   /** Related posts untuk Detail News page — berbasis kategori/tag/author */
-  RELATED_POSTS: (postId: number) => `/recommendations/related/${postId}`,
+  RELATED_POSTS: (postId: string) => `/recommendations/related/${postId}`,
 
   /** Personalized / trending feed untuk Home page */
   RECOMMENDED_POSTS: "/recommendations/home",
 
   /** Trending dalam satu kategori — widget sidebar Detail page */
-  TRENDING_BY_CATEGORY: (categoryId: number) =>
+  TRENDING_BY_CATEGORY: (categoryId: string) =>
     `/recommendations/trending-category/${categoryId}`,
 
   /** Hot tags dari artikel trending — widget "Topik Hangat" */
@@ -65,8 +65,8 @@ export const API_ENDPOINTS = {
   TRACK_VIEW: "/recommendations/track-view",
 
   /** Bookmark: toggle, cek status, daftar */
-  TOGGLE_BOOKMARK: (postId: number) => `/recommendations/bookmark/${postId}`,
-  BOOKMARK_STATUS: (postId: number) => `/recommendations/bookmark/${postId}`,
+  TOGGLE_BOOKMARK: (postId: string) => `/recommendations/bookmark/${postId}`,
+  BOOKMARK_STATUS: (postId: string) => `/recommendations/bookmark/${postId}`,
   USER_BOOKMARKS: "/recommendations/bookmarks",
 };
 

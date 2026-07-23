@@ -13,7 +13,7 @@ const RelatedPosts = ({ posts }: RelatedPostsProps) => {
     <section className="mt-16">
       {/* Section Header */}
       <div className="mb-6 flex items-center justify-between">
-        <h3 className="text-xl font-bold text-gray-900">
+        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
           Rekomendasi Berita Lainnya
         </h3>
         <span className="text-sm text-emerald-600 font-medium">
@@ -27,7 +27,7 @@ const RelatedPosts = ({ posts }: RelatedPostsProps) => {
           <Link
             key={post.id}
             to={`/detail-news/${post.slug}`}
-            className="group rounded-xl border border-gray-100 bg-white overflow-hidden shadow-sm hover:shadow-lg transition"
+            className="group rounded-xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden shadow-sm hover:shadow-lg transition"
           >
             {/* Image */}
             {post.featured_image && (
@@ -49,7 +49,7 @@ const RelatedPosts = ({ posts }: RelatedPostsProps) => {
 
             {/* Content */}
             <div className="p-4 flex flex-col gap-2">
-              <h4 className="text-sm font-semibold text-gray-900 leading-snug line-clamp-2 group-hover:text-emerald-700 transition">
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 group-hover:text-emerald-700 transition">
                 {post.title}
               </h4>
 

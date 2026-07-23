@@ -12,20 +12,20 @@ const AccountRow: React.FC<{
   copied: boolean;
 }> = ({ bank, number, name, onCopy, copied }) => {
   return (
-    <div className="flex items-center justify-between gap-4 p-3 rounded-lg border border-gray-100 bg-white">
+    <div className="flex items-center justify-between gap-4 p-3 rounded-lg border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 dark:bg-gray-800">
       <div>
-        <div className="text-sm font-semibold text-gray-800">{bank}</div>
-        <div className="text-xs text-gray-500">{name}</div>
+        <div className="text-sm font-semibold text-gray-800 dark:text-gray-100">{bank}</div>
+        <div className="text-xs text-gray-500 dark:text-gray-400">{name}</div>
       </div>
 
       <div className="flex-1 text-right">
-        <div className="font-mono text-sm text-gray-700">{number}</div>
+        <div className="font-mono text-sm text-gray-700 dark:text-gray-300">{number}</div>
       </div>
 
       <div>
         <button
           onClick={() => onCopy(number)}
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-md border border-gray-200 bg-gray-50 text-sm hover:bg-gray-100 transition"
+          className="inline-flex items-center gap-2 px-3 py-1 rounded-md border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 transition"
           aria-label={`Copy nomor ${bank}`}
         >
           {copied ? (
@@ -46,7 +46,7 @@ const AccountRow: React.FC<{
                   d="M8 7H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-2M16 3h5v5M16 3L8 11"
                 />
               </svg>
-              <span className="text-sm text-gray-700">Copy</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">Copy</span>
             </>
           )}
         </button>
@@ -100,7 +100,7 @@ const Pendaftaran: React.FC = () => {
     return (
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="animate-pulse space-y-8">
-          <div className="bg-white rounded-2xl shadow-sm p-8">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-8">
             <div className="h-8 bg-slate-200 rounded w-2/3 mb-4"></div>
             <div className="h-4 bg-slate-200 rounded w-1/2"></div>
           </div>
@@ -111,7 +111,7 @@ const Pendaftaran: React.FC = () => {
   if (!content) {
     return (
       <div className="max-w-6xl mx-auto px-6 py-12">
-        <div className="bg-white rounded-2xl shadow-sm p-8 text-center text-gray-500">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-8 text-center text-gray-500">
           Konten tidak tersedia.
         </div>
       </div>
@@ -121,13 +121,13 @@ const Pendaftaran: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
       {/* Header */}
-      <div className="bg-white rounded-2xl shadow-sm p-8 mb-8">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-8 mb-8">
         <div className="md:flex md:items-center md:justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
               {content.header.title}
             </h1>
-            <p className="text-gray-600">{content.header.description}</p>
+            <p className="text-gray-600 dark:text-gray-400">{content.header.description}</p>
 
             <div className="mt-4 flex flex-wrap gap-3">
               <a
@@ -147,7 +147,7 @@ const Pendaftaran: React.FC = () => {
                   )}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-gray-200 text-gray-700 hover:bg-gray-50 transition"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
                 >
                   Konfirmasi via WhatsApp
                 </a>
@@ -156,9 +156,9 @@ const Pendaftaran: React.FC = () => {
           </div>
 
           <div className="mt-6 md:mt-0">
-            <div className="rounded-lg bg-green-50 px-4 py-3 text-center">
-              <div className="text-sm text-gray-600">Biaya Pendaftaran</div>
-              <div className="text-xl font-semibold text-green-700 mt-1">
+              <div className="rounded-lg bg-green-50 dark:bg-green-900/20 px-4 py-3 text-center">
+              <div className="text-sm text-gray-600 dark:text-gray-400">Biaya Pendaftaran</div>
+              <div className="text-xl font-semibold text-green-700 dark:text-green-400 mt-1">
                 {content.registrationFee}
               </div>
             </div>
@@ -170,11 +170,11 @@ const Pendaftaran: React.FC = () => {
         {/* Left: Persyaratan + Cara Daftar */}
         <div className="lg:col-span-2 space-y-6">
           {/* Persyaratan */}
-          <div className="bg-white rounded-2xl shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
               Persyaratan Pendaftaran
             </h2>
-            <ol className="list-decimal pl-5 space-y-2 text-gray-700">
+            <ol className="list-decimal pl-5 space-y-2 text-gray-700 dark:text-gray-300">
               {content.requirements.map((req, index) => (
                 <li key={index}>{req}</li>
               ))}
@@ -203,8 +203,8 @@ const Pendaftaran: React.FC = () => {
           </div>
 
           {/* Accounts */}
-          <div className="bg-white rounded-2xl shadow p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
               Rekening / Metode Pembayaran
             </h3>
             <div className="space-y-3">
@@ -219,33 +219,33 @@ const Pendaftaran: React.FC = () => {
                 />
               ))}
             </div>
-            <p className="mt-3 text-xs text-gray-500">
+            <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
               • Salin nomor rekening lalu lakukan pembayaran. Setelah transfer,
               jangan lupa konfirmasi via WA.
             </p>
           </div>
 
           {/* Cara Daftar & Timeline */}
-          <div className="bg-white rounded-2xl shadow p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
               Cara Daftar & Timeline
             </h3>
 
             <div className="space-y-4">
               <div>
-                <h4 className="font-medium text-gray-700">
+                <h4 className="font-medium text-gray-700 dark:text-gray-300">
                   Periode Pendaftaran
                 </h4>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   {content.timelineStart} — {content.timelineEnd}
                 </p>
               </div>
 
               <div>
-                <h4 className="font-medium text-gray-700">
+                <h4 className="font-medium text-gray-700 dark:text-gray-300">
                   Langkah Pendaftaran
                 </h4>
-                <ol className="list-decimal pl-5 text-gray-700 space-y-2 text-sm">
+                <ol className="list-decimal pl-5 text-gray-700 dark:text-gray-300 space-y-2 text-sm">
                   {content.steps.map((step, index) => (
                     <li key={index}>{step}</li>
                   ))}
@@ -257,11 +257,11 @@ const Pendaftaran: React.FC = () => {
 
         {/* Right: Kontak & CTA */}
         <aside className="space-y-6">
-          <div className="bg-white rounded-2xl shadow p-6 text-center">
-            <h4 className="text-lg font-semibold text-gray-800 mb-2">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6 text-center">
+            <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
               Kontak Konfirmasi
             </h4>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               Silakan chat via WhatsApp untuk konfirmasi dan pertanyaan.
             </p>
 
@@ -272,7 +272,7 @@ const Pendaftaran: React.FC = () => {
                   href={makeWhatsAppLink(c.number, "PRM_Nama_Prodi_Alamat")}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center justify-between gap-3 px-4 py-2 rounded-md border border-gray-100 hover:shadow-sm transition"
+                  className="flex items-center justify-between gap-3 px-4 py-2 rounded-md border border-gray-100 dark:border-gray-700 hover:shadow-sm transition"
                 >
                   <div className="flex items-center gap-3">
                     <img
@@ -298,7 +298,7 @@ const Pendaftaran: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow p-6 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6 text-center">
             <h4 className="text-lg font-semibold text-gray-800 mb-3">
               Butuh Bantuan?
             </h4>
@@ -315,7 +315,7 @@ const Pendaftaran: React.FC = () => {
             </a>
           </div>
 
-          <div className="bg-white rounded-2xl shadow p-4 text-center text-xs text-gray-500">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-4 text-center text-xs text-gray-500">
             <div>Format Konfirmasi WA:</div>
             <div className="mt-2 font-mono text-sm">PRM_Nama_Prodi_Alamat</div>
           </div>

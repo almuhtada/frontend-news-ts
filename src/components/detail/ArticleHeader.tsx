@@ -9,7 +9,7 @@ const ArticleHeader = ({ post }: ArticleHeaderProps) => {
     <>
       {/* Breadcrumb */}
       <div>
-        <h6 className="text-xs text-gray-500">
+        <h6 className="text-xs text-gray-500 dark:text-gray-400">
           Home {">"} {post.categories?.[0]?.name || "Berita"} {">"}{" "}
           {post.title}
         </h6>
@@ -17,13 +17,13 @@ const ArticleHeader = ({ post }: ArticleHeaderProps) => {
 
       {/* Judul Berita */}
       <div className="mt-4">
-        <h1 className="font-bold text-3xl leading-tight text-gray-900">
+        <h1 className="font-bold text-3xl leading-tight text-gray-900 dark:text-gray-100">
           {post.title}
         </h1>
       </div>
 
       {/* Info media + tanggal */}
-      <div className="mt-4 text-sm text-gray-500">
+      <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
         <span className="font-semibold text-blue-600">almuhtada.org</span> -
         {post.published_at
           ? new Date(post.published_at).toLocaleDateString("id-ID", {

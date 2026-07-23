@@ -58,7 +58,7 @@ const Home = () => {
   return (
     <PublicPageLayout>
       <SEO />
-      <div className="min-h-screen bg-white from-slate-50 via-blue-50 to-indigo-100">
+      <div className="min-h-screen bg-white dark:bg-gray-950">
         <main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 sm:py-8">
           <div className="grid lg:grid-cols-4 gap-6 lg:gap-10">
             {/* Main Content */}

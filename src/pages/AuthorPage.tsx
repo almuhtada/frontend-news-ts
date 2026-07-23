@@ -18,10 +18,10 @@ const AuthorPage = () => {
   if (loading) {
     return (
       <PublicPageLayout>
-        <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-gray-950">
           <div className="text-center">
             <div className="h-10 w-10 animate-spin rounded-full border-2 border-emerald-600 border-t-transparent mx-auto" />
-            <p className="mt-4 text-sm text-gray-600">Memuat profil penulis…</p>
+            <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">Memuat profil penulis…</p>
           </div>
         </div>
       </PublicPageLayout>
@@ -31,12 +31,12 @@ const AuthorPage = () => {
   if (error || !author) {
     return (
       <PublicPageLayout>
-        <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-gray-950">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
               Penulis Tidak Ditemukan
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               {error || "Profil penulis tidak tersedia."}
             </p>
           </div>
@@ -85,10 +85,10 @@ const AuthorPage = () => {
 
   return (
     <PublicPageLayout>
-      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-gray-950 dark:to-gray-950">
         <main className="mx-auto max-w-6xl px-4 py-8">
         {/* PROFILE HEADER */}
-        <section className="mb-10 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+        <section className="mb-10 rounded-2xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 shadow-sm">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
             {/* Avatar */}
             <div className="flex-shrink-0">
@@ -149,7 +149,7 @@ const AuthorPage = () => {
 
             {/* PAGINATION */}
             {totalPages > 1 && (
-              <div className="mt-10 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+              <div className="mt-10 rounded-2xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 shadow-sm">
                 <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
                   {/* Prev */}
                   <button
@@ -157,7 +157,7 @@ const AuthorPage = () => {
                     disabled={currentPage === 1}
                     className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
                       currentPage === 1
-                        ? "cursor-not-allowed bg-gray-100 text-gray-400"
+                        ? "cursor-not-allowed bg-gray-100 dark:bg-gray-700 text-gray-400"
                         : "bg-emerald-600 text-white hover:bg-emerald-500"
                     }`}
                   >
@@ -179,7 +179,7 @@ const AuthorPage = () => {
                             ? "bg-emerald-600 text-white shadow"
                             : page === "..."
                               ? "cursor-default text-gray-400"
-                              : "bg-gray-100 text-gray-700 hover:bg-emerald-100 hover:text-emerald-700"
+                              : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 hover:text-emerald-700"
                         }`}
                       >
                         {page}
@@ -193,7 +193,7 @@ const AuthorPage = () => {
                     disabled={currentPage === totalPages}
                     className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
                       currentPage === totalPages
-                        ? "cursor-not-allowed bg-gray-100 text-gray-400"
+                        ? "cursor-not-allowed bg-gray-100 dark:bg-gray-700 text-gray-400"
                         : "bg-emerald-600 text-white hover:bg-emerald-500"
                     }`}
                   >
@@ -209,12 +209,12 @@ const AuthorPage = () => {
             )}
           </>
         ) : (
-          <div className="rounded-2xl border border-gray-100 bg-white p-10 text-center shadow-sm">
-            <FileText className="mx-auto mb-4 h-14 w-14 text-gray-300" />
-            <h3 className="text-lg font-semibold text-gray-900">
+          <div className="rounded-2xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 p-10 text-center shadow-sm">
+            <FileText className="mx-auto mb-4 h-14 w-14 text-gray-300 dark:text-gray-600" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
               Belum Ada Artikel
             </h3>
-            <p className="mt-1 text-sm text-gray-600">
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
               Penulis ini belum mempublikasikan artikel.
             </p>
           </div>

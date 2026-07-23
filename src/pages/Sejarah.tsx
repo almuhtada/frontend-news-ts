@@ -6,7 +6,7 @@ import CategoryArticles from "../components/category/CategoryArticles";
 import CategorySidebar from "../components/category/CategorySidebar";
 import Pagination from "../components/common/Pagination";
 
-const SejarahPage = () => {
+const CategoryPage = () => {
   const { slug } = useParams<{ slug?: string }>();
   const {
     featuredArticles,
@@ -35,7 +35,7 @@ const SejarahPage = () => {
 
   return (
     <PublicPageLayout>
-      <div className="flex-1 bg-gray-50">
+      <div className="flex-1 bg-gray-50 dark:bg-gray-950">
         <main className="max-w-7xl mx-auto px-4 py-8">
           <div className="grid lg:grid-cols-4 gap-10">
             <div className="lg:col-span-3 space-y-10">
@@ -64,4 +64,4 @@ const SejarahPage = () => {
   );
 };
 
-export default SejarahPage;
+export default CategoryPage;

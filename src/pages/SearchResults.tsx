@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { Search, Calendar, Eye } from "lucide-react";
+import { Search, Calendar, Eye, AlertCircle } from "lucide-react";
 import { postsService, type Post } from "../services/posts";
 import { getImageUrl } from "../config/api";
 import PublicPageLayout from "../components/layouts/PublicPageLayout";
@@ -11,10 +11,33 @@ const SearchResults = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalResults, setTotalResults] = useState(0);
+  const [searchError, setSearchError] = useState<string | null>(null);
 
   useEffect(() => {
     const searchPosts = async () => {
-      if (!query) {
+  if (searchError) {
+    return (
+      <PublicPageLayout>
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+          <div className="max-w-4xl mx-auto px-4 py-16 text-center">
+            <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+              Gagal Mencari
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">{searchError}</p>
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center px-6 py-3 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition"
+            >
+              Kembali ke Beranda
+            </Link>
+          </div>
+        </div>
+      </PublicPageLayout>
+    );
+  }
+
+  if (!query) {
         setLoading(false);
         return;
       }
@@ -28,8 +51,10 @@ const SearchResults = () => {
         });
         setPosts(response.posts);
         setTotalResults(response.total);
+        setSearchError(null);
       } catch (error) {
         console.error("Error searching posts:", error);
+        setSearchError("Gagal mencari artikel. Silakan coba lagi.");
       } finally {
         setLoading(false);
       }

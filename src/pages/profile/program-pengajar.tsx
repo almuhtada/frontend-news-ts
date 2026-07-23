@@ -42,7 +42,7 @@ const ProgramPengajar = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white dark:bg-gray-950">
         <div className="max-w-7xl mx-auto px-6 py-20 animate-pulse space-y-8">
           <div className="h-12 bg-slate-200 rounded w-1/2 mx-auto" />
           <div className="h-4 bg-slate-200 rounded w-2/3 mx-auto" />
@@ -53,23 +53,23 @@ const ProgramPengajar = () => {
 
   if (error || !content) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
         <p className="text-red-500">{error || "Konten tidak tersedia"}</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950 dark:text-gray-100">
       <div className="max-w-7xl mx-auto px-6 py-20">
         {/* HEADER */}
         <div className="relative text-center mb-20">
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 opacity-5 blur-3xl" />
           <div className="relative space-y-6">
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900">
+            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-gray-100">
               {content.header.title}
             </h1>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg text-slate-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
               {content.header.description}
             </p>
             <div className="flex justify-center">
@@ -91,10 +91,10 @@ const ProgramPengajar = () => {
                 {content.programs.map((program, index) => (
                   <div
                     key={index}
-                    className="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl hover:bg-emerald-100 transition"
+                    className="flex items-start gap-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition"
                   >
                     <span className="w-2 h-2 mt-2 rounded-full bg-emerald-600" />
-                    <p className="text-slate-700 leading-relaxed">{program}</p>
+                    <p className="text-slate-700 dark:text-gray-300 leading-relaxed">{program}</p>
                   </div>
                 ))}
               </div>
@@ -111,12 +111,12 @@ const ProgramPengajar = () => {
               {content.masyayikh.map((person, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition"
+                  className="flex items-center gap-3 p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition"
                 >
                   <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 flex items-center justify-center text-white text-sm font-semibold">
                     {index + 1}
                   </div>
-                  <span className="text-slate-700 text-sm">{person}</span>
+                  <span className="text-slate-700 dark:text-gray-300 text-sm">{person}</span>
                 </div>
               ))}
             </div>
@@ -132,12 +132,12 @@ const ProgramPengajar = () => {
               {content.asatidz.map((person, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-3 p-3 bg-green-50 rounded-lg hover:bg-green-100 transition"
+                  className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/40 transition"
                 >
                   <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-600 to-emerald-600 flex items-center justify-center text-white text-sm font-semibold">
                     {index + 1}
                   </div>
-                  <span className="text-slate-700 text-sm">{person}</span>
+                  <span className="text-slate-700 dark:text-gray-300 text-sm">{person}</span>
                 </div>
               ))}
             </div>
@@ -153,7 +153,7 @@ const ProgramPengajar = () => {
               {content.pengurus.map((item, index) => (
                 <div
                   key={index}
-                  className="p-4 bg-emerald-50 rounded-xl hover:bg-emerald-100 transition"
+                  className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition"
                 >
                   <div className="font-semibold text-emerald-700 mb-1">
                     {item.role}
@@ -174,12 +174,12 @@ const ProgramPengajar = () => {
               {content.mentors.map((person, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-3 p-3 bg-teal-50 rounded-lg hover:bg-teal-100 transition"
+                  className="flex items-center gap-3 p-3 bg-teal-50 dark:bg-teal-900/20 rounded-lg hover:bg-teal-100 dark:hover:bg-teal-900/40 transition"
                 >
                   <div className="w-8 h-8 rounded-full bg-gradient-to-r from-teal-600 to-emerald-600 flex items-center justify-center text-white text-sm font-semibold">
                     {index + 1}
                   </div>
-                  <span className="text-slate-700 text-sm">{person}</span>
+                  <span className="text-slate-700 dark:text-gray-300 text-sm">{person}</span>
                 </div>
               ))}
             </div>
@@ -196,10 +196,10 @@ const ProgramPengajar = () => {
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 flex items-center justify-center">
                   <UserCheck className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 mb-3">
+                <h3 className="text-lg font-bold text-slate-800 dark:text-gray-100 mb-3">
                   Tertarik Bergabung?
                 </h3>
-                <p className="text-slate-600 text-sm mb-6">{content.ctaText}</p>
+                <p className="text-slate-600 dark:text-gray-400 text-sm mb-6">{content.ctaText}</p>
                 <button className="px-6 py-3 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white font-semibold hover:shadow-lg hover:scale-105 transition">
                   Hubungi Kami
                 </button>
@@ -210,9 +210,9 @@ const ProgramPengajar = () => {
 
         {/* FOOTER BADGE */}
         <div className="mt-20 text-center">
-          <div className="inline-flex items-center gap-3 px-6 py-3 bg-white rounded-full shadow-md">
+          <div className="inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-full shadow-md">
             <span className="w-3 h-3 rounded-full bg-gradient-to-r from-emerald-500 to-green-500 animate-pulse" />
-            <span className="text-slate-600 text-sm font-medium">
+            <span className="text-slate-600 dark:text-gray-400 text-sm font-medium">
               Program Aktif & Terpercaya
             </span>
           </div>

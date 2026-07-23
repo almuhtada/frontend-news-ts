@@ -78,7 +78,7 @@ export const recommendationsService = {
      Dipanggil dengan postId artikel yang sedang ditampilkan.
      Backend sudah menerapkan bobot: kategori 65% · tag 25% · author 10%.
   ─────────────────────────────────────────────────────────────────── */
-  getRelatedPosts: async (postId: number, limit = 6): Promise<Post[]> => {
+  getRelatedPosts: async (postId: string, limit = 6): Promise<Post[]> => {
     const response = await api.get<ApiPostsArrayResponse>(
       API_ENDPOINTS.RELATED_POSTS(postId),
       { limit },
@@ -108,11 +108,11 @@ export const recommendationsService = {
      Tampilkan artikel terpopuler dalam kategori yang sama.
   ─────────────────────────────────────────────────────────────────── */
   getTrendingByCategory: async (
-    categoryId: number,
-    options: { limit?: number; hours?: number; excludePostId?: number } = {}
+    categoryId: string,
+    options: { limit?: number; hours?: number; excludePostId?: string } = {}
   ): Promise<Post[]> => {
     const { limit = 5, hours = 48, excludePostId } = options;
-    const params: Record<string, number> = { limit, hours };
+    const params: Record<string, string | number> = { limit, hours };
     if (excludePostId) params.excludePostId = excludePostId;
 
     const response = await api.get<ApiPostsArrayResponse>(
@@ -139,7 +139,7 @@ export const recommendationsService = {
      Dipanggil saat user membuka artikel. Tidak blocking UI.
      Error diabaikan agar tidak mengganggu pengalaman baca.
   ─────────────────────────────────────────────────────────────────── */
-  trackView: (postId: number): void => {
+  trackView: (postId: string): void => {
     api
       .post(
         API_ENDPOINTS.TRACK_VIEW,
@@ -152,7 +152,7 @@ export const recommendationsService = {
   /* ───────────────────────────────────────────────────────────────────
      BOOKMARK — Toggle (wajib login)
   ─────────────────────────────────────────────────────────────────── */
-  toggleBookmark: async (postId: number): Promise<BookmarkStatus> => {
+  toggleBookmark: async (postId: string): Promise<BookmarkStatus> => {
     const response = await api.post<ApiBookmarkStatusResponse>(
       API_ENDPOINTS.TOGGLE_BOOKMARK(postId),
       {}
@@ -163,7 +163,7 @@ export const recommendationsService = {
   /* ───────────────────────────────────────────────────────────────────
      BOOKMARK STATUS — cek apakah sudah di-bookmark (wajib login)
   ─────────────────────────────────────────────────────────────────── */
-  getBookmarkStatus: async (postId: number): Promise<BookmarkStatus> => {
+  getBookmarkStatus: async (postId: string): Promise<BookmarkStatus> => {
     const response = await api.get<ApiBookmarkStatusResponse>(
       API_ENDPOINTS.BOOKMARK_STATUS(postId)
     );

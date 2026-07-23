@@ -23,6 +23,7 @@ export interface Tag {
 
 export interface Post {
   id: number;
+  uuid: string;
   title: string;
   slug: string;
   excerpt?: string;
@@ -32,8 +33,8 @@ export interface Post {
   editor_id?: number;
   status: 'draft' | 'publish' | 'archived';
   is_featured: boolean;
-  views?: number; // Database column name
-  view_count?: number; // Alias for compatibility
+  views?: number;
+  view_count?: number;
   comment_status: 'open' | 'closed';
   meta_title?: string;
   meta_description?: string;
@@ -151,13 +152,13 @@ export const postsService = {
   },
 
   // Update post
-  updatePost: async (id: number, data: UpdatePostData): Promise<Post> => {
-    const response = await api.put<ApiPostResponse>(`${API_ENDPOINTS.POSTS}/${id}`, data);
+  updatePost: async (uuid: string, data: UpdatePostData): Promise<Post> => {
+    const response = await api.put<ApiPostResponse>(`${API_ENDPOINTS.POSTS}/${uuid}`, data);
     return response.data;
   },
 
   // Delete post
-  deletePost: async (id: number): Promise<void> => {
-    await api.delete(`${API_ENDPOINTS.POSTS}/${id}`);
+  deletePost: async (uuid: string): Promise<void> => {
+    await api.delete(`${API_ENDPOINTS.POSTS}/${uuid}`);
   },
 };

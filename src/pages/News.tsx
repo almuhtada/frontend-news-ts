@@ -30,12 +30,12 @@ const News = () => {
   if (loading) {
     return (
       <PublicPageLayout>
-        <div className="min-h-[60vh] flex flex-col items-center justify-center bg-white">
+        <div className="min-h-[60vh] flex flex-col items-center justify-center bg-white dark:bg-gray-950">
           <div className="relative">
-            <div className="w-14 h-14 rounded-full border-4 border-gray-100 border-t-amber-500 animate-spin" />
+            <div className="w-14 h-14 rounded-full border-4 border-gray-100 dark:border-gray-700 border-t-amber-500 animate-spin" />
             <div className="absolute inset-0 w-14 h-14 rounded-full border-4 border-transparent border-t-amber-300 animate-spin [animation-duration:1.5s]" />
           </div>
-          <p className="mt-6 text-gray-500 font-medium tracking-wide animate-pulse">
+          <p className="mt-6 text-gray-500 dark:text-gray-400 font-medium tracking-wide animate-pulse">
             Memuat berita...
           </p>
         </div>
@@ -47,9 +47,9 @@ const News = () => {
   if (error) {
     return (
       <PublicPageLayout>
-        <div className="min-h-[60vh] flex items-center justify-center bg-white px-4">
+        <div className="min-h-[60vh] flex items-center justify-center bg-white dark:bg-gray-950 px-4">
           <div className="text-center max-w-md">
-            <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-red-50 flex items-center justify-center">
+            <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
               <svg
                 className="w-10 h-10 text-red-500"
                 fill="none"
@@ -64,10 +64,10 @@ const News = () => {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
               Terjadi Kesalahan
             </h3>
-            <p className="text-gray-500 leading-relaxed">{error}</p>
+            <p className="text-gray-500 dark:text-gray-400 leading-relaxed">{error}</p>
             <button
               onClick={() => window.location.reload()}
               className="mt-6 px-6 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 transition-colors duration-200"
@@ -83,7 +83,7 @@ const News = () => {
   // ─── Main Content ──────────────────────────────────────────────
   return (
     <PublicPageLayout>
-      <div className="min-h-screen bg-gray-50/80 text-gray-900">
+      <div className="min-h-screen bg-gray-50/80 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
         {/* Top accent bar */}
         <div className="h-1 bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500" />
 

@@ -371,6 +371,16 @@ const isVerseTranslation = (text: string): boolean =>
   /^artinya\s*:/i.test(text) ||
   (/(?:Q\.?\s*S\.?|Al[-\s]?Baqarah)/i.test(text) && /^[“"']/.test(text.trim()));
 
+const isMostlyArabic = (text: string): boolean => {
+  const chars = text.replace(/\s/g, "");
+  if (chars.length < 3) return false;
+  let arabicCount = 0;
+  for (const ch of chars) {
+    if (ARABIC_TEXT_REGEX.test(ch)) arabicCount++;
+  }
+  return arabicCount / chars.length > 0.6;
+};
+
 /**
  * Format content into paragraphs of ~5 sentences each
  */
@@ -409,6 +419,16 @@ const formatEveryFourSentences = (html: string): string[] => {
       }
       mergedParagraphs.push(`${cleaned}\n${nextParagraph}`);
       index++;
+      continue;
+    }
+
+    // Keep Arabic-only paragraphs separate so they get proper styling
+    if (isMostlyArabic(cleaned)) {
+      if (plainBuffer) {
+        mergedParagraphs.push(plainBuffer.trim());
+        plainBuffer = "";
+      }
+      mergedParagraphs.push(cleaned);
       continue;
     }
 

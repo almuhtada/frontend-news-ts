@@ -85,6 +85,7 @@ export const useNewsData = () => {
 
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(selectedCategory === category ? null : category);
+    setCurrentPage(1);
   };
 
   const formatTimeAgo = (dateString: string) => {
@@ -94,11 +95,11 @@ export const useNewsData = () => {
       (now.getTime() - date.getTime()) / (1000 * 60 * 60),
     );
 
-    if (diffInHours < 1) return "Just now";
-    if (diffInHours < 24) return `${diffInHours} hours ago`;
+    if (diffInHours < 1) return "Baru saja";
+    if (diffInHours < 24) return `${diffInHours} jam lalu`;
     const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays === 1) return "1 day ago";
-    return `${diffInDays} days ago`;
+    if (diffInDays === 1) return "1 hari lalu";
+    return `${diffInDays} hari lalu`;
   };
 
   const filteredArticles = selectedCategory

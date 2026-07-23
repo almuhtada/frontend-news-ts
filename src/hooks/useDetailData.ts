@@ -26,7 +26,7 @@ export const useDetailData = () => {
 
         // Track view untuk sistem rekomendasi (fire-and-forget)
         // Tidak perlu await — tidak boleh blocking
-        recommendationsService.trackView(postData.id);
+        recommendationsService.trackView(postData.uuid);
 
         // Fetch related posts menggunakan endpoint rekomendasi yang sesungguhnya.
         // Strategi bobot ditangani di backend:
@@ -35,7 +35,7 @@ export const useDetailData = () => {
         //   - Author sama    → ~10% slot
         //   - Fallback trending jika kurang
         const related = await recommendationsService.getRelatedPosts(
-          postData.id,
+          postData.uuid,
           6
         );
         setRelatedPosts(related.filter((p) => p.slug !== slug).slice(0, 6));
@@ -81,7 +81,6 @@ export const useDetailData = () => {
     };
   }, []);
 
-  // Pagination logic
   const words = post?.content.split(" ") || [];
   const wordsPerPage = 300;
   const totalPages = Math.ceil(words.length / wordsPerPage);
