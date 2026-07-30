@@ -83,12 +83,12 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
           <Link
             key={article.id}
             to={`/detail-news/${article.slug}`}
-            className="group block px-6 py-5 hover:bg-emerald-50/40 dark:hover:bg-emerald-900/20 transition"
+            className="group block px-4 py-4 md:px-6 md:py-5 hover:bg-emerald-50/40 dark:hover:bg-emerald-900/20 transition"
           >
-            <div className="flex gap-5">
+            <div className="md:flex md:gap-5">
               {/* Thumbnail */}
               {article.featured_image && (
-                <div className="h-24 w-36 flex-shrink-0 overflow-hidden rounded-xl">
+                <div className="w-full md:w-36 aspect-[16/9] md:aspect-auto md:h-24 flex-shrink-0 overflow-hidden rounded-xl md:rounded-xl">
                   <img
                     src={getImageUrl(article.featured_image)}
                     alt={article.title}
@@ -98,11 +98,11 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
               )}
 
               {/* Content */}
-              <div className="flex-1 min-w-0">
+              <div className="mt-3 md:mt-0 md:flex-1 md:min-w-0">
                 {/* Meta */}
-                <div className="mb-2 flex items-center gap-3 text-xs">
+                <div className="flex items-center gap-2 md:gap-3 text-[11px] md:text-xs">
                   {article.categories?.[0] && (
-                    <span className="rounded-full bg-emerald-100 px-3 py-1 font-semibold text-emerald-700">
+                    <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 md:px-3 md:py-1 font-semibold text-emerald-700">
                       {article.categories[0].name}
                     </span>
                   )}
@@ -112,13 +112,13 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
                 </div>
 
                 {/* Title */}
-                <h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 group-hover:text-emerald-700 transition">
+                <h3 className="mt-1.5 md:mt-2 mb-1.5 md:mb-2 text-sm md:text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 md:line-clamp-2 group-hover:text-emerald-700 transition">
                   {article.title}
                 </h3>
 
                 {/* Excerpt */}
                 <div
-                  className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2"
+                  className="text-xs md:text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mt-1 md:mt-0"
                   dangerouslySetInnerHTML={{
                     __html:
                       article.excerpt || article.content.substring(0, 150),

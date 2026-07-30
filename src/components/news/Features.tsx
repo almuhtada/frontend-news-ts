@@ -24,20 +24,24 @@ const features = [
 
 const Features = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 border-b border-gray-150 dark:border-gray-800/80 pb-6 mb-6">
       {features.map((f) => (
         <div
           key={f.id}
-          className="bg-white rounded shadow p-4 flex flex-col"
+          className="bg-transparent flex flex-col justify-between py-1"
         >
-          <div className="text-xs text-indigo-600 font-semibold">
-            {f.tag}
+          <div>
+            <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+              {f.tag}
+            </span>
+            <h4 className="mt-1.5 font-bold text-base text-gray-900 dark:text-gray-100 leading-snug">{f.title}</h4>
+            <p className="mt-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+              {f.excerpt}
+            </p>
           </div>
-          <h4 className="mt-2 font-bold">{f.title}</h4>
-          <div className="mt-2 text-sm text-gray-600 flex-1">
-            {f.excerpt}
+          <div className="mt-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 cursor-pointer hover:underline">
+            Baca selengkapnya →
           </div>
-          <div className="mt-3 text-sm text-gray-500">Read more →</div>
         </div>
       ))}
     </div>

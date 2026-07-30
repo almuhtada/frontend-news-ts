@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { useRef } from "react";
 import type { Post } from "../../services/posts";
 import { getImageUrl } from "../../config/api";
+import { PLACEHOLDER_IMAGE_MEDIUM } from "../../config/constants";
 
 interface NewsSectionProps {
   title: string;
@@ -21,6 +22,7 @@ interface NewsSectionProps {
   iconColor?: string;
   iconBgColor?: string;
   badgeType?: "views" | "popular" | "viral" | "new";
+  layout?: "horizontal" | "vertical";
 }
 
 const iconMap = {
@@ -37,6 +39,7 @@ const NewsSection = ({
   iconColor = "text-white",
   iconBgColor = "from-emerald-500 to-teal-600",
   badgeType = "new",
+  layout = "horizontal",
 }: NewsSectionProps) => {
   const IconComponent = iconMap[icon];
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -55,42 +58,42 @@ const NewsSection = ({
     switch (badgeType) {
       case "views":
         return (
-          <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
-            <Eye className="w-3 h-3" />
+          <div className="flex items-center gap-1 text-[11px] text-gray-500">
+            <Eye className="w-3.5 h-3.5" />
             <span>{article.views || 0} views</span>
           </div>
         );
       case "popular":
         return (
-          <div className="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-400">
+          <div className="flex items-center gap-3 text-[11px] text-gray-500">
             <div className="flex items-center gap-1">
-              <Eye className="w-3 h-3" />
+              <Eye className="w-3.5 h-3.5" />
               <span>{article.views || 0}</span>
             </div>
             <div className="flex items-center gap-1">
-              <MessageCircle className="w-3 h-3" />
+              <MessageCircle className="w-3.5 h-3.5" />
               <span>24</span>
             </div>
           </div>
         );
       case "viral":
         return (
-          <div className="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-400">
+          <div className="flex items-center gap-3 text-[11px] text-gray-500">
             <div className="flex items-center gap-1">
-              <Flame className="w-3 h-3 text-orange-500" />
+              <Flame className="w-3.5 h-3.5 text-orange-500" />
               <span className="font-semibold text-orange-600">
                 {article.views || 0} views
               </span>
             </div>
             <div className="flex items-center gap-1">
-              <Share2 className="w-3 h-3" />
+              <Share2 className="w-3.5 h-3.5" />
               <span>128 shares</span>
             </div>
           </div>
         );
       case "new":
         return (
-          <div className="text-xs text-gray-600 dark:text-gray-400">
+          <div className="text-[11px] text-gray-500">
             {article.published_at
               ? new Date(article.published_at).toLocaleDateString("id-ID", {
                   day: "numeric",
@@ -106,8 +109,70 @@ const NewsSection = ({
   // Limit to 4 articles
   const displayArticles = articles.slice(0, 4);
 
+  if (layout === "vertical") {
+    return (
+      <section className="mb-12 border-b border-green-800/10 dark:border-green-700/10 pb-10">
+        <div className="flex items-center gap-3 mb-6">
+          <div
+            className={`w-8 h-8 bg-gradient-to-br ${iconBgColor} rounded-2xl flex items-center justify-center`}
+          >
+            <IconComponent className={`w-5 h-5 ${iconColor}`} />
+          </div>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{title}</h2>
+        </div>
+
+        <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2">
+          {displayArticles.map((article) => {
+            const categoryName = article.categories?.[0]?.name || "Berita";
+            const imageUrl = getImageUrl(article.featured_image) || PLACEHOLDER_IMAGE_MEDIUM;
+
+            return (
+              <Link
+                key={article.id}
+                to={`/detail-news/${article.slug}`}
+                className="group rounded-xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden shadow-sm hover:shadow-lg transition"
+              >
+                {article.featured_image && (
+                  <div className="relative aspect-[16/9] overflow-hidden">
+                    <img
+                      src={imageUrl}
+                      alt={article.title}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = PLACEHOLDER_IMAGE_MEDIUM;
+                      }}
+                    />
+                    <span className="absolute left-3 top-3 rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white shadow">
+                      {categoryName}
+                    </span>
+                  </div>
+                )}
+                <div className="p-4 sm:p-5 flex flex-col gap-2">
+                  <h4 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 group-hover:text-emerald-700 transition">
+                    {article.title}
+                  </h4>
+                  {article.published_at && (
+                    <span className="text-xs sm:text-sm text-gray-400">
+                      {new Date(article.published_at).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </span>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+    );
+  }
+
+  // Horizontal Scrollable slider
   return (
-    <section className="mb-12">
+    <section className="mb-12 border-b border-green-800/10 dark:border-green-700/10 pb-10">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <div
@@ -115,22 +180,22 @@ const NewsSection = ({
           >
             <IconComponent className={`w-5 h-5 ${iconColor}`} />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{title}</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{title}</h2>
         </div>
 
         {/* Scroll buttons */}
         <div className="flex gap-2">
           <button
             onClick={() => scroll("left")}
-            className="w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-all flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
+            className="w-9 h-9 rounded-full bg-white dark:bg-gray-800 shadow hover:shadow-md transition-all flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+            <ChevronLeft className="w-4 h-4 text-gray-600 dark:text-gray-300" />
           </button>
           <button
             onClick={() => scroll("right")}
-            className="w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-all flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
+            className="w-9 h-9 rounded-full bg-white dark:bg-gray-800 shadow hover:shadow-md transition-all flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
           >
-            <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+            <ChevronRight className="w-4 h-4 text-gray-600 dark:text-gray-300" />
           </button>
         </div>
       </div>
@@ -141,55 +206,57 @@ const NewsSection = ({
         className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        {displayArticles.map((article, index) => (
-          <div
-            key={`${article.id}-${index}`}
-            className="flex-shrink-0 w-[calc(25%-18px)] min-w-[280px] group"
-          >
-            <Link to={`/detail-news/${article.slug}`}>
-              <div className="bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 h-full">
-                {/* Image */}
-                {article.featured_image && (
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={getImageUrl(article.featured_image)}
-                      alt={article.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+        {displayArticles.map((article, index) => {
+          const categoryName = article.categories?.[0]?.name || "Berita";
+          return (
+            <div
+              key={`${article.id}-${index}`}
+              className="flex-shrink-0 w-[280px] sm:w-[320px] group"
+            >
+              <Link to={`/detail-news/${article.slug}`}>
+                <div className="bg-transparent overflow-hidden h-full flex flex-col">
+                  {/* Image */}
+                  {article.featured_image && (
+                    <div className="relative h-44 overflow-hidden rounded-lg mb-3">
+                      <img
+                        src={getImageUrl(article.featured_image)}
+                        alt={article.title}
+                        className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                      />
+                    </div>
+                  )}
+
+                  {/* Content */}
+                  <div className="flex-1 flex flex-col">
+                    {/* Category Tag */}
+                    <span className="mb-2 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-450">
+                      {categoryName}
+                    </span>
+
+                    {/* Title */}
+                    <h3 className="font-bold text-base text-gray-900 dark:text-gray-100 line-clamp-2 mb-2 group-hover:text-emerald-600 transition-colors leading-snug">
+                      {article.title}
+                    </h3>
+
+                    {/* Excerpt */}
+                    <div
+                      className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 leading-relaxed"
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          article.excerpt || article.content?.substring(0, 100) || "",
+                      }}
                     />
-                    {/* Category badge */}
-                    {article.categories?.[0] && (
-                      <div className="absolute top-3 left-3">
-                        <span className="px-3 py-1 bg-green-600 text-white text-xs font-semibold rounded-full">
-                          {article.categories[0].name}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                )}
 
-                {/* Content */}
-                <div className="p-5">
-                  <h3 className="font-bold text-lg text-gray-900 dark:text-gray-100 line-clamp-2 mb-3 group-hover:text-green-600 transition-colors">
-                    {article.title}
-                  </h3>
-
-                  <div
-                    className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-4"
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        article.excerpt || article.content?.substring(0, 100) || "",
-                    }}
-                  />
-
-                  {/* Badge showing why it's in this section */}
-                  <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-800">
-                    {getBadge(article)}
+                    {/* Badge/Meta info */}
+                    <div className="flex items-center justify-between pt-3 border-t border-green-800/10 dark:border-green-700/10 mt-auto">
+                      {getBadge(article)}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          </div>
-        ))}
+              </Link>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

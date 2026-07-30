@@ -6,10 +6,12 @@ import {
   Share2,
   Check
 } from "lucide-react";
+import { useToast } from "../../context/ToastContext";
 
 const SocialShare = () => {
   const [copied, setCopied] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const { toast } = useToast();
 
   // Get current URL
   const currentUrl = window.location.href;
@@ -81,7 +83,7 @@ const SocialShare = () => {
   // Instagram doesn't have direct share API, but we can copy the link with a message
   const handleInstagram = () => {
     handleCopyLink();
-    alert('Link telah disalin! Buka Instagram dan paste link di bio atau story Anda.');
+    toast.info('Link telah disalin! Buka Instagram dan paste link di bio atau story Anda.');
   };
 
   return (

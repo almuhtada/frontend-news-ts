@@ -4,6 +4,7 @@ import { Search, Calendar, Eye, AlertCircle } from "lucide-react";
 import { postsService, type Post } from "../services/posts";
 import { getImageUrl } from "../config/api";
 import PublicPageLayout from "../components/layouts/PublicPageLayout";
+import { PLACEHOLDER_IMAGE_MEDIUM } from "../config/constants";
 
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
@@ -15,29 +16,11 @@ const SearchResults = () => {
 
   useEffect(() => {
     const searchPosts = async () => {
-  if (searchError) {
-    return (
-      <PublicPageLayout>
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-          <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-            <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-              Gagal Mencari
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">{searchError}</p>
-            <Link
-              to="/"
-              className="inline-flex items-center justify-center px-6 py-3 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition"
-            >
-              Kembali ke Beranda
-            </Link>
-          </div>
-        </div>
-      </PublicPageLayout>
-    );
-  }
+      if (searchError) {
+        return;
+      }
 
-  if (!query) {
+      if (!query) {
         setLoading(false);
         return;
       }
@@ -85,6 +68,28 @@ const SearchResults = () => {
     );
   }
 
+  if (searchError) {
+    return (
+      <PublicPageLayout>
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+          <div className="max-w-4xl mx-auto px-4 py-16 text-center">
+            <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+              Gagal Mencari
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">{searchError}</p>
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center px-6 py-3 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition"
+            >
+              Kembali ke Beranda
+            </Link>
+          </div>
+        </div>
+      </PublicPageLayout>
+    );
+  }
+
   if (!query) {
     return (
       <PublicPageLayout>
@@ -106,122 +111,118 @@ const SearchResults = () => {
   return (
     <PublicPageLayout>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        {/* Search Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-2">
-            <Search className="w-5 h-5" />
-            <span className="text-sm">Hasil pencarian untuk:</span>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+          {/* Search Header */}
+          <div className="mb-8">
+            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-2">
+              <Search className="w-5 h-5" />
+              <span className="text-sm">Hasil pencarian untuk:</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+              "{query}"
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">Ditemukan {totalResults} artikel</p>
           </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-            "{query}"
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">Ditemukan {totalResults} artikel</p>
-        </div>
 
-        {/* Results */}
-        {posts.length === 0 ? (
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm p-12 text-center">
-            <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Tidak ada hasil
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Tidak ditemukan artikel yang sesuai dengan pencarian Anda.
-            </p>
-            <Link
-              to="/"
-              className="inline-flex items-center justify-center px-6 py-3 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition"
-            >
-              Kembali ke Beranda
-            </Link>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {posts.map((post) => (
-              <article
-                key={post.id}
-                className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden group"
+          {/* Results */}
+          {posts.length === 0 ? (
+            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm p-12 text-center">
+              <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                Tidak ada hasil
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
+                Tidak ditemukan artikel yang sesuai dengan pencarian Anda.
+              </p>
+              <Link
+                to="/"
+                className="inline-flex items-center justify-center px-6 py-3 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition"
               >
-                <Link to={`/detail-news/${post.slug}`} className="block">
-                  <div className="grid md:grid-cols-[200px_1fr] gap-6 p-6">
-                    {/* Thumbnail */}
-                    {post.featured_image && (
-                      <div className="w-full h-48 md:h-full rounded-lg overflow-hidden bg-gray-100">
-                        <img
-                          src={getImageUrl(post.featured_image)}
-                          alt={post.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                    )}
+                Kembali ke Beranda
+              </Link>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-150 dark:divide-gray-800/80">
+              {posts.map((post) => {
+                const categoryName = post.categories?.[0]?.name || "Berita";
+                const authorName = post.author?.display_name || post.author?.username || "Admin";
 
-                    {/* Content */}
-                    <div className="flex flex-col justify-between">
-                      <div>
+                return (
+                  <Link key={post.id} to={`/detail-news/${post.slug}`} className="group block py-6">
+                    <article className="flex flex-col md:flex-row gap-6 bg-transparent">
+                      {/* Thumbnail */}
+                      {post.featured_image && (
+                        <div className="w-full md:w-44 h-48 md:h-28 flex-shrink-0 overflow-hidden rounded-lg">
+                          <img
+                            src={getImageUrl(post.featured_image)}
+                            alt={post.title}
+                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.src = PLACEHOLDER_IMAGE_MEDIUM;
+                            }}
+                          />
+                        </div>
+                      )}
+
+                      {/* Content */}
+                      <div className="flex-1 min-w-0 flex flex-col justify-center">
                         {/* Category */}
-                        {post.categories && post.categories.length > 0 && (
-                          <div className="mb-2">
-                            <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
-                              {post.categories[0].name}
-                            </span>
-                          </div>
-                        )}
+                        <span className="mb-2 inline-block text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                          {categoryName}
+                        </span>
 
                         {/* Title */}
-                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2">
                           {post.title}
                         </h2>
 
                         {/* Excerpt */}
                         {post.excerpt && (
-                          <p className="text-gray-600 dark:text-gray-400 line-clamp-2 mb-4">
+                          <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-3 leading-relaxed">
                             {post.excerpt}
                           </p>
                         )}
-                      </div>
 
-                      {/* Meta */}
-                      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          <span>
-                            {formatDate(post.published_at || post.createdAt)}
+                        {/* Meta */}
+                        <div className="flex items-center gap-2.5 text-xs text-gray-400 dark:text-gray-500">
+                          <span className="font-semibold text-gray-700 dark:text-gray-300">
+                            Oleh {authorName}
+                          </span>
+                          <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
+                          <span className="flex items-center gap-1">
+                            <Calendar className="w-3.5 h-3.5" />
+                            <span>
+                              {formatDate(post.published_at || post.createdAt)}
+                            </span>
+                          </span>
+                          <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
+                          <span className="flex items-center gap-1">
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>{post.views || post.view_count || 0}</span>
                           </span>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <Eye className="w-4 h-4" />
-                          <span>{post.views || post.view_count || 0}</span>
-                        </div>
-                        {post.author && (
-                          <div className="flex items-center gap-1">
-                            <span className="font-medium">
-                              {post.author.username}
-                            </span>
-                          </div>
-                        )}
                       </div>
-                    </div>
-                  </div>
-                </Link>
-              </article>
-            ))}
-          </div>
-        )}
+                    </article>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
 
-        {/* Back to home */}
-        {posts.length > 0 && (
-          <div className="mt-12 text-center">
-            <Link
-              to="/"
-              className="inline-flex items-center justify-center px-6 py-3 border-2 border-emerald-600 text-emerald-600 font-medium rounded-lg hover:bg-emerald-50 transition"
-            >
-              Kembali ke Beranda
-            </Link>
-          </div>
-        )}
+          {/* Back to home */}
+          {posts.length > 0 && (
+            <div className="mt-12 text-center">
+              <Link
+                to="/"
+                className="inline-flex items-center justify-center px-6 py-3 border-2 border-emerald-600 text-emerald-600 font-medium rounded-lg hover:bg-emerald-50 transition"
+              >
+                Kembali ke Beranda
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
     </PublicPageLayout>
   );
 };

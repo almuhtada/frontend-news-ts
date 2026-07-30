@@ -54,17 +54,19 @@ const Navbar = () => {
     <>
       {/* Header */}
       <header className="bg-[#00531b] dark:bg-gray-900 border-b border-green-900 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
-          <div className="flex items-center justify-between gap-4">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 md:px-8 py-3">
+          <div className="flex items-center justify-between gap-3">
             {/* LOGO + DATE */}
-            <div className="flex items-center gap-2 sm:gap-4">
-              <img
-                src={Logo}
-                alt="Logo Al-Muhtada"
-                className="h-12 sm:h-14 md:h-16 lg:h-18 object-contain"
-              />
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+              <Link to="/" onClick={() => setActiveCategory("Beranda")}>
+                <img
+                  src={Logo}
+                  alt="Logo Al-Muhtada"
+                  className="h-10 sm:h-12 md:h-16 lg:h-24 object-contain flex-shrink-0"
+                />
+              </Link>
 
-              <span className="hidden lg:block text-sm text-white/80 leading-tight">
+              <span className="hidden lg:block text-sm text-white/80 leading-tight whitespace-nowrap">
                 {new Date().toLocaleDateString("id-ID", {
                   weekday: "long",
                   year: "numeric",
@@ -75,7 +77,7 @@ const Navbar = () => {
             </div>
 
             {/* SEARCH + THEME TOGGLE + HAMBURGER */}
-            <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-3">
               <div className="hidden md:block">
                 <SearchBar />
               </div>
@@ -83,17 +85,19 @@ const Navbar = () => {
               <button
                 onClick={toggleTheme}
                 className="p-2 rounded-lg hover:bg-white/10 text-white transition-colors"
-                aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+                aria-label={
+                  isDark ? "Switch to light mode" : "Switch to dark mode"
+                }
               >
                 {isDark ? <Sun size={20} /> : <Moon size={20} />}
               </button>
 
               <button
-                className="2xl:hidden p-2 rounded-lg hover:bg-white/10 text-white transition-colors"
+                className="md:hidden p-2 rounded-lg hover:bg-white/10 text-white transition-colors"
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label={isOpen ? "Close menu" : "Open menu"}
               >
-                {isOpen ? <X size={24} /> : <Menu size={24} />}
+                {isOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
             </div>
           </div>
@@ -105,12 +109,12 @@ const Navbar = () => {
           showNavbar ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        <div className="px-6">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 md:px-8">
           {/* Desktop Menu */}
-          <div className="hidden 2xl:flex flex-wrap items-center gap-x-5 gap-y-2 py-3 2xl:gap-x-8">
+          <div className="hidden md:flex items-center justify-center gap-x-3 lg:gap-x-5 xl:gap-x-7 py-3 w-full">
             <NavLink
               to="/"
-              className={`shrink-0 whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
+              className={`whitespace-nowrap pb-1 border-b-2 text-sm font-medium transition-colors ${
                 activeCategory === "Beranda"
                   ? "border-white text-white"
                   : "border-transparent text-white/80 hover:text-white hover:border-white/60"
@@ -122,7 +126,7 @@ const Navbar = () => {
 
             <NavLink
               to="/pendidikan"
-              className={`shrink-0 whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
+              className={`whitespace-nowrap pb-1 border-b-2 text-sm font-medium transition-colors ${
                 activeCategory === "Pendidikan"
                   ? "border-white text-white"
                   : "border-transparent text-white/80 hover:text-white hover:border-white/60"
@@ -134,7 +138,7 @@ const Navbar = () => {
 
             <NavLink
               to="/category/sejarah"
-              className={`shrink-0 whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
+              className={`whitespace-nowrap pb-1 border-b-2 text-sm font-medium transition-colors ${
                 activeCategory === "sejarah"
                   ? "border-white text-white"
                   : "border-transparent text-white/80 hover:text-white hover:border-white/60"
@@ -149,7 +153,7 @@ const Navbar = () => {
               <NavLink
                 key={category.id}
                 to={`/category/${category.slug}`}
-                className={`shrink-0 whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
+                className={`whitespace-nowrap pb-1 border-b-2 text-sm font-medium transition-colors ${
                   activeCategory === category.slug
                     ? "border-white text-white"
                     : "border-transparent text-white/80 hover:text-white hover:border-white/60"
@@ -162,7 +166,7 @@ const Navbar = () => {
 
             <Dropdown
               label="Profil"
-              className={`shrink-0 whitespace-nowrap pb-2 border-b-2 text-sm font-medium transition-colors ${
+              className={`whitespace-nowrap pb-1 border-b-2 text-sm font-medium transition-colors ${
                 activeCategory === "Profil"
                   ? "border-white text-white"
                   : "border-transparent text-white/80 hover:text-white hover:border-white/60"
@@ -190,96 +194,102 @@ const Navbar = () => {
 
           {/* Mobile Menu */}
           {isOpen && (
-            <div className="2xl:hidden flex flex-col space-y-4 py-4 border-t border-white/20 bg-[#00531b] dark:bg-gray-900">
-              <div className="px-2">
+            <div className="md:hidden flex flex-col py-3 border-t border-white/20">
+              <div className="px-1 pb-3">
                 <SearchBar />
               </div>
-              <Link
-                to="/"
-                className="px-4 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
-                onClick={() => {
-                  setActiveCategory("Beranda");
-                  setIsOpen(false);
-                }}
-              >
-                Beranda
-              </Link>
-              <Link
-                to="/pendidikan"
-                className="px-4 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
-                onClick={() => {
-                  setActiveCategory("Pendidikan");
-                  setIsOpen(false);
-                }}
-              >
-                Pendidikan
-              </Link>
-              <Link
-                to="/category/sejarah"
-                className="px-4 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
-                onClick={() => {
-                  setActiveCategory("sejarah");
-                  setIsOpen(false);
-                }}
-              >
-                Sejarah
-              </Link>
 
-              {/* Kategori dari Database */}
-              {categories.map((category) => (
+              <div className="flex flex-col">
                 <Link
-                  key={category.id}
-                  to={`/category/${category.slug}`}
-                  className="px-4 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                  to="/"
+                  className="px-4 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
                   onClick={() => {
-                    setActiveCategory(category.slug);
+                    setActiveCategory("Beranda");
                     setIsOpen(false);
                   }}
                 >
-                  {category.name}
+                  Beranda
                 </Link>
-              ))}
-              <div className="border-t border-white/20 pt-4 mt-2">
-                <p className="px-4 font-semibold text-white mb-2">Profil</p>
-                <div className="flex flex-col space-y-2">
+                <Link
+                  to="/pendidikan"
+                  className="px-4 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                  onClick={() => {
+                    setActiveCategory("Pendidikan");
+                    setIsOpen(false);
+                  }}
+                >
+                  Pendidikan
+                </Link>
+                <Link
+                  to="/category/sejarah"
+                  className="px-4 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                  onClick={() => {
+                    setActiveCategory("sejarah");
+                    setIsOpen(false);
+                  }}
+                >
+                  Sejarah
+                </Link>
+
+                {/* Kategori dari Database */}
+                {categories.map((category) => (
+                  <Link
+                    key={category.id}
+                    to={`/category/${category.slug}`}
+                    className="px-4 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    onClick={() => {
+                      setActiveCategory(category.slug);
+                      setIsOpen(false);
+                    }}
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </div>
+
+              <div className="border-t border-white/15 mt-2 pt-2">
+                <p className="px-4 py-2 text-xs font-semibold text-white/60 uppercase tracking-wider">
+                  Profil
+                </p>
+                <div className="flex flex-col">
                   <Link
                     to="/tentang-pesantren"
-                    className="px-6 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    className="px-6 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
                     onClick={() => setIsOpen(false)}
                   >
                     Tentang Pesantren
                   </Link>
                   <Link
                     to="/program-pengajar"
-                    className="px-6 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    className="px-6 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
                     onClick={() => setIsOpen(false)}
                   >
                     Program & Pengajar
                   </Link>
                   <Link
                     to="/pendaftaran"
-                    className="px-6 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    className="px-6 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
                     onClick={() => setIsOpen(false)}
                   >
                     Pendaftaran Mahasantri Baru
                   </Link>
                   <Link
                     to="/prestasi-mahasantri"
-                    className="px-6 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    className="px-6 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
                     onClick={() => setIsOpen(false)}
                   >
                     Prestasi Mahasantri
                   </Link>
                   <Link
                     to="/publikasi-mahasantri"
-                    className="px-6 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    className="px-6 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
                     onClick={() => setIsOpen(false)}
                   >
                     Publikasi Mahasantri
                   </Link>
                   <Link
                     to="/griya-quran"
-                    className="px-6 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    className="px-6 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
                     onClick={() => setIsOpen(false)}
                   >
                     Griya Qur'an

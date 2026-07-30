@@ -1,5 +1,11 @@
 import DOMPurify from "dompurify";
-import { Clock, BookOpen, FileText, ChevronDown, Maximize2 } from "lucide-react";
+import {
+  Clock,
+  BookOpen,
+  FileText,
+  ChevronDown,
+  Maximize2,
+} from "lucide-react";
 
 interface ArticleContentProps {
   currentPage: number;
@@ -31,13 +37,16 @@ const isArabicLine = (line: string): boolean => {
 const AYAT_MARKERS = /ayat|Q\.?\s*S\.?|qs|al[- ]?qur.?an/i;
 const HADITS_MARKERS = /hadits|hadis|hadist|H\.?\s*R\.?|hr/i;
 
-type ArabicContext = 'quran' | 'hadith' | null;
+type ArabicContext = "quran" | "hadith" | null;
 
-const detectArabicContext = (lines: string[], currentIndex: number): ArabicContext => {
+const detectArabicContext = (
+  lines: string[],
+  currentIndex: number,
+): ArabicContext => {
   for (let j = currentIndex - 1; j >= 0 && j >= currentIndex - 5; j--) {
     const prev = lines[j].toLowerCase();
-    if (AYAT_MARKERS.test(prev)) return 'quran';
-    if (HADITS_MARKERS.test(prev)) return 'hadith';
+    if (AYAT_MARKERS.test(prev)) return "quran";
+    if (HADITS_MARKERS.test(prev)) return "hadith";
   }
   return null;
 };
@@ -45,7 +54,10 @@ const detectArabicContext = (lines: string[], currentIndex: number): ArabicConte
 const cleanText = (text: string) => {
   const cleaned = text
     .replace(/\[irp[^\]]*\]/gi, "")
-    .replace(/\[[a-zA-Z0-9_-]+[^\]]*\]/g, "")
+    .replace(
+      /\[(?!\/?align-(?:center|right|justify)(?:-(?:h[1-6]|blockquote))?\])[a-zA-Z0-9_-]+[^\]]*\]/g,
+      "",
+    )
     .replace(
       /<strong[^>]*>\s*<a[^>]*>almuhtada\.org<\/a>[^<]*<\/strong>\s*-?\s*/gi,
       "",
@@ -87,9 +99,54 @@ const ArticleContent = ({
   let lastContext: ArabicContext = null;
 
   for (let i = 0; i < rawLines.length; i++) {
-    const line = rawLines[i];
+    let line = rawLines[i];
     const next = rawLines[i + 1];
     const next2 = rawLines[i + 2];
+
+    let alignmentClass = "";
+    if (line.includes("[align-center]")) {
+      alignmentClass = " align-center-block";
+      line = line
+        .replace(/\[align-center\]/g, "")
+        .replace(/\[\/align-center\]/g, "");
+    } else if (line.includes("[align-right]")) {
+      alignmentClass = " align-right-block";
+      line = line
+        .replace(/\[align-right\]/g, "")
+        .replace(/\[\/align-right\]/g, "");
+    } else if (line.includes("[align-justify]")) {
+      alignmentClass = " align-justify-block";
+      line = line
+        .replace(/\[align-justify\]/g, "")
+        .replace(/\[\/align-justify\]/g, "");
+    }
+
+    // Deteksi alignment heading h1-h6
+    const headingAlignMatch = line.match(
+      /^\[align-(center|right|justify)-(h[1-6])\]([\s\S]*?)\[\/align-(?:center|right|justify)-\2\]$/i,
+    );
+    if (headingAlignMatch) {
+      lastContext = null;
+      const align = headingAlignMatch[1];
+      const tag = headingAlignMatch[2];
+      const content = headingAlignMatch[3];
+      blocks.push(`<${tag} class="align-${align}-block">${content}</${tag}>`);
+      continue;
+    }
+
+    // Deteksi alignment blockquote
+    const quoteAlignMatch = line.match(
+      /^\[align-(center|right|justify)-blockquote\]([\s\S]*?)\[\/align-(?:center|right|justify)-blockquote\]$/i,
+    );
+    if (quoteAlignMatch) {
+      lastContext = null;
+      const align = quoteAlignMatch[1];
+      const content = quoteAlignMatch[2];
+      blocks.push(
+        `<blockquote class="align-${align}-block">${content}</blockquote>`,
+      );
+      continue;
+    }
 
     if (
       isArabicLine(line) &&
@@ -123,32 +180,51 @@ const ArticleContent = ({
       continue;
     }
 
-    if (line.startsWith("\u2022 ")) {
+    const bulletMatch = line.match(/^(\u2022\s+)(.*)$/);
+    if (bulletMatch) {
       lastContext = null;
-      blocks.push(`<div class="list-item bullet-item">${line}</div>`);
+      const marker = bulletMatch[1].trim();
+      const content = bulletMatch[2];
+      blocks.push(`
+        <div class="list-item-container">
+          <div class="list-item-marker">${marker}</div>
+          <div class="list-item-content${alignmentClass}">${content}</div>
+        </div>
+      `);
       continue;
     }
 
-    if (/^\d+[.)]\s/.test(line)) {
+    const numberMatch = line.match(/^(\d+[.)]\s+)(.*)$/);
+    if (numberMatch) {
       lastContext = null;
-      blocks.push(`<div class="list-item numbered-item">${line}</div>`);
+      const marker = numberMatch[1].trim();
+      const content = numberMatch[2];
+      blocks.push(`
+        <div class="list-item-container">
+          <div class="list-item-marker">${marker}</div>
+          <div class="list-item-content${alignmentClass}">${content}</div>
+        </div>
+      `);
       continue;
     }
 
     if (lastContext) {
       lastContext = null;
-      blocks.push(`<p class="article-paragraph explanation-text" style="border-left: 3px solid #10b981; padding-left: 1rem; margin: 0.75rem 0;">${line}</p>`);
+      blocks.push(
+        `<p class="article-paragraph explanation-text${alignmentClass}" style="border-left: 3px solid #10b981; padding-left: 1rem; margin: 0.75rem 0;">${line}</p>`,
+      );
       continue;
     }
 
-    const showFirstParagraph = (currentPage === 1 || showAll) && isFirstParagraph;
+    const showFirstParagraph =
+      (currentPage === 1 || showAll) && isFirstParagraph;
     const pClass = showFirstParagraph
-      ? "article-paragraph first-paragraph"
-      : "article-paragraph";
+      ? `article-paragraph first-paragraph${alignmentClass}`
+      : `article-paragraph${alignmentClass}`;
 
     if (showFirstParagraph) {
       blocks.push(
-        `<p class="${pClass}"><strong><a href="https://almuhtada.org" target="_blank" rel="noopener noreferrer" class="source-link">almuhtada.org</a></strong> - ${line}</p>`
+        `<p class="${pClass}"><strong><a href="https://almuhtada.org" target="_blank" rel="noopener noreferrer" class="source-link">Almuhtada.org</a></strong> - ${line}</p>`,
       );
       isFirstParagraph = false;
     } else {
@@ -185,12 +261,21 @@ const ArticleContent = ({
       </div>
 
       {excerpt && (currentPage === 1 || showAll) && (
-        <div className="mb-8 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 p-5 sm:p-6">
-          <div className="flex items-center gap-2 mb-3">
-            <FileText className="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-400" />
-            <h3 className="text-sm font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">Ringkasan</h3>
+        <div className="relative mb-8">
+          <div className="absolute top-0 left-0 w-12 h-[2px] bg-emerald-600 dark:bg-emerald-400" />
+
+          <div className="pt-5">
+            <div className="flex items-baseline gap-3 mb-4">
+              <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-[0.15em]">
+                Ringkasan
+              </span>
+              <span className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
+            </div>
+
+            <p className="text-gray-800 dark:text-gray-200 leading-[1.75] text-base font-normal">
+              {excerpt}
+            </p>
           </div>
-          <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-[0.95rem]">{excerpt}</p>
         </div>
       )}
 
@@ -229,8 +314,91 @@ const ArticleContent = ({
           font-size: 1.125rem;
           color: #1a1a1a;
         }
+        .article-body blockquote {
+          border-left: 4px solid #00531b;
+          padding-left: 1.25rem;
+          font-style: italic;
+          color: #4b5563;
+          margin: 1.75rem 0;
+          line-height: 1.8;
+        }
+        .dark .article-body blockquote {
+          border-left-color: #10b981;
+          color: #9ca3af;
+        }
+        .article-body h1 {
+          font-size: 1.875rem;
+          font-weight: 800;
+          margin-top: 2rem;
+          margin-bottom: 1rem;
+          line-height: 1.25;
+        }
+        .article-body h2 {
+          font-size: 1.5rem;
+          font-weight: 700;
+          margin-top: 1.75rem;
+          margin-bottom: 0.75rem;
+          line-height: 1.3;
+        }
+        .article-body h3 {
+          font-size: 1.25rem;
+          font-weight: 700;
+          margin-top: 1.5rem;
+          margin-bottom: 0.5rem;
+          line-height: 1.35;
+        }
+        .article-body pre {
+          background-color: #f3f4f6;
+          padding: 1rem;
+          border-radius: 0.5rem;
+          overflow-x: auto;
+          font-family: monospace;
+          font-size: 0.875rem;
+          margin: 1.5rem 0;
+        }
+        .dark .article-body pre {
+          background-color: #1f2937;
+        }
+        .article-body code {
+          font-family: monospace;
+          font-size: 0.875rem;
+          background-color: #f3f4f6;
+          color: #be123c;
+          padding: 0.2rem 0.4rem;
+          border-radius: 0.25rem;
+          white-space: pre-wrap;
+          word-break: break-word;
+        }
+        .dark .article-body code {
+          background-color: #1f2937;
+          color: #fda4af;
+        }
         .dark .article-body {
           color: #e5e7eb;
+        }
+
+        .list-item-container {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.5rem;
+          margin: 0.5rem 0;
+          margin-left: 1.75rem;
+          font-size: 1.125rem;
+          color: #1a1a1a;
+          line-height: 1.85;
+          width: 100%;
+        }
+        .dark .list-item-container {
+          color: #e5e7eb;
+        }
+        .list-item-marker {
+          flex-shrink: 0;
+          text-align: left;
+          width: 1.75rem;
+          font-weight: 600;
+        }
+        .list-item-content {
+          flex: 1;
         }
 
         .article-paragraph {
@@ -370,6 +538,18 @@ const ArticleContent = ({
           color: #6ee7b7;
           background: #064e3b;
           border-right-color: #34d399;
+        }
+        .align-center-block {
+          text-align: center !important;
+          text-align-last: center !important;
+        }
+        .align-right-block {
+          text-align: right !important;
+          text-align-last: right !important;
+        }
+        .align-justify-block {
+          text-align: justify !important;
+          text-align-last: justify !important;
         }
       `}</style>
     </>

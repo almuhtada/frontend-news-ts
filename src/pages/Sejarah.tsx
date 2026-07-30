@@ -35,10 +35,10 @@ const CategoryPage = () => {
 
   return (
     <PublicPageLayout>
-      <div className="flex-1 bg-gray-50 dark:bg-gray-950">
-        <main className="max-w-7xl mx-auto px-4 py-8">
-          <div className="grid lg:grid-cols-4 gap-10">
-            <div className="lg:col-span-3 space-y-10">
+      <div className="flex-1 bg-white dark:bg-gray-950">
+        <main className="max-w-[1500px] mx-auto px-4 py-8 md:px-8">
+          <div className="grid lg:grid-cols-4 gap-6 lg:gap-8">
+            <div className="lg:col-span-3 space-y-10 lg:border-r lg:border-green-800/15 dark:lg:border-green-700/20 lg:pr-8">
               <CategoryHero articles={featuredArticles} />
               <CategoryArticles articles={articles} />
 

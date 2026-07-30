@@ -14,7 +14,7 @@ const HeroSection = ({ story, formatTimeAgo }: HeroSectionProps) => {
         <img
           src={getImageUrl(story.featured_image)}
           alt={story.title}
-          className="w-full md:w-1/2 object-cover h-64 md:h-auto"
+          className="w-full md:w-1/2 object-cover h-48 sm:h-56 md:h-auto"
         />
       )}
       <div className="p-6 flex-1">

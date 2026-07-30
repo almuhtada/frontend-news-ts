@@ -8,6 +8,7 @@ export interface NewsSectionConfig {
   iconColor?: string;
   iconBgColor?: string;
   badgeType?: "views" | "popular" | "viral" | "new";
+  layout?: "horizontal" | "vertical";
 }
 
 interface MultiNewsSectionProps {
@@ -54,6 +55,7 @@ const MultiNewsSection = ({ sections, isLoading = false }: MultiNewsSectionProps
           iconColor={section.iconColor}
           iconBgColor={section.iconBgColor}
           badgeType={section.badgeType}
+          layout={section.layout}
         />
       ))}
     </div>

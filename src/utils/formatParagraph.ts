@@ -104,13 +104,24 @@ const handleMedia = (html: string): string => {
 };
 
 /**
+ * Convert markdown backticks to code tags
+ */
+const convertBackticksToCode = (text: string): string => {
+  // Inline code: `code` -> <code>code</code>
+  text = text.replace(/`([^`\n]+)`/g, "<code>$1</code>");
+  // Code blocks: ```code``` -> <pre><code>code</code></pre>
+  text = text.replace(/```([\s\S]*?)```/g, "<pre><code>$1</code></pre>");
+  return text;
+};
+
+/**
  * Handle headings
  */
 const handleHeadings = (html: string): string => {
   let text = html;
 
-  // Convert headings to text with newlines
-  text = text.replace(/<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>/gi, "\n\n$1\n\n");
+  // Convert headings to text with newlines while keeping the heading tags
+  text = text.replace(/<h([1-6])[^>]*>([\s\S]*?)<\/h[1-6]>/gi, "\n\n<h$1>$2</h$1>\n\n");
 
   return text;
 };
@@ -121,11 +132,13 @@ const handleHeadings = (html: string): string => {
 const handleBlockquotes = (html: string): string => {
   let text = html;
 
-  // Convert blockquote to quoted text
-  text = text.replace(/<blockquote[^>]*>([\s\S]*?)<\/blockquote>/gi, (_match, content) => {
-    const cleanContent = content.replace(/<[^>]+>/g, "").trim();
-    return `\n"${cleanContent}"\n`;
-  });
+  // Convert blockquote to text with newlines while keeping the blockquote tags
+  text = text.replace(/<blockquote[^>]*>([\s\S]*?)<\/blockquote>/gi, "\n\n<blockquote>$1</blockquote>\n\n");
+
+  // Convert double quotes "" at start of paragraph (after newlines) to blockquote
+  // Pattern: \n\n""text"" or \n""text""
+  text = text.replace(/\n\n""([\s\S]*?)""/gi, '\n\n<blockquote>$1</blockquote>');
+  text = text.replace(/\n""([\s\S]*?)""/gi, '\n<blockquote>$1</blockquote>');
 
   return text;
 };
@@ -164,6 +177,27 @@ const handleTables = (html: string): string => {
 const handleLists = (html: string): string => {
   let text = html;
 
+  // Headings can be created inside a list item by the dashboard editor.
+  // Keep them intact so the public article still renders H1-H6 as headings
+  // instead of silently turning them into regular list text.
+  const cleanListItem = (content: string): string => {
+    const headings: string[] = [];
+    const withHeadingPlaceholders = content.replace(
+      /<h([1-6])[^>]*>([\s\S]*?)<\/h\1>/gi,
+      (_match, level: string, headingContent: string) => {
+        const placeholder = `__ARTICLE_HEADING_${headings.length}__`;
+        headings.push(`<h${level}>${headingContent}</h${level}>`);
+        return placeholder;
+      },
+    );
+
+    const withoutOtherTags = withHeadingPlaceholders.replace(/<[^>]+>/g, "").trim();
+
+    return withoutOtherTags.replace(/__ARTICLE_HEADING_(\d+)__/g, (_match, index: string) => {
+      return headings[Number(index)] ?? "";
+    });
+  };
+
   // Handle ordered lists (<ol>) - convert to numbered items
   // Support start attribute: <ol start="2"> should start counting from 2
   text = text.replace(/<ol([^>]*)>([\s\S]*?)<\/ol>/gi, (_match, attrs, content) => {
@@ -171,32 +205,69 @@ const handleLists = (html: string): string => {
     const startMatch = attrs.match(/start=["']?(\d+)["']?/i);
     let counter = startMatch ? parseInt(startMatch[1], 10) - 1 : 0;
 
-    return content.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, (_: string, itemContent: string) => {
+    return content.replace(/<li([^>]*)>([\s\S]*?)<\/li>/gi, (_: string, liAttrs: string, itemContent: string) => {
       counter++;
+      // Extract alignment from li element
+      const alignMatch = liAttrs.match(/style=["'][^"']*text-align\s*:\s*(center|right|justify)[^"']*["']/i);
+      const align = alignMatch ? alignMatch[1].toLowerCase() : null;
+      
       // Clean inner HTML tags from list item
-      const cleanItem = itemContent.replace(/<[^>]+>/g, "").trim();
-      return `\n${counter}. ${cleanItem}`;
+      const cleanItem = cleanListItem(itemContent);
+      let result = `${counter}. ${cleanItem}`;
+      
+      // Keep alignment tokens and the list item on one line. The renderer
+      // processes content line-by-line, so a leading newline leaves a stray
+      // closing token in the public article.
+      if (align) {
+        result = `\n[align-${align}]${result}[/align-${align}]`;
+      } else {
+        result = `\n${result}`;
+      }
+      return result;
     });
   });
 
   // Handle unordered lists (<ul>) - convert to bullet items
   text = text.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/gi, (_match, content) => {
-    return content.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, (_: string, itemContent: string) => {
+    return content.replace(/<li([^>]*)>([\s\S]*?)<\/li>/gi, (_: string, liAttrs: string, itemContent: string) => {
+      // Extract alignment from li element
+      const alignMatch = liAttrs.match(/style=["'][^"']*text-align\s*:\s*(center|right|justify)[^"']*["']/i);
+      const align = alignMatch ? alignMatch[1].toLowerCase() : null;
+      
       // Clean inner HTML tags from list item
-      const cleanItem = itemContent.replace(/<[^>]+>/g, "").trim();
-      return `\n• ${cleanItem}`;
+      const cleanItem = cleanListItem(itemContent);
+      let result = `• ${cleanItem}`;
+      
+      // Keep alignment tokens and the list item on one line.
+      if (align) {
+        result = `\n[align-${align}]${result}[/align-${align}]`;
+      } else {
+        result = `\n${result}`;
+      }
+      return result;
     });
   });
 
   // Handle any remaining <li> tags (outside of ol/ul)
   // Check if content already has numbering - don't add bullet if it does
-  text = text.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, (_match, content) => {
-    const cleanContent = content.replace(/<[^>]+>/g, "").trim();
+  text = text.replace(/<li([^>]*)>([\s\S]*?)<\/li>/gi, (_match, liAttrs: string, content) => {
+    // Extract alignment from li element
+    const alignMatch = liAttrs.match(/style=["'][^"']*text-align\s*:\s*(center|right|justify)[^"']*["']/i);
+    const align = alignMatch ? alignMatch[1].toLowerCase() : null;
+    
+    const cleanContent = cleanListItem(content);
     // If content starts with a number followed by dot/paren, keep as numbered
-    if (/^\d+[.)]\s/.test(cleanContent)) {
-      return `\n${cleanContent}`;
+    let result = /^\d+[.)]\s/.test(cleanContent)
+      ? cleanContent
+      : `• ${cleanContent}`;
+    
+    // Keep alignment tokens and the list item on one line.
+    if (align) {
+      result = `\n[align-${align}]${result}[/align-${align}]`;
+    } else {
+      result = `\n${result}`;
     }
-    return `\n• ${cleanContent}`;
+    return result;
   });
   // For unclosed <li> tags, check context before adding bullet
   text = text.replace(/<li[^>]*>/gi, "\n");
@@ -272,6 +343,60 @@ const decodeHtmlEntities = (text: string): string => {
 };
 
 /**
+ * Sanitize allowed formatting tags by removing attributes (except href on <a>)
+ * and strip wrapper span tags but keep their inner text.
+ */
+const sanitizeFormattingTags = (html: string): string => {
+  let text = html;
+
+  // Strip span wrapper tags but keep their contents
+  text = text.replace(/<span\b[^>]*>/gi, "");
+  text = text.replace(/<\/span>/gi, "");
+
+  // Clean formatting tags (remove any custom styling, class, id, etc.)
+  text = text.replace(/<(strong|b|em|i|u|s|strike|del)\b[^>]*>/gi, "<$1>");
+
+  // Clean headings
+  text = text.replace(/<(h[1-6])\b[^>]*>/gi, "<$1>");
+
+  // Clean pre and code
+  text = text.replace(/<(pre|code)\b[^>]*>/gi, "<$1>");
+
+  // Clean links
+  text = text.replace(/<a\b[^>]*href=["']([^"']*)["'][^>]*>/gi, (_match, href) => {
+    return `<a href="${href}" target="_blank" rel="noopener noreferrer">`;
+  });
+
+  return text;
+};
+
+/**
+ * Handle alignment styles by converting them to custom tokens
+ */
+const handleAlignmentToTokens = (html: string): string => {
+  let text = html;
+  
+  // Convert text-align center, right, justify on headings to specific tokens
+  for (let i = 1; i <= 6; i++) {
+    text = text.replace(new RegExp(`<h${i}[^>]*style=["'][^"']*text-align\\s*:\\s*center[^"']*["'][^>]*>([\\s\\S]*?)<\\/h${i}>`, "gi"), `[align-center-h${i}]$2[/align-center-h${i}]`);
+    text = text.replace(new RegExp(`<h${i}[^>]*style=["'][^"']*text-align\\s*:\\s*right[^"']*["'][^>]*>([\\s\\S]*?)<\\/h${i}>`, "gi"), `[align-right-h${i}]$2[/align-right-h${i}]`);
+    text = text.replace(new RegExp(`<h${i}[^>]*style=["'][^"']*text-align\\s*:\\s*justify[^"']*["'][^>]*>([\\s\\S]*?)<\\/h${i}>`, "gi"), `[align-justify-h${i}]$2[/align-justify-h${i}]`);
+  }
+
+  // Convert text-align center, right, justify on blockquotes to specific tokens
+  text = text.replace(/<blockquote[^>]*style=["'][^"']*text-align\s*:\s*center[^"']*["'][^>]*>([\s\S]*?)<\/blockquote>/gi, "[align-center-blockquote]$1[/align-center-blockquote]");
+  text = text.replace(/<blockquote[^>]*style=["'][^"']*text-align\s*:\s*right[^"']*["'][^>]*>([\s\S]*?)<\/blockquote>/gi, "[align-right-blockquote]$1[/align-right-blockquote]");
+  text = text.replace(/<blockquote[^>]*style=["'][^"']*text-align\s*:\s*justify[^"']*["'][^>]*>([\s\S]*?)<\/blockquote>/gi, "[align-justify-blockquote]$1[/align-justify-blockquote]");
+
+  // Convert text-align center, right, justify on other tags to tokens
+  text = text.replace(/<(p|div|li|ol|ul)[^>]*style=["'][^"']*text-align\s*:\s*center[^"']*["'][^>]*>([\s\S]*?)<\/\1>/gi, "[align-center]$2[/align-center]");
+  text = text.replace(/<(p|div|li|ol|ul)[^>]*style=["'][^"']*text-align\s*:\s*right[^"']*["'][^>]*>([\s\S]*?)<\/\1>/gi, "[align-right]$2[/align-right]");
+  text = text.replace(/<(p|div|li|ol|ul)[^>]*style=["'][^"']*text-align\s*:\s*justify[^"']*["'][^>]*>([\s\S]*?)<\/\1>/gi, "[align-justify]$2[/align-justify]");
+
+  return text;
+};
+
+/**
  * Strip remaining HTML tags and normalize whitespace
  */
 const stripHtml = (html: string): string => {
@@ -293,10 +418,17 @@ const stripHtml = (html: string): string => {
 
   // Step 4: Handle special elements
   text = handleMedia(text);
+  text = convertBackticksToCode(text);
   text = handleHeadings(text);
   text = handleBlockquotes(text);
   text = handleTables(text);
   text = handleLists(text);
+
+  // Extract alignment tokens from remaining structural tags
+  text = handleAlignmentToTokens(text);
+
+  // Step 4.5: Sanitize allowed formatting tags and strip span wrappers
+  text = sanitizeFormattingTags(text);
 
   // Step 5: Convert remaining structural tags to newlines
   text = text.replace(/<br\s*\/?>/gi, "\n");
@@ -306,14 +438,14 @@ const stripHtml = (html: string): string => {
   text = text.replace(/<div[^>]*>/gi, "");
   text = text.replace(/<hr[^>]*>/gi, "\n---\n");
 
-  // Step 6: Remove all remaining HTML tags
-  text = text.replace(/<[^>]+>/g, "");
+  // Step 6: Remove all remaining HTML tags except formatting tags
+  text = text.replace(/<(?!(\/?(strong|b|em|i|u|s|strike|del|a|h1|h2|h3|h4|h5|h6|pre|code|blockquote)\b))[^>]+>/gi, "");
 
   // Step 7: Decode HTML entities
   text = decodeHtmlEntities(text);
 
   // Step 8: Clean up again after decode (in case entities revealed more HTML)
-  text = text.replace(/<[^>]+>/g, "");
+  text = text.replace(/<(?!(\/?(strong|b|em|i|u|s|strike|del|a|h1|h2|h3|h4|h5|h6|pre|code|blockquote)\b))[^>]+>/gi, "");
 
   // Step 9: Normalize whitespace
   text = text.replace(/\r\n/g, "\n");
@@ -345,11 +477,14 @@ const stripHtml = (html: string): string => {
  */
 const isSpecialParagraph = (para: string): boolean => {
   if (!para) return true;
-  if (para === "[Media Embed]" || para === "[Video]" || para === "[Audio]") return true;
-  if (para.startsWith("•") || /^\d+[.)]\s/.test(para)) return true;
-  if (para.startsWith('"') || para.startsWith("[Gambar:")) return true;
-  if (para.includes("\n•") || /\n\d+\.\s/.test(para)) return true;
-  if (/Q\.?S\.|H\.?R\.|Swt\.|Saw\.|\.ra\b/i.test(para)) return true;
+  const cleanPara = para.trim();
+  if (cleanPara === "[Media Embed]" || cleanPara === "[Video]" || cleanPara === "[Audio]") return true;
+  if (/^<h[1-6]>/i.test(cleanPara) || /^<pre>/i.test(cleanPara) || /^<blockquote/i.test(cleanPara)) return true;
+  if (/^\[align-(center|right|justify)(?:-h[1-6]|-blockquote)?\]/i.test(cleanPara)) return true;
+  if (cleanPara.startsWith("•") || /^\d+[.)]\s/.test(cleanPara)) return true;
+  if (cleanPara.startsWith('"') || cleanPara.startsWith("[Gambar:")) return true;
+  if (cleanPara.includes("\n•") || /\n\d+\.\s/.test(cleanPara)) return true;
+  if (/Q\.?S\.|H\.?R\.|Swt\.|Saw\.|\.ra\b/i.test(cleanPara)) return true;
   return false;
 };
 

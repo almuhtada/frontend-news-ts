@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { TrendingUp, Eye, FileText, ArrowRight } from "lucide-react";
 import { postsService, type Post } from "../../services/posts";
 
 const ArtikelPopulerApi: React.FC = () => {
@@ -29,22 +28,17 @@ const ArtikelPopulerApi: React.FC = () => {
   // ─── Loading State ───────────────────────────────────────────
   if (loading) {
     return (
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800/60 shadow-sm overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-50 dark:border-gray-800 flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
-            <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />
-          </div>
-          <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100 uppercase tracking-wide">
-            Artikel Populer
-          </h3>
-        </div>
-        <div className="p-5 space-y-3">
+      <div className="bg-transparent pb-6">
+        <h3 className="font-serif text-lg font-bold text-gray-900 dark:text-gray-105 pb-2 border-b border-gray-100 dark:border-gray-800/60 mb-4">
+          Artikel Populer
+        </h3>
+        <div className="space-y-4">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="flex gap-3 animate-pulse">
-              <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800" />
+            <div key={i} className="flex gap-4 animate-pulse">
+              <div className="w-8 h-8 rounded bg-gray-100 dark:bg-gray-800" />
               <div className="flex-1 space-y-2">
-                <div className="h-4 bg-gray-100 dark:bg-gray-800 rounded-lg w-full" />
-                <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded-lg w-2/3" />
+                <div className="h-4 bg-gray-100 dark:bg-gray-800 rounded w-full" />
+                <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded w-2/3" />
               </div>
             </div>
           ))}
@@ -55,121 +49,49 @@ const ArtikelPopulerApi: React.FC = () => {
 
   // ─── Error State ─────────────────────────────────────────────
   if (error) {
-    return (
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800/60 shadow-sm overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-50 dark:border-gray-800 flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
-            <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />
-          </div>
-          <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100 uppercase tracking-wide">
-            Artikel Populer
-          </h3>
-        </div>
-        <div className="p-8 text-center">
-          <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
-            <FileText className="w-5 h-5 text-gray-400 dark:text-gray-600" />
-          </div>
-          <p className="text-sm text-gray-500 dark:text-gray-400">{error}</p>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   // ─── Empty State ─────────────────────────────────────────────
   if (articles.length === 0) {
-    return (
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800/60 shadow-sm overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-50 dark:border-gray-800 flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
-            <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />
-          </div>
-          <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100 uppercase tracking-wide">
-            Artikel Populer
-          </h3>
-        </div>
-        <div className="p-8 text-center">
-          <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
-            <FileText className="w-5 h-5 text-gray-400 dark:text-gray-600" />
-          </div>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Belum ada artikel populer
-          </p>
-        </div>
-      </div>
-    );
+    return null;
   }
 
-  // ─── Main Content ────────────────────────────────────────────
+  // ─── Main Content (Editorial Newspaper Style) ─────────────────
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800/60 shadow-sm overflow-hidden">
+    <div className="bg-transparent pb-6">
       {/* Header */}
-      <div className="px-5 py-4 border-b border-gray-50 dark:border-gray-800 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
-            <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />
-          </div>
-          <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100 uppercase tracking-wide">
-            Artikel Populer
-          </h3>
-        </div>
-        <span className="text-[10px] font-semibold px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-          {articles.length}
-        </span>
-      </div>
+      <h3 className="font-serif text-lg font-bold text-gray-900 dark:text-gray-105 pb-2 border-b border-gray-100 dark:border-gray-800/60 mb-4">
+        Artikel Populer
+      </h3>
 
       {/* List */}
-      <div className="p-2">
-        <div className="divide-y divide-gray-50 dark:divide-gray-800/60">
-          {articles.map((article, index) => (
+      <div className="flex flex-col">
+        {articles.map((article, index) => {
+          const authorName = article.author?.display_name || article.author?.username || "Redaksi";
+          return (
             <Link
               key={article.id}
               to={`/detail-news/${article.slug}`}
-              className="group flex items-start gap-3 px-3 py-3.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200"
+              className="group flex items-start gap-4 py-3.5 border-b border-gray-100 dark:border-gray-850 last:border-0"
             >
-              {/* Rank Number */}
-              <div
-                className={`
-                  flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold
-                  ${
-                    index < 3
-                      ? "bg-gradient-to-br from-green-400 to-green-500 text-white shadow-sm"
-                      : "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500"
-                  }
-                `}
-              >
+              {/* Large, elegant editorial rank number */}
+              <span className="font-serif text-3xl font-light text-gray-300 dark:text-gray-700 leading-none select-none w-8 block flex-shrink-0">
                 {index + 1}
-              </div>
+              </span>
 
-              {/* Content */}
+              {/* Title and Author (Clean typography) */}
               <div className="flex-1 min-w-0">
-                <h4 className="text-sm font-medium text-gray-800 dark:text-gray-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-snug line-clamp-2">
+                <h4 className="font-bold text-sm text-gray-950 dark:text-gray-200 leading-snug group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
                   {article.title}
                 </h4>
-
-                {/* Meta */}
-                <div className="flex items-center gap-2 mt-1.5 text-[11px] text-gray-400 dark:text-gray-500">
-                  <span className="inline-flex items-center gap-1">
-                    <Eye className="w-3 h-3" />
-                    {(article.views || article.view_count || 0).toLocaleString(
-                      "id-ID",
-                    )}
-                  </span>
-                  {article.categories && article.categories.length > 0 && (
-                    <>
-                      <span className="w-0.5 h-0.5 rounded-full bg-gray-300 dark:bg-gray-600" />
-                      <span className="text-emerald-600 dark:text-emerald-400">
-                        {article.categories[0].name}
-                      </span>
-                    </>
-                  )}
-                </div>
+                <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider font-semibold">
+                  Oleh {authorName}
+                </p>
               </div>
-
-              {/* Arrow */}
-              <ArrowRight className="flex-shrink-0 w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all duration-200 mt-1" />
             </Link>
-          ))}
-        </div>
+          );
+        })}
       </div>
     </div>
   );

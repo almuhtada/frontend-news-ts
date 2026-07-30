@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import {
-  Users,
   BookOpen,
   Award,
-  UserCheck,
+  Users,
   Settings,
   Heart,
+  UserCheck,
 } from "lucide-react";
-import SectionCard from "../../components/components-news/card-section-program-pengajar";
+import ArtikelPopulerApi from "../../components/components-global/artikel-populer-api";
 import {
   pageContentsService,
   type ProgramPengajarContent,
@@ -42,10 +42,32 @@ const ProgramPengajar = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-950">
-        <div className="max-w-7xl mx-auto px-6 py-20 animate-pulse space-y-8">
-          <div className="h-12 bg-slate-200 rounded w-1/2 mx-auto" />
-          <div className="h-4 bg-slate-200 rounded w-2/3 mx-auto" />
+      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-10">
+        <div className="grid lg:grid-cols-4 gap-6 lg:gap-8">
+          <div className="lg:col-span-3 lg:border-r lg:border-green-800/15 dark:lg:border-green-700/20 lg:pr-8 space-y-6">
+            <div className="animate-pulse space-y-6">
+              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-2/3" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6" />
+              <div className="space-y-3 pt-4">
+                {[1, 2, 3, 4].map((i) => (
+                  <div
+                    key={i}
+                    className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg"
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="animate-pulse space-y-4">
+            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-16 bg-gray-200 dark:bg-gray-700 rounded-lg"
+              />
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -53,171 +75,195 @@ const ProgramPengajar = () => {
 
   if (error || !content) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
-        <p className="text-red-500">{error || "Konten tidak tersedia"}</p>
+      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 md:px-8 py-16 text-center">
+        <p className="text-gray-500 dark:text-gray-400">
+          {error || "Konten tidak tersedia"}
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950 dark:text-gray-100">
-      <div className="max-w-7xl mx-auto px-6 py-20">
-        {/* HEADER */}
-        <div className="relative text-center mb-20">
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 opacity-5 blur-3xl" />
-          <div className="relative space-y-6">
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-gray-100">
-              {content.header.title}
-            </h1>
-            <p className="text-lg text-slate-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
-              {content.header.description}
-            </p>
-            <div className="flex justify-center">
-              <div className="w-24 h-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500" />
+    <div className="min-h-screen bg-white dark:bg-gray-950">
+      <main className="max-w-[1500px] mx-auto px-4 py-6 sm:px-6 md:px-8 sm:py-8">
+        <div className="grid lg:grid-cols-4 gap-6 lg:gap-8">
+          <div className="lg:col-span-3 space-y-6 lg:space-y-10 lg:border-r lg:border-green-800/15 dark:lg:border-green-700/20 lg:pr-8">
+            {/* Page Header */}
+            <div className="mb-2 justify-center items-center text-center pb-16 p-6">
+              <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                {content.header.title}
+              </h1>
+              <p className="text-lg text-gray-500 dark:text-gray-400 leading-relaxed max-w-3xl mx-auto">
+                {content.header.description}
+              </p>
             </div>
-          </div>
-        </div>
 
-        {/* GRID */}
-        <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
-          {/* PROGRAM PESANTREN */}
-          <div className="lg:col-span-2 xl:col-span-3">
-            <SectionCard
-              title="Program Pesantren"
-              icon={BookOpen}
-              gradient="bg-gradient-to-r from-emerald-600 to-teal-600"
-            >
-              <div className="grid md:grid-cols-2 gap-4">
+            <section className="border-b border-green-800/10 dark:border-green-700/10 pb-10">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center">
+                  <BookOpen className="w-5 h-5 text-white" />
+                </div>
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                  Program Pesantren
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8">
                 {content.programs.map((program, index) => (
                   <div
                     key={index}
-                    className="flex items-start gap-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition"
+                    className="flex items-start gap-3 py-4 border-b border-green-800/5 dark:border-green-700/10"
                   >
-                    <span className="w-2 h-2 mt-2 rounded-full bg-emerald-600" />
-                    <p className="text-slate-700 dark:text-gray-300 leading-relaxed">{program}</p>
+                    <span className="flex-shrink-0 text-base font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                      {program}
+                    </p>
                   </div>
                 ))}
               </div>
-            </SectionCard>
-          </div>
+            </section>
 
-          {/* DEWAN MASYAYIKH */}
-          <SectionCard
-            title="Dewan Masyayikh"
-            icon={Award}
-            gradient="bg-gradient-to-r from-emerald-700 to-green-600"
-          >
-            <div className="space-y-3">
-              {content.masyayikh.map((person, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-3 p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition"
-                >
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 flex items-center justify-center text-white text-sm font-semibold">
-                    {index + 1}
+            {/* ─── 2-Column: Masyayikh + Asatidz ──────────── */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 border-b border-green-800/10 dark:border-green-700/10 pb-10">
+              {/* Dewan Masyayikh */}
+              <section>
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl flex items-center justify-center">
+                    <Award className="w-5 h-5 text-white" />
                   </div>
-                  <span className="text-slate-700 dark:text-gray-300 text-sm">{person}</span>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                    Dewan Masyayikh
+                  </h2>
                 </div>
-              ))}
-            </div>
-          </SectionCard>
+                <div className="divide-y divide-green-800/5 dark:divide-green-700/10">
+                  {content.masyayikh.map((person, index) => (
+                    <div key={index} className="flex items-center gap-3 py-3">
+                      <span className="flex-shrink-0 text-base font-extrabold text-emerald-600 dark:text-emerald-400">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span className="text-base text-gray-700 dark:text-gray-300">
+                        {person}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </section>
 
-          {/* DEWAN GURU */}
-          <SectionCard
-            title="Dewan Guru / Asatidz"
-            icon={Users}
-            gradient="bg-gradient-to-r from-green-600 to-emerald-600"
-          >
-            <div className="space-y-3">
-              {content.asatidz.map((person, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/40 transition"
-                >
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-600 to-emerald-600 flex items-center justify-center text-white text-sm font-semibold">
-                    {index + 1}
+              {/* Dewan Guru / Asatidz */}
+              <section>
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center">
+                    <Users className="w-5 h-5 text-white" />
                   </div>
-                  <span className="text-slate-700 dark:text-gray-300 text-sm">{person}</span>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                    Dewan Guru / Asatidz
+                  </h2>
                 </div>
-              ))}
+                <div className="divide-y divide-green-800/5 dark:divide-green-700/10">
+                  {content.asatidz.map((person, index) => (
+                    <div key={index} className="flex items-center gap-3 py-3">
+                      <span className="flex-shrink-0 text-base font-extrabold text-emerald-600 dark:text-emerald-400">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span className="text-base text-gray-700 dark:text-gray-300">
+                        {person}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </section>
             </div>
-          </SectionCard>
 
-          {/* BADAN PENGURUS */}
-          <SectionCard
-            title="Badan Pengurus Harian"
-            icon={Settings}
-            gradient="bg-gradient-to-r from-emerald-700 to-green-700"
-          >
-            <div className="space-y-4">
-              {content.pengurus.map((item, index) => (
-                <div
-                  key={index}
-                  className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition"
-                >
-                  <div className="font-semibold text-emerald-700 mb-1">
-                    {item.role}
+            {/* ─── 2-Column: Pengurus + Mentor ─────────────── */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 border-b border-green-800/10 dark:border-green-700/10 pb-10">
+              {/* Badan Pengurus Harian */}
+              <section>
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl flex items-center justify-center">
+                    <Settings className="w-5 h-5 text-white" />
                   </div>
-                  <div className="text-slate-700 text-sm">{item.name}</div>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                    Badan Pengurus Harian
+                  </h2>
                 </div>
-              ))}
-            </div>
-          </SectionCard>
+                <div className="divide-y divide-green-800/5 dark:divide-green-700/10">
+                  {content.pengurus.map((item, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between py-3"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span className="flex-shrink-0 text-base font-extrabold text-emerald-600 dark:text-emerald-400">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <span className="text-base text-gray-800 dark:text-gray-200 truncate">
+                          {item.name}
+                        </span>
+                      </div>
+                      <span className="flex-shrink-0 ml-3 text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+                        {item.role}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </section>
 
-          {/* TIM MENTOR */}
-          <SectionCard
-            title="Tim Mentor"
-            icon={Heart}
-            gradient="bg-gradient-to-r from-teal-600 to-emerald-600"
-          >
-            <div className="space-y-3">
-              {content.mentors.map((person, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-3 p-3 bg-teal-50 dark:bg-teal-900/20 rounded-lg hover:bg-teal-100 dark:hover:bg-teal-900/40 transition"
-                >
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-teal-600 to-emerald-600 flex items-center justify-center text-white text-sm font-semibold">
-                    {index + 1}
+              {/* Tim Mentor */}
+              <section>
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center">
+                    <Heart className="w-5 h-5 text-white" />
                   </div>
-                  <span className="text-slate-700 dark:text-gray-300 text-sm">{person}</span>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                    Tim Mentor
+                  </h2>
                 </div>
-              ))}
+                <div className="divide-y divide-green-800/5 dark:divide-green-700/10">
+                  {content.mentors.map((person, index) => (
+                    <div key={index} className="flex items-center gap-3 py-3">
+                      <span className="flex-shrink-0 text-base font-extrabold text-emerald-600 dark:text-emerald-400">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span className="text-base text-gray-700 dark:text-gray-300">
+                        {person}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </section>
             </div>
-          </SectionCard>
 
-          {/* CTA */}
-          <div className="lg:col-span-2 xl:col-span-1">
-            <SectionCard
-              title="Bergabung Bersama Kami"
-              icon={UserCheck}
-              gradient="bg-gradient-to-r from-emerald-600 to-green-600"
-            >
-              <div className="text-center py-8">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 flex items-center justify-center">
-                  <UserCheck className="w-8 h-8 text-white" />
+            {/* ─── CTA ───────────────────────────────────────── */}
+            <section className="pb-6">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl flex items-center justify-center">
+                  <UserCheck className="w-5 h-5 text-white" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 dark:text-gray-100 mb-3">
-                  Tertarik Bergabung?
-                </h3>
-                <p className="text-slate-600 dark:text-gray-400 text-sm mb-6">{content.ctaText}</p>
-                <button className="px-6 py-3 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white font-semibold hover:shadow-lg hover:scale-105 transition">
-                  Hubungi Kami
-                </button>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                  Bergabung Bersama Kami
+                </h2>
               </div>
-            </SectionCard>
+              <p className="text-base text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
+                {content.ctaText}
+              </p>
+              <a
+                href="/pendaftaran"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white text-base font-medium rounded-xl hover:bg-emerald-700 transition-colors"
+              >
+                Hubungi Kami
+              </a>
+            </section>
           </div>
-        </div>
 
-        {/* FOOTER BADGE */}
-        <div className="mt-20 text-center">
-          <div className="inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-full shadow-md">
-            <span className="w-3 h-3 rounded-full bg-gradient-to-r from-emerald-500 to-green-500 animate-pulse" />
-            <span className="text-slate-600 dark:text-gray-400 text-sm font-medium">
-              Program Aktif & Terpercaya
-            </span>
+          {/* ─── Sidebar ──────────────────────────────────────── */}
+          <div>
+            <div className="lg:sticky lg:top-6">
+              <ArtikelPopulerApi />
+            </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

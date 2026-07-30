@@ -18,15 +18,14 @@ export const useHomeData = () => {
 
   // ── Rekomendasi personal / trending (baru) ──────────────────────
   const [recommendedNews, setRecommendedNews] = useState<Post[]>([]);
-  const [isPersonalized, setIsPersonalized] = useState(false);
 
-  const [categories, setCategories] = useState<Array<{
-    id: string;
-    label: string;
-    icon: React.ComponentType<{ className?: string }>;
-  }>>([
-    { id: "semua", label: "Semua", icon: Star },
-  ]);
+  const [categories, setCategories] = useState<
+    Array<{
+      id: string;
+      label: string;
+      icon: React.ComponentType<{ className?: string }>;
+    }>
+  >([{ id: "semua", label: "Semua", icon: Star }]);
 
   // Hot topics berbasis trending tags dari BE (bukan hanya post_count)
   const [hotTopics, setHotTopics] = useState<HotTopic[]>([]);
@@ -68,13 +67,17 @@ export const useHomeData = () => {
           recommended,
           hotTopicsData,
         ] = await Promise.allSettled([
-          postsService.getPosts({ featured: true, limit: 5, status: "publish" }),
+          postsService.getPosts({
+            featured: true,
+            limit: 5,
+            status: "publish",
+          }),
           postsService.getPopularPosts(4),
-          postsService.getTrendingPosts(4, 24),
+          postsService.getTrendingPosts(4, 168), // 168 jam = 7 hari (berita baru seminggu terakhir yang banyak dilihat)
           postsService.getRecentPosts(4),
           postsService.getRecentPosts(50),
           postsService.getRecentPosts(12),
-          recommendationsService.getRecommendedPosts(8),
+          postsService.getRecentPosts(8),
           recommendationsService.getHotTopics(8, 24),
         ]);
 
@@ -111,12 +114,14 @@ export const useHomeData = () => {
 
         // ── Recommended feed (personalized / fallback trending) ──────
         if (recommended.status === "fulfilled") {
-          setRecommendedNews(recommended.value.posts);
-          setIsPersonalized(recommended.value.personalized);
+          setRecommendedNews(recommended.value);
         }
 
         // ── Hot Topics dari trending tags ───────────────────────────
-        if (hotTopicsData.status === "fulfilled" && hotTopicsData.value.length > 0) {
+        if (
+          hotTopicsData.status === "fulfilled" &&
+          hotTopicsData.value.length > 0
+        ) {
           setHotTopics(hotTopicsData.value);
         } else {
           // Fallback: gunakan kategori dengan post_count terbanyak
@@ -198,7 +203,7 @@ export const useHomeData = () => {
           loadMoreArticles();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     const currentTarget = observerTarget.current;
@@ -217,7 +222,7 @@ export const useHomeData = () => {
     activeCategory === "semua"
       ? articles
       : articles.filter((article) =>
-          article.categories?.some((cat) => cat.slug === activeCategory)
+          article.categories?.some((cat) => cat.slug === activeCategory),
         );
 
   return {
@@ -232,7 +237,6 @@ export const useHomeData = () => {
     allNews,
     // Rekomendasi personal / trending (baru)
     recommendedNews,
-    isPersonalized,
     categories,
     hotTopics,
     loadingMore,

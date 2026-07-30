@@ -37,7 +37,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-emerald-950 dark:bg-gray-900 text-white/80 mt-12">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 px-4 sm:px-6 py-12">
+      <div className="max-w-[1500px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 px-4 sm:px-6 md:px-8 py-12">
         {/* Logo + Kontak */}
         <div className="sm:col-span-2 md:col-span-1">
           <img src={Logo} alt={settings.siteName} className="w-32 sm:w-40 mb-4" />
@@ -106,7 +106,7 @@ const Footer = () => {
         {/* Kategori */}
         <div>
           <h4 className="font-bold text-lg mb-3 text-emerald-400">Kategori</h4>
-          <ul className="grid grid-cols-2 gap-2 text-sm">
+          <ul className="grid grid-cols-2 gap-2 text-sm break-words">
             {categories.map((category) => (
               <li key={category.id}>
                 <Link
@@ -161,7 +161,7 @@ const Footer = () => {
 
       {/* Bottom bar */}
       <div className="border-t border-white/10 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-6 py-4 text-center text-xs text-white/50">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 md:px-8 py-4 text-center text-xs text-white/50">
           © {new Date().getFullYear()} {settings.siteName || "Pesantren Riset Al-Muhtada"} — All rights reserved.
         </div>
       </div>
