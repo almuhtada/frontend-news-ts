@@ -56,20 +56,21 @@ const ArticleCardApi: React.FC<ArticleCardApiProps> = ({
   return (
     <Link
       to={`/detail-news/${article.slug}`}
-      className={`group block ${featured ? "md:col-span-2" : ""} border-b border-gray-150 dark:border-gray-800 pb-6 mb-2`}
+      className={`group block ${featured ? "md:col-span-2" : ""} border-b border-gray-150 dark:border-gray-800 pb-6 mb-2 min-w-0 w-full`}
     >
       <article
         className={`
           relative overflow-hidden flex flex-col md:flex-row gap-6
           bg-transparent
           transition-all duration-300 ease-out
+          min-w-0 w-full
         `}
       >
         {/* Image Container */}
         <div
           className={`
-            relative overflow-hidden flex-shrink-0 rounded-lg
-            ${featured ? "md:w-3/5 aspect-[16/10]" : "w-full md:w-2/5 aspect-[16/10]"}
+            relative overflow-hidden flex-shrink-0 rounded-lg w-full
+            ${featured ? "md:w-3/5 aspect-[16/10]" : "md:w-2/5 aspect-[16/10]"}
           `}
         >
           <img
@@ -85,7 +86,7 @@ const ArticleCardApi: React.FC<ArticleCardApiProps> = ({
         </div>
 
         {/* Content */}
-        <div className="flex-1 flex flex-col justify-center py-1">
+        <div className="flex-1 flex flex-col justify-center py-1 min-w-0">
           {/* Category Tag */}
           <span className="mb-2 text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
             {categoryName}
@@ -96,7 +97,7 @@ const ArticleCardApi: React.FC<ArticleCardApiProps> = ({
             className={`
               font-bold text-gray-900 dark:text-gray-100
               group-hover:text-emerald-600 dark:group-hover:text-emerald-400
-              transition-colors duration-200 leading-tight mb-2
+              transition-colors duration-200 leading-tight mb-2 break-words
               ${featured ? "text-xl sm:text-2xl" : "text-base sm:text-lg"}
             `}
           >
@@ -104,19 +105,19 @@ const ArticleCardApi: React.FC<ArticleCardApiProps> = ({
           </h3>
 
           {/* Excerpt */}
-          <p className="text-gray-500 dark:text-gray-400 leading-relaxed text-sm mb-4 line-clamp-2 sm:line-clamp-3">
+          <p className="text-gray-500 dark:text-gray-400 leading-relaxed text-sm mb-4 line-clamp-2 sm:line-clamp-3 break-words">
             {summary}
           </p>
 
           {/* Metadata Footer */}
-          <div className="flex items-center gap-2.5 text-xs text-gray-400 dark:text-gray-500 mt-auto">
+          <div className="flex items-center gap-2.5 text-[10px] sm:text-xs text-gray-400 dark:text-gray-500 mt-auto flex-wrap min-w-0">
             <span className="font-semibold text-gray-700 dark:text-gray-300">
               Oleh {authorName}
             </span>
             <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
             <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" />
-              {articleDate} • {readTime}
+              <Clock className="w-3.5 h-3.5 flex-shrink-0" />
+              <span>{articleDate} • {readTime}</span>
             </span>
           </div>
         </div>

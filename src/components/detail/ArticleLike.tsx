@@ -77,6 +77,7 @@ const ArticleLike = ({ postUuid, initialCount = 0 }: Props) => {
         rounded-full border
         text-sm font-medium
         transition-all duration-200
+        self-start
         ${
           liked
             ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-300 dark:border-emerald-700 text-gray-700 dark:text-gray-300"

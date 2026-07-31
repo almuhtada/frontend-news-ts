@@ -126,7 +126,7 @@ const SearchResults = () => {
 
           {/* Results */}
           {posts.length === 0 ? (
-            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm p-12 text-center">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm p-12 text-center w-full min-w-0">
               <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h2 className="text-xl font-semibold text-gray-900 mb-2">
                 Tidak ada hasil
@@ -142,17 +142,17 @@ const SearchResults = () => {
               </Link>
             </div>
           ) : (
-            <div className="divide-y divide-gray-150 dark:divide-gray-800/80">
+            <div className="divide-y divide-gray-150 dark:divide-gray-800/80 w-full min-w-0">
               {posts.map((post) => {
                 const categoryName = post.categories?.[0]?.name || "Berita";
                 const authorName = post.author?.display_name || post.author?.username || "Admin";
 
                 return (
-                  <Link key={post.id} to={`/detail-news/${post.slug}`} className="group block py-6">
-                    <article className="flex flex-col md:flex-row gap-6 bg-transparent">
+                  <Link key={post.id} to={`/detail-news/${post.slug}`} className="group block py-6 w-full min-w-0">
+                    <article className="flex flex-col md:flex-row gap-6 bg-transparent w-full min-w-0">
                       {/* Thumbnail */}
                       {post.featured_image && (
-                        <div className="w-full md:w-44 h-48 md:h-28 flex-shrink-0 overflow-hidden rounded-lg">
+                        <div className="w-full md:w-44 aspect-[16/10] md:h-28 flex-shrink-0 overflow-hidden rounded-lg">
                           <img
                             src={getImageUrl(post.featured_image)}
                             alt={post.title}
@@ -166,39 +166,39 @@ const SearchResults = () => {
                       )}
 
                       {/* Content */}
-                      <div className="flex-1 min-w-0 flex flex-col justify-center">
+                      <div className="flex-1 min-w-0 flex flex-col justify-center w-full">
                         {/* Category */}
                         <span className="mb-2 inline-block text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
                           {categoryName}
                         </span>
 
                         {/* Title */}
-                        <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2 break-words">
                           {post.title}
                         </h2>
 
                         {/* Excerpt */}
                         {post.excerpt && (
-                          <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-3 leading-relaxed">
+                          <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-3 leading-relaxed break-words">
                             {post.excerpt}
                           </p>
                         )}
 
                         {/* Meta */}
-                        <div className="flex items-center gap-2.5 text-xs text-gray-400 dark:text-gray-500">
+                        <div className="flex items-center gap-2.5 text-xs text-gray-400 dark:text-gray-500 flex-wrap min-w-0">
                           <span className="font-semibold text-gray-700 dark:text-gray-300">
                             Oleh {authorName}
                           </span>
                           <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
                           <span className="flex items-center gap-1">
-                            <Calendar className="w-3.5 h-3.5" />
+                            <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
                             <span>
                               {formatDate(post.published_at || post.createdAt)}
                             </span>
                           </span>
                           <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
                           <span className="flex items-center gap-1">
-                            <Eye className="w-3.5 h-3.5" />
+                            <Eye className="w-3.5 h-3.5 flex-shrink-0" />
                             <span>{post.views || post.view_count || 0}</span>
                           </span>
                         </div>

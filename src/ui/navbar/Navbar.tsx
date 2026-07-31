@@ -53,16 +53,16 @@ const Navbar = () => {
   return (
     <>
       {/* Header */}
-      <header className="bg-[#00531b] dark:bg-gray-900 border-b border-green-900 dark:border-gray-700">
+      <header className="bg-[#00531b] dark:bg-gray-900 border-b border-green-900 dark:border-gray-700 w-full overflow-hidden">
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 md:px-8 py-3">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-3 min-w-0">
             {/* LOGO + DATE */}
-            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-              <Link to="/" onClick={() => setActiveCategory("Beranda")}>
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1 sm:flex-initial">
+              <Link to="/" onClick={() => setActiveCategory("Beranda")} className="min-w-0 block">
                 <img
                   src={Logo}
                   alt="Logo Al-Muhtada"
-                  className="h-10 sm:h-12 md:h-16 lg:h-24 object-contain flex-shrink-0"
+                  className="h-10 sm:h-12 md:h-16 lg:h-24 object-contain flex-shrink-0 max-w-full"
                 />
               </Link>
 
@@ -111,7 +111,7 @@ const Navbar = () => {
       >
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 md:px-8">
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center justify-center gap-x-3 lg:gap-x-5 xl:gap-x-7 py-3 w-full">
+          <div className="hidden md:flex items-center justify-center gap-x-3 lg:gap-x-5 xl:gap-x-7 py-3 w-full overflow-x-auto scrollbar-hide min-w-0">
             <NavLink
               to="/"
               className={`whitespace-nowrap pb-1 border-b-2 text-sm font-medium transition-colors ${
@@ -192,9 +192,9 @@ const Navbar = () => {
             </Dropdown>
           </div>
 
-          {/* Mobile Menu */}
+           {/* Mobile Menu */}
           {isOpen && (
-            <div className="md:hidden flex flex-col py-3 border-t border-white/20">
+            <div className="md:hidden flex flex-col py-3 border-t border-white/20 max-h-[75vh] overflow-y-auto min-w-0">
               <div className="px-1 pb-3">
                 <SearchBar />
               </div>

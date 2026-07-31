@@ -111,17 +111,17 @@ const NewsSection = ({
 
   if (layout === "vertical") {
     return (
-      <section className="mb-12 border-b border-green-800/10 dark:border-green-700/10 pb-10">
-        <div className="flex items-center gap-3 mb-6">
+      <section className="mb-12 border-b border-green-800/10 dark:border-green-700/10 pb-10 min-w-0 w-full">
+        <div className="flex items-center gap-3 mb-6 min-w-0">
           <div
-            className={`w-8 h-8 bg-gradient-to-br ${iconBgColor} rounded-2xl flex items-center justify-center`}
+            className={`w-8 h-8 bg-gradient-to-br ${iconBgColor} rounded-2xl flex items-center justify-center flex-shrink-0`}
           >
             <IconComponent className={`w-5 h-5 ${iconColor}`} />
           </div>
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{title}</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 min-w-0 break-words">{title}</h2>
         </div>
 
-        <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2">
+        <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 min-w-0 w-full">
           {displayArticles.map((article) => {
             const categoryName = article.categories?.[0]?.name || "Berita";
             const imageUrl = getImageUrl(article.featured_image) || PLACEHOLDER_IMAGE_MEDIUM;
@@ -130,10 +130,10 @@ const NewsSection = ({
               <Link
                 key={article.id}
                 to={`/detail-news/${article.slug}`}
-                className="group rounded-xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden shadow-sm hover:shadow-lg transition"
+                className="group rounded-xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden shadow-sm hover:shadow-lg transition min-w-0 w-full block"
               >
                 {article.featured_image && (
-                  <div className="relative aspect-[16/9] overflow-hidden">
+                  <div className="relative aspect-[16/9] overflow-hidden w-full">
                     <img
                       src={imageUrl}
                       alt={article.title}
@@ -148,8 +148,8 @@ const NewsSection = ({
                     </span>
                   </div>
                 )}
-                <div className="p-4 sm:p-5 flex flex-col gap-2">
-                  <h4 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 group-hover:text-emerald-700 transition">
+                <div className="p-4 sm:p-5 flex flex-col gap-2 min-w-0">
+                  <h4 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 group-hover:text-emerald-700 transition break-words">
                     {article.title}
                   </h4>
                   {article.published_at && (
@@ -172,19 +172,19 @@ const NewsSection = ({
 
   // Horizontal Scrollable slider
   return (
-    <section className="mb-12 border-b border-green-800/10 dark:border-green-700/10 pb-10">
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-3">
+    <section className="mb-12 border-b border-green-800/10 dark:border-green-700/10 pb-10 min-w-0 w-full">
+      <div className="flex items-center justify-between mb-8 gap-4 min-w-0">
+        <div className="flex items-center gap-3 min-w-0">
           <div
-            className={`w-8 h-8 bg-gradient-to-br ${iconBgColor} rounded-2xl flex items-center justify-center`}
+            className={`w-8 h-8 bg-gradient-to-br ${iconBgColor} rounded-2xl flex items-center justify-center flex-shrink-0`}
           >
             <IconComponent className={`w-5 h-5 ${iconColor}`} />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{title}</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 min-w-0 break-words">{title}</h2>
         </div>
 
         {/* Scroll buttons */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-shrink-0">
           <button
             onClick={() => scroll("left")}
             className="w-9 h-9 rounded-full bg-white dark:bg-gray-800 shadow hover:shadow-md transition-all flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -203,7 +203,7 @@ const NewsSection = ({
       {/* Scrollable container */}
       <div
         ref={scrollRef}
-        className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
+        className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4 min-w-0 w-full"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {displayArticles.map((article, index) => {
@@ -211,13 +211,13 @@ const NewsSection = ({
           return (
             <div
               key={`${article.id}-${index}`}
-              className="flex-shrink-0 w-[280px] sm:w-[320px] group"
+              className="flex-shrink-0 w-[280px] sm:w-[320px] group min-w-0"
             >
-              <Link to={`/detail-news/${article.slug}`}>
-                <div className="bg-transparent overflow-hidden h-full flex flex-col">
+              <Link to={`/detail-news/${article.slug}`} className="block w-full">
+                <div className="bg-transparent overflow-hidden h-full flex flex-col min-w-0">
                   {/* Image */}
                   {article.featured_image && (
-                    <div className="relative h-44 overflow-hidden rounded-lg mb-3">
+                    <div className="relative h-44 overflow-hidden rounded-lg mb-3 w-full">
                       <img
                         src={getImageUrl(article.featured_image)}
                         alt={article.title}
@@ -227,20 +227,20 @@ const NewsSection = ({
                   )}
 
                   {/* Content */}
-                  <div className="flex-1 flex flex-col">
+                  <div className="flex-1 flex flex-col min-w-0">
                     {/* Category Tag */}
                     <span className="mb-2 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-450">
                       {categoryName}
                     </span>
 
                     {/* Title */}
-                    <h3 className="font-bold text-base text-gray-900 dark:text-gray-100 line-clamp-2 mb-2 group-hover:text-emerald-600 transition-colors leading-snug">
+                    <h3 className="font-bold text-base text-gray-900 dark:text-gray-100 line-clamp-2 mb-2 group-hover:text-emerald-600 transition-colors leading-snug break-words">
                       {article.title}
                     </h3>
 
                     {/* Excerpt */}
                     <div
-                      className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 leading-relaxed"
+                      className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 leading-relaxed break-words"
                       dangerouslySetInnerHTML={{
                         __html:
                           article.excerpt || article.content?.substring(0, 100) || "",
@@ -248,7 +248,7 @@ const NewsSection = ({
                     />
 
                     {/* Badge/Meta info */}
-                    <div className="flex items-center justify-between pt-3 border-t border-green-800/10 dark:border-green-700/10 mt-auto">
+                    <div className="flex items-center justify-between pt-3 border-t border-green-800/10 dark:border-green-700/10 mt-auto min-w-0">
                       {getBadge(article)}
                     </div>
                   </div>

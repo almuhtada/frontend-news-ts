@@ -62,11 +62,11 @@ const Home = () => {
   return (
     <PublicPageLayout>
       <SEO />
-      <div className="min-h-screen bg-white dark:bg-gray-950">
-        <main className="max-w-[1500px] mx-auto px-4 py-6 sm:px-6 md:px-8 sm:py-8">
-          <div className="grid lg:grid-cols-4 gap-6 lg:gap-8">
+      <div className="min-h-screen bg-white dark:bg-gray-950 w-full overflow-hidden">
+        <main className="max-w-[1500px] mx-auto px-4 py-6 sm:px-6 md:px-8 sm:py-8 min-w-0 w-full">
+          <div className="grid lg:grid-cols-4 gap-6 lg:gap-8 min-w-0 w-full">
             {/* Main Content */}
-            <div className="lg:col-span-3 space-y-6 lg:space-y-10 lg:border-r lg:border-green-800/15 dark:lg:border-green-700/20 lg:pr-8">
+            <div className="lg:col-span-3 space-y-6 lg:space-y-10 lg:border-r lg:border-green-800/15 dark:lg:border-green-700/20 lg:pr-8 min-w-0 w-full">
               <FeaturedSection
                 articles={featuredArticles}
                 isLoading={isLoading}

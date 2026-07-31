@@ -53,7 +53,7 @@ const ArticlesList = ({
 
       {/* ─── Articles Grid ────────────────────────────────────── */}
       {articles.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 min-w-0 w-full">
           {articles.map((article, index) => {
             const categoryName = article.categories?.[0]?.name || "Berita";
             const authorName = article.author?.display_name || article.author?.username || "Admin";
@@ -62,11 +62,11 @@ const ArticlesList = ({
               <Link
                 key={article.id}
                 to={`/detail-news/${article.slug}`}
-                className="group block border-b border-gray-150 dark:border-gray-800/80 pb-6"
+                className="group block border-b border-gray-150 dark:border-gray-800/80 pb-6 min-w-0 w-full"
               >
-                <article className="flex flex-col gap-4 bg-transparent">
+                <article className="flex flex-col gap-4 bg-transparent min-w-0 w-full">
                   {/* Thumbnail */}
-                  <div className="relative w-full aspect-[16/10] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+                  <div className="relative w-full aspect-[16/10] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 flex-shrink-0">
                     {article.featured_image ? (
                       <img
                         src={getImageUrl(article.featured_image)}
@@ -86,20 +86,20 @@ const ArticlesList = ({
                   </div>
 
                   {/* Content */}
-                  <div className="flex-1 flex flex-col justify-between py-1">
-                    <div>
+                  <div className="flex-1 flex flex-col justify-between py-1 min-w-0 w-full">
+                    <div className="min-w-0 w-full">
                       {/* Category Tag */}
                       <span className="inline-block mb-2 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
                         {categoryName}
                       </span>
 
                       {/* Title */}
-                      <h3 className="font-bold text-gray-900 dark:text-gray-100 text-base sm:text-lg leading-snug group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200 line-clamp-2">
+                      <h3 className="font-bold text-gray-900 dark:text-gray-100 text-base sm:text-lg leading-snug group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200 line-clamp-2 break-words">
                         {article.title}
                       </h3>
 
                       {/* Excerpt */}
-                      <p className="mt-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2">
+                      <p className="mt-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2 break-words">
                         {article.excerpt ||
                           article.content
                             .replace(/<[^>]*>/g, "")
@@ -108,19 +108,19 @@ const ArticlesList = ({
                     </div>
 
                     {/* Footer Meta */}
-                    <div className="flex items-center gap-2 mt-4 text-[11px] text-gray-400 dark:text-gray-500">
+                    <div className="flex items-center gap-2 mt-4 text-[10px] sm:text-xs text-gray-400 dark:text-gray-500 flex-wrap min-w-0">
                       <span className="font-semibold text-gray-700 dark:text-gray-300">
                         Oleh {authorName}
                       </span>
                       <span className="w-0.5 h-0.5 rounded-full bg-gray-300 dark:bg-gray-600" />
                       <span className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
+                        <Clock className="w-3.5 h-3.5 flex-shrink-0" />
                         {formatDate(article.createdAt)}
                       </span>
                       <span className="w-0.5 h-0.5 rounded-full bg-gray-300 dark:bg-gray-600" />
                       <span className="group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors inline-flex items-center gap-0.5">
                         Baca
-                        <ArrowRight className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-0.5" />
+                        <ArrowRight className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-0.5 flex-shrink-0" />
                       </span>
                     </div>
                   </div>

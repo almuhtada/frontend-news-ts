@@ -95,12 +95,12 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
   const mainAuthor = main.author?.display_name || main.author?.username || "Redaksi";
 
   return (
-    <div className="pb-8 border-b border-green-800/15 dark:border-green-700/20">
+    <div className="pb-8 border-b border-green-800/15 dark:border-green-700/20 w-full min-w-0 overflow-hidden">
       {/* ========== MOBILE LAYOUT ========== */}
-      <div className="md:hidden">
+      <div className="md:hidden w-full min-w-0">
         {/* Carousel container */}
         <div
-          className="relative overflow-hidden rounded-xl bg-gray-100 select-none"
+          className="relative overflow-hidden rounded-xl bg-gray-100 select-none w-full aspect-video min-w-0"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
@@ -113,10 +113,11 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
               animate="center"
               exit="exit"
               transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.8 }}
+              className="w-full h-full"
             >
               <Link
                 to={`/detail-news/${slides[current].slug}`}
-                className="relative block aspect-[16/9] overflow-hidden"
+                className="relative block w-full h-full overflow-hidden"
               >
                 <div
                   className="absolute inset-0 bg-cover bg-center scale-110"
@@ -130,20 +131,20 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
                 <img
                   src={getImageUrl(slides[current].featured_image) || PLACEHOLDER_IMAGE_LARGE}
                   alt={slides[current].title}
-                  className="relative h-full w-full object-contain z-10"
+                  className="relative h-full w-full object-cover z-10"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = PLACEHOLDER_IMAGE_LARGE;
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent z-20" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent z-20" />
                 <div className="absolute bottom-0 left-0 right-0 p-4 pb-5 z-30">
                   <span className="text-[10px] font-bold text-emerald-300 uppercase tracking-wider drop-shadow-sm">
                     {slides[current].categories?.[0]?.name || "Berita"}
                   </span>
-                  <h2 className="mt-1 text-base sm:text-lg font-bold text-white leading-tight line-clamp-2 drop-shadow-sm">
+                  <h2 className="mt-1 text-sm sm:text-base font-bold text-white leading-tight line-clamp-2 drop-shadow-sm break-words">
                     {slides[current].title}
                   </h2>
-                  <div className="mt-1.5 text-xs text-gray-300 drop-shadow-sm">
+                  <div className="mt-1.5 text-[10px] text-gray-300 drop-shadow-sm">
                     {formatDateTime(slides[current].published_at || slides[current].createdAt)}
                   </div>
                 </div>
@@ -192,11 +193,11 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
 
         {/* Side articles section */}
         {sideArticles.length > 0 && (
-          <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800">
+          <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800 min-w-0 w-full">
             <h3 className="text-base font-bold text-gray-900 dark:text-gray-100 mb-4">
               Berita Lainnya
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-4 min-w-0 w-full">
               {sideArticles.map((article) => {
                 const imageUrl = getImageUrl(article.featured_image) || PLACEHOLDER_IMAGE_SMALL;
                 const category = article.categories?.[0]?.name || "Berita";
@@ -204,9 +205,9 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
                   <Link
                     key={article.id}
                     to={`/detail-news/${article.slug}`}
-                    className="group flex items-start gap-4"
+                    className="group flex items-start gap-4 min-w-0 w-full"
                   >
-                    <div className="relative w-[120px] aspect-[4/3] flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                    <div className="relative w-[100px] sm:w-[120px] aspect-[4/3] flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
                       <img
                         src={imageUrl}
                         alt={article.title}
@@ -217,13 +218,13 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
                       />
                     </div>
                     <div className="flex-1 min-w-0 pt-0.5">
-                      <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-450 uppercase tracking-wider">
+                      <span className="text-[10px] sm:text-[11px] font-bold text-emerald-600 dark:text-emerald-450 uppercase tracking-wider">
                         {category}
                       </span>
-                      <h3 className="mt-1 text-sm font-bold text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                      <h3 className="mt-1 text-xs sm:text-sm font-bold text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors break-words">
                         {article.title}
                       </h3>
-                      <div className="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                      <div className="mt-1 text-[10px] text-gray-400 dark:text-gray-500">
                         {formatDateTime(article.published_at || article.createdAt)}
                       </div>
                     </div>

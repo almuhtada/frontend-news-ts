@@ -16,7 +16,7 @@ const CategoryFilter = ({
   return (
     <section className="mb-8 border-b border-green-800/10 dark:border-green-700/10 pb-3">
       {/* Category Links horizontal list */}
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+      <div className="flex items-center gap-x-6 gap-y-3 overflow-x-auto scrollbar-hide pb-1 w-full min-w-0">
         {categories.map((category) => {
           const isActive = activeCategory === category.id;
 

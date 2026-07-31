@@ -76,16 +76,16 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
   };
 
   return (
-    <section className="rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm">
+    <section className="rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm w-full min-w-0 overflow-hidden">
       {/* List */}
-      <div className="divide-y divide-gray-100 dark:divide-gray-800">
+      <div className="divide-y divide-gray-100 dark:divide-gray-800 w-full min-w-0">
         {currentArticles.map((article) => (
           <Link
             key={article.id}
             to={`/detail-news/${article.slug}`}
-            className="group block px-4 py-4 md:px-6 md:py-5 hover:bg-emerald-50/40 dark:hover:bg-emerald-900/20 transition"
+            className="group block px-4 py-4 md:px-6 md:py-5 hover:bg-emerald-50/40 dark:hover:bg-emerald-900/20 transition w-full min-w-0"
           >
-            <div className="md:flex md:gap-5">
+            <div className="flex flex-col md:flex-row md:gap-5 w-full min-w-0">
               {/* Thumbnail */}
               {article.featured_image && (
                 <div className="w-full md:w-36 aspect-[16/9] md:aspect-auto md:h-24 flex-shrink-0 overflow-hidden rounded-xl md:rounded-xl">
@@ -98,9 +98,9 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
               )}
 
               {/* Content */}
-              <div className="mt-3 md:mt-0 md:flex-1 md:min-w-0">
+              <div className="mt-3 md:mt-0 md:flex-1 md:min-w-0 w-full">
                 {/* Meta */}
-                <div className="flex items-center gap-2 md:gap-3 text-[11px] md:text-xs">
+                <div className="flex items-center gap-2 md:gap-3 text-[10px] md:text-xs flex-wrap">
                   {article.categories?.[0] && (
                     <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 md:px-3 md:py-1 font-semibold text-emerald-700">
                       {article.categories[0].name}
@@ -112,13 +112,13 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
                 </div>
 
                 {/* Title */}
-                <h3 className="mt-1.5 md:mt-2 mb-1.5 md:mb-2 text-sm md:text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 md:line-clamp-2 group-hover:text-emerald-700 transition">
+                <h3 className="mt-1.5 md:mt-2 mb-1.5 md:mb-2 text-sm md:text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 md:line-clamp-2 group-hover:text-emerald-700 transition break-words">
                   {article.title}
                 </h3>
 
                 {/* Excerpt */}
                 <div
-                  className="text-xs md:text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mt-1 md:mt-0"
+                  className="text-xs md:text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mt-1 md:mt-0 break-words"
                   dangerouslySetInnerHTML={{
                     __html:
                       article.excerpt || article.content.substring(0, 150),

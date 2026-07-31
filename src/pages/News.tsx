@@ -83,16 +83,16 @@ const News = () => {
   // ─── Main Content ──────────────────────────────────────────────
   return (
     <PublicPageLayout>
-      <div className="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+      <div className="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 w-full overflow-hidden">
         {/* Top accent bar */}
         <div className="h-1 bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500" />
 
-        <main className="max-w-[1500px] mx-auto px-4 sm:px-6 md:px-8 py-8 lg:py-12">
+        <main className="max-w-[1500px] mx-auto px-4 sm:px-6 md:px-8 py-8 lg:py-12 min-w-0 w-full">
           {/* Section Header */}
           <div className="mb-8 lg:mb-10">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="w-1.5 h-6 rounded-full bg-amber-500" />
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+            <div className="flex items-center gap-3 mb-2 min-w-0">
+              <span className="w-1.5 h-6 rounded-full bg-amber-500 flex-shrink-0" />
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight break-words min-w-0">
                 Berita Terkini
               </h1>
             </div>
@@ -101,9 +101,9 @@ const News = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 min-w-0 w-full">
             {/* Main Column */}
-            <section className="lg:col-span-8 space-y-8 lg:space-y-10 lg:border-r lg:border-green-800/15 dark:lg:border-green-700/20 lg:pr-8">
+            <section className="lg:col-span-8 space-y-8 lg:space-y-10 lg:border-r lg:border-green-800/15 dark:lg:border-green-700/20 lg:pr-8 min-w-0 w-full">
               {/* Hero */}
               {topStories[0] && (
                 <div className="animate-fade-in">
