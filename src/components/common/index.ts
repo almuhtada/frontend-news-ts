@@ -2,3 +2,4 @@
 // Components yang bisa dipakai di berbagai tempat
 
 export { default as Pagination } from "./Pagination";
+export { default as ProfileHero } from "./ProfileHero";

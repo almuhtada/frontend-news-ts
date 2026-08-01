@@ -56,7 +56,7 @@ const ArticleCardApi: React.FC<ArticleCardApiProps> = ({
   return (
     <Link
       to={`/detail-news/${article.slug}`}
-      className={`group block ${featured ? "md:col-span-2" : ""} border-b border-gray-150 dark:border-gray-800 pb-6 mb-2 min-w-0 w-full`}
+      className={`group block ${featured ? "md:col-span-2" : ""} border-b border-gray-200/60 dark:border-gray-800 pb-6 mb-2 min-w-0 w-full`}
     >
       <article
         className={`

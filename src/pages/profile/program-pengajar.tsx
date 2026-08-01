@@ -12,6 +12,7 @@ import {
   pageContentsService,
   type ProgramPengajarContent,
 } from "../../services/pageContents";
+import ProfileHero from "../../components/common/ProfileHero";
 
 const ProgramPengajar = () => {
   const [content, setContent] = useState<ProgramPengajarContent | null>(null);
@@ -85,18 +86,17 @@ const ProgramPengajar = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
-      <main className="max-w-[1500px] mx-auto px-4 py-6 sm:px-6 md:px-8 sm:py-8">
+      <main className="max-w-[1500px] mx-auto px-4 py-8 sm:px-6 md:px-8">
+        <div className="mb-10">
+          <ProfileHero
+            title={content.header.title}
+            description={content.header.description}
+            badge="Struktur & Pengajar"
+          />
+        </div>
+
         <div className="grid lg:grid-cols-4 gap-6 lg:gap-8">
           <div className="lg:col-span-3 space-y-6 lg:space-y-10 lg:border-r lg:border-green-800/15 dark:lg:border-green-700/20 lg:pr-8">
-            {/* Page Header */}
-            <div className="mb-2 justify-center items-center text-center pb-16 p-6">
-              <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-                {content.header.title}
-              </h1>
-              <p className="text-lg text-gray-500 dark:text-gray-400 leading-relaxed max-w-3xl mx-auto">
-                {content.header.description}
-              </p>
-            </div>
 
             <section className="border-b border-green-800/10 dark:border-green-700/10 pb-10">
               <div className="flex items-center gap-4 mb-6">

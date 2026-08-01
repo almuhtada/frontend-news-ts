@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import ArtikelPopulerApi from "../../components/components-global/artikel-populer-api";
 import { aboutService, type AboutSection } from "../../services/about";
 import { API_BASE_URL } from "../../config/api";
+import ProfileHero from "../../components/common/ProfileHero";
 
 const TentangPesantren = () => {
   const [sections, setSections] = useState<AboutSection[]>([]);
@@ -76,12 +77,18 @@ const TentangPesantren = () => {
 
   return (
     <div className="bg-white dark:bg-gray-950 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
-        {/* Kolom Kiri */}
-        <div className="md:col-span-2">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center text-gray-900 dark:text-gray-100 mb-6 md:mb-8">
-            {mainIntro?.title}
-          </h1>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="mb-10">
+          <ProfileHero
+            title={mainIntro?.title || "Tentang Kami"}
+            description="Mengenal sejarah perjuangan, profil pengasuh, serta visi dan misi Pesantren Riset Al-Muhtada."
+            badge="Profil Pesantren"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
+          {/* Kolom Kiri */}
+          <div className="md:col-span-2">
 
           <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6 text-justify">
             {mainIntro?.content}
@@ -176,6 +183,7 @@ const TentangPesantren = () => {
         </div>
       </div>
     </div>
+  </div>
   );
 };
 

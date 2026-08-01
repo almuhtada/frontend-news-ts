@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 interface CategoryFilterProps {
   categories: Array<{
     id: string;
@@ -13,11 +15,20 @@ const CategoryFilter = ({
   activeCategory,
   onCategoryChange,
 }: CategoryFilterProps) => {
+  const [showAll, setShowAll] = useState(false);
+
+  // Jika jumlah kategori > 5, batasi tampilan awal menjadi 5 item (termasuk "Semua" di awal)
+  const limitCount = 5;
+  const hasMore = categories.length > limitCount;
+  const displayedCategories = showAll || !hasMore
+    ? categories
+    : categories.slice(0, limitCount);
+
   return (
     <section className="mb-8 border-b border-green-800/10 dark:border-green-700/10 pb-3">
       {/* Category Links horizontal list */}
-      <div className="flex items-center gap-x-6 gap-y-3 overflow-x-auto scrollbar-hide pb-1 w-full min-w-0">
-        {categories.map((category) => {
+      <div className="flex items-center flex-wrap gap-x-6 gap-y-3 pb-1 w-full min-w-0">
+        {displayedCategories.map((category) => {
           const isActive = activeCategory === category.id;
 
           return (
@@ -39,6 +50,15 @@ const CategoryFilter = ({
             </button>
           );
         })}
+
+        {hasMore && (
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="pb-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 hover:underline focus:outline-none border-b-2 border-transparent"
+          >
+            {showAll ? "Sembunyikan" : "Lihat Semua"}
+          </button>
+        )}
       </div>
     </section>
   );

@@ -15,6 +15,7 @@ export const useHomeData = () => {
   const [viralNews, setViralNews] = useState<Post[]>([]);
   const [recentNews, setRecentNews] = useState<Post[]>([]);
   const [allNews, setAllNews] = useState<Post[]>([]);
+  const [categoryLoading, setCategoryLoading] = useState(false);
 
   // ── Rekomendasi personal / trending (baru) ──────────────────────
   const [recommendedNews, setRecommendedNews] = useState<Post[]>([]);
@@ -36,6 +37,29 @@ export const useHomeData = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const observerTarget = useRef<HTMLDivElement | null>(null);
 
+  // Efek untuk memuat artikel per kategori ketika kategori aktif berubah
+  useEffect(() => {
+    if (activeCategory === "semua") return;
+
+    const fetchCategoryArticles = async () => {
+      try {
+        setCategoryLoading(true);
+        const response = await postsService.getPosts({
+          category: activeCategory,
+          limit: 100,
+          status: "publish",
+        });
+        setAllNews(response.posts);
+      } catch (err) {
+        console.error("Error fetching articles by category:", err);
+      } finally {
+        setCategoryLoading(false);
+      }
+    };
+
+    fetchCategoryArticles();
+  }, [activeCategory]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -47,7 +71,7 @@ export const useHomeData = () => {
         const categoryIcons = [Star, Zap, Users, Search, TrendingUp];
         const formattedCategories = [
           { id: "semua", label: "Semua", icon: Star },
-          ...categoriesData.slice(0, 4).map((cat: Category, index: number) => ({
+          ...categoriesData.map((cat: Category, index: number) => ({
             id: cat.slug,
             label: cat.name,
             icon: categoryIcons[index + 1] || Star,
@@ -75,7 +99,10 @@ export const useHomeData = () => {
           postsService.getPopularPosts(4),
           postsService.getTrendingPosts(4, 168), // 168 jam = 7 hari (berita baru seminggu terakhir yang banyak dilihat)
           postsService.getRecentPosts(4),
-          postsService.getRecentPosts(50),
+          postsService.getPosts({
+            limit: 100,
+            status: "publish",
+          }),
           postsService.getRecentPosts(12),
           postsService.getRecentPosts(8),
           recommendationsService.getHotTopics(8, 24),
@@ -103,7 +130,11 @@ export const useHomeData = () => {
 
         // Set all news
         if (allNewsPosts.status === "fulfilled") {
-          setAllNews(allNewsPosts.value);
+          // getRecentPosts mengembalikan Post[], tapi getPosts mengembalikan PostsResponse
+          const postsData = Array.isArray(allNewsPosts.value) 
+            ? allNewsPosts.value 
+            : (allNewsPosts.value as any).posts || [];
+          setAllNews(postsData);
         }
 
         // Set articles dengan infinite scroll
@@ -228,7 +259,7 @@ export const useHomeData = () => {
   return {
     activeCategory,
     setActiveCategory,
-    isLoading,
+    isLoading: isLoading || categoryLoading,
     featuredArticles,
     filteredArticles,
     trendingNews,

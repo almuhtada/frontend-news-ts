@@ -261,18 +261,18 @@ const ArticleContent = ({
       </div>
 
       {excerpt && (currentPage === 1 || showAll) && (
-        <div className="relative mb-8">
-          <div className="absolute top-0 left-0 w-12 h-[2px] bg-emerald-600 dark:bg-emerald-400" />
-
-          <div className="pt-5">
-            <div className="flex items-baseline gap-3 mb-4">
-              <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-[0.15em]">
+        <div className="mb-10">
+          <div className="bg-gray-50/80 rounded-xl px-6 py-5 border border-gray-100">
+            <div className="flex items-center gap-2 mb-2.5">
+              <FileText
+                className="w-3.5 h-3.5 text-emerald-600"
+                strokeWidth={2.5}
+              />
+              <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">
                 Ringkasan
               </span>
-              <span className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
             </div>
-
-            <p className="text-gray-800 dark:text-gray-200 leading-[1.75] text-base font-normal">
+            <p className="text-gray-700 leading-[1.75] text-[0.95rem]">
               {excerpt}
             </p>
           </div>

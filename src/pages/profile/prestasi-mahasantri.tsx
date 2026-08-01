@@ -5,6 +5,7 @@ import {
   achievementsService,
   type Achievement,
 } from "../../services/achievements";
+import ProfileHero from "../../components/common/ProfileHero";
 
 const PrestasiMahasantri = () => {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
@@ -90,23 +91,18 @@ const PrestasiMahasantri = () => {
       <div className="h-1 bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-500" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+        <div className="mb-10">
+          <ProfileHero
+            title="Prestasi Mahasantri"
+            description="Daftar prestasi yang diraih oleh para mahasantri dalam berbagai kompetisi, akademik, penelitian, hingga karya publikasi."
+            badge="Rekam Jejak Gemilang"
+            badgeIcon={<Sparkles className="w-3.5 h-3.5 text-emerald-600" />}
+          />
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
           {/* ─── Main Content ─────────────────────────────────── */}
           <div className="lg:col-span-8">
-            {/* Header */}
-            <div className="text-center mb-8 lg:mb-10">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-4">
-                <Sparkles className="w-3.5 h-3.5" />
-                Rekam Jejak Gemilang
-              </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 tracking-tight mb-4">
-                Prestasi Mahasantri
-              </h1>
-              <p className="text-sm sm:text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
-                Daftar prestasi yang diraih oleh para mahasantri dalam berbagai
-                kompetisi, akademik, penelitian, hingga karya publikasi.
-              </p>
-            </div>
 
             {/* Achievement Stats */}
 

@@ -7,7 +7,7 @@ interface QuickBitesProps {
 
 const QuickBites = ({ stories }: QuickBitesProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 border-b border-gray-150 dark:border-gray-800/80 pb-6 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 border-b border-gray-200/60 dark:border-gray-800/80 pb-6 mb-6">
       {stories.map((story) => (
         <div key={story.id} className="bg-transparent flex flex-col justify-between py-1">
           <div>

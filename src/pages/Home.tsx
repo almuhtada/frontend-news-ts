@@ -52,12 +52,7 @@ const Home = () => {
   ];
 
   // Filter allNews berdasarkan category aktif
-  const filteredAllNews =
-    activeCategory === "semua"
-      ? allNews
-      : allNews.filter((article) =>
-          article.categories?.some((cat) => cat.slug === activeCategory),
-        );
+  const filteredAllNews = allNews;
 
   return (
     <PublicPageLayout>

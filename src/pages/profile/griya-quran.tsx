@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { pageContentsService, type GriyaQuranContent } from "../../services/pageContents";
+import { MapPin, Phone, Calendar, Compass, BookOpen, CheckCircle2 } from "lucide-react";
+import ProfileHero from "../../components/common/ProfileHero";
 
 const GriyaQuran = () => {
   const [content, setContent] = useState<GriyaQuranContent | null>(null);
@@ -47,54 +49,108 @@ const GriyaQuran = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12 space-y-12 dark:text-gray-100">
-      {/* Header */}
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">{content.header.title}</h1>
-        <p className="text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">{content.header.description}</p>
-        <p className="text-gray-500 dark:text-gray-500 mt-3">
-          📍 {content.header.address} | ☎️ {content.header.phone}
-        </p>
-      </div>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 space-y-16 dark:text-gray-100">
+      <ProfileHero
+        title={content.header.title}
+        description={content.header.description}
+        badge="Program Unggulan"
+      >
+        <div className="pt-2 flex flex-wrap gap-x-6 gap-y-3 text-xs sm:text-sm text-gray-600 border-t border-gray-200 mt-2">
+          <span className="flex items-center gap-2">
+            <MapPin size={16} className="text-emerald-600 flex-shrink-0" />
+            {content.header.address}
+          </span>
+          <span className="hidden sm:inline text-gray-300">|</span>
+          <span className="flex items-center gap-2">
+            <Phone size={16} className="text-emerald-600 flex-shrink-0" />
+            {content.header.phone}
+          </span>
+        </div>
+      </ProfileHero>
 
       {/* Visi & Misi */}
-      <section>
-        <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6">Visi & Misi</h2>
-        <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-2xl shadow-sm">
-          <p className="text-green-700 dark:text-green-400 font-medium italic mb-4">"{content.vpiMisi.visi}"</p>
-          <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
-            {content.vpiMisi.misi.map((misi, index) => (
-              <li key={index}>{misi}</li>
-            ))}
-          </ul>
+      <section className="space-y-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2.5">
+          <span className="w-1.5 h-6 rounded-full bg-emerald-600" />
+          Visi & Misi
+        </h2>
+        <div className="grid md:grid-cols-12 gap-6 items-stretch">
+          <div className="md:col-span-5 flex flex-col justify-between bg-emerald-50/50 dark:bg-emerald-950/25 border border-emerald-100/50 dark:border-emerald-900/30 p-8 rounded-3xl">
+            <div>
+              <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-700 dark:text-emerald-400 mb-6">
+                <Compass size={20} />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-3">Visi</h3>
+              <p className="text-gray-700 dark:text-gray-300 text-base sm:text-lg font-medium leading-relaxed italic">
+                "{content.vpiMisi.visi}"
+              </p>
+            </div>
+          </div>
+          <div className="md:col-span-7 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-8 rounded-3xl shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800/80 flex items-center justify-center text-gray-700 dark:text-gray-300 mb-6">
+                <BookOpen size={20} />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Misi</h3>
+              <ul className="space-y-4">
+                {content.vpiMisi.misi.map((misi, index) => (
+                  <li key={index} className="flex gap-3 text-gray-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed">
+                    <CheckCircle2 size={18} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <span>{misi}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Program */}
-      <section>
-        <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6">Program</h2>
+      <section className="space-y-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2.5">
+          <span className="w-1.5 h-6 rounded-full bg-emerald-600" />
+          Program Pembelajaran
+        </h2>
         <div className="grid md:grid-cols-3 gap-6">
           {content.programs.map((program, index) => (
             <div
               key={index}
-              className="p-6 border border-gray-400 dark:border-gray-600 rounded-xl shadow-sm hover:shadow-md transition bg-white dark:bg-gray-800"
+              className="group relative p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-emerald-500/20 dark:hover:border-emerald-400/20 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300 flex flex-col justify-between"
             >
-              <h3 className="font-bold text-green-700 dark:text-green-400 mb-2">{program.title}</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{program.description}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-500">🗓️ {program.schedule}</p>
+              <div>
+                <h3 className="font-bold text-lg text-gray-900 dark:text-gray-100 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors mb-2.5">
+                  {program.title}
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
+                  {program.description}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 w-fit px-3 py-1.5 rounded-lg">
+                <Calendar size={13} />
+                <span>{program.schedule}</span>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
       {/* Halaqah */}
-      <section>
-        <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6">Halaqah</h2>
+      <section className="space-y-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2.5">
+          <span className="w-1.5 h-6 rounded-full bg-emerald-600" />
+          Halaqah
+        </h2>
         <div className="grid md:grid-cols-3 gap-6">
           {content.halaqah.map((h, index) => (
-            <div key={index} className="bg-green-50 dark:bg-green-900/20 p-6 rounded-2xl shadow-sm text-center">
-              <h4 className="font-bold text-green-700 dark:text-green-400 mb-2">{h.name}</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{h.description}</p>
+            <div 
+              key={index} 
+              className="bg-emerald-50/20 dark:bg-emerald-950/10 border border-emerald-100/30 dark:border-emerald-900/10 p-6 rounded-2xl flex flex-col items-start gap-3"
+            >
+              <span className="px-2.5 py-1 text-[11px] font-bold tracking-wider text-emerald-700 dark:text-emerald-400 bg-emerald-100/70 dark:bg-emerald-900/40 rounded-md">
+                Halaqah {index + 1}
+              </span>
+              <h4 className="font-bold text-base text-gray-900 dark:text-gray-100">{h.name}</h4>
+              <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{h.description}</p>
             </div>
           ))}
         </div>

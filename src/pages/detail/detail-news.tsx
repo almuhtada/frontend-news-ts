@@ -117,7 +117,9 @@ const DetailNews = () => {
             <div className="flex-1 min-w-0">
               <ArticleHeader post={post} />
             </div>
-            <ArticleLike postUuid={post.uuid} />
+            <div className="flex justify-end md:self-start">
+              <ArticleLike postUuid={post.uuid} />
+            </div>
           </div>
 
           {/* Author */}

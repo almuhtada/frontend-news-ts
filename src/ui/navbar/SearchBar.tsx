@@ -18,7 +18,7 @@ const SearchBar = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-center gap-3 rounded-full bg-white/90 px-4 py-2 shadow-sm ring-1 ring-black/5 focus-within:ring-emerald-600 transition w-full md:w-auto"
+      className="flex items-center gap-3 rounded-full bg-white px-5 py-2.5 shadow-sm transition w-full md:w-auto"
     >
       <Search className="w-4 h-4 text-emerald-700 flex-shrink-0" />
 
@@ -28,7 +28,7 @@ const SearchBar = () => {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         className="
-          w-full md:w-56
+          w-full md:w-72
           bg-transparent
           text-sm
           text-gray-700

@@ -62,7 +62,7 @@ const ArticlesList = ({
               <Link
                 key={article.id}
                 to={`/detail-news/${article.slug}`}
-                className="group block border-b border-gray-150 dark:border-gray-800/80 pb-6 min-w-0 w-full"
+                className="group block border-b border-gray-200/60 dark:border-gray-800/80 pb-6 min-w-0 w-full"
               >
                 <article className="flex flex-col gap-4 bg-transparent min-w-0 w-full">
                   {/* Thumbnail */}

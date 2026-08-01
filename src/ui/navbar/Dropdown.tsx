@@ -8,7 +8,7 @@ type DropdownProps = {
   className?: string;
   align?: "left" | "right" | "center";
   width?: string;
-  variant?: "default" | "ghost" | "outline";
+  variant?: "default" | "pill" | "ghost" | "outline";
 };
 
 const Dropdown = ({
@@ -55,6 +55,9 @@ const Dropdown = ({
 
   const variantStyles = {
     default: "text-white hover:text-white/90 hover:bg-white/10",
+    pill: `text-white bg-black/15 hover:bg-black/25 dark:bg-white/10 dark:hover:bg-white/15 px-4 py-2 rounded-xl transition-all duration-200 ${
+      isOpen ? "bg-black/25 dark:bg-white/15" : ""
+    }`,
     ghost: "text-gray-700 hover:text-gray-900 hover:bg-gray-100",
     outline:
       "text-gray-700 border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50 hover:border-gray-400",
@@ -71,7 +74,7 @@ const Dropdown = ({
         aria-haspopup="true"
         className={`
           inline-flex items-center gap-1.5
-          whitespace-nowrap text-sm font-medium
+          whitespace-nowrap text-base ${variant === "pill" ? "font-semibold" : "font-bold"}
           transition-all duration-200 ease-out
           focus:outline-none focus:ring-2 focus:ring-white/40 focus:ring-offset-2 focus:ring-offset-transparent
           ${variantStyles[variant]}
@@ -93,6 +96,7 @@ const Dropdown = ({
           ${width}
           origin-top
           transition-all duration-200 ease-out
+          z-[9999]
           ${
             isOpen
               ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"

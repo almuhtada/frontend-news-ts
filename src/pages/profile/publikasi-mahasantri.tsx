@@ -4,6 +4,7 @@ import {
   publicationsService,
   type Publication,
 } from "../../services/publications";
+import ProfileHero from "../../components/common/ProfileHero";
 
 const PublikasiMahasantri = () => {
   const [publications, setPublications] = useState<Publication[]>([]);
@@ -34,13 +35,18 @@ const PublikasiMahasantri = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 dark:text-gray-100">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 dark:text-gray-100">
+      <div className="mb-10">
+        <ProfileHero
+          title="Publikasi Mahasantri"
+          description="Daftar karya tulis ilmiah, jurnal, opini, riset, dan artikel ilmiah yang berhasil diterbitkan oleh para mahasantri Pesantren Riset Al-Muhtada."
+          badge="Karya & Riset"
+        />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
         {/* Konten utama */}
         <div className="md:col-span-2 space-y-6">
-          <h1 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
-            Publikasi Mahasantri
-          </h1>
           {publications.length === 0 ? (
             <div className="text-center text-gray-500">
               Belum ada data publikasi
