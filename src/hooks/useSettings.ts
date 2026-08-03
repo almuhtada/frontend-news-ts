@@ -5,6 +5,7 @@ export interface SiteSettings {
   siteName: string;
   tagline: string;
   description: string;
+  journalLink: string;
   email: string;
   phone: string;
   address: string;
@@ -19,6 +20,7 @@ const defaultSettings: SiteSettings = {
   siteName: '',
   tagline: '',
   description: '',
+  journalLink: 'https://ijissjournal.org/index.php/journal',
   email: '',
   phone: '',
   address: '',
@@ -63,6 +65,7 @@ export const useSettings = () => {
             siteName: data.data.general?.site_name || defaultSettings.siteName,
             tagline: data.data.general?.tagline || defaultSettings.tagline,
             description: data.data.general?.description || defaultSettings.description,
+            journalLink: data.data.general?.journal_link || defaultSettings.journalLink,
             email: data.data.contact?.email || defaultSettings.email,
             phone: data.data.contact?.phone || defaultSettings.phone,
             address: data.data.contact?.address || defaultSettings.address,

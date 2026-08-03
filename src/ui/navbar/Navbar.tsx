@@ -9,6 +9,7 @@ import { Menu, X, Sun, Moon } from "lucide-react";
 import { categoriesService } from "../../services/categories";
 import type { Category } from "../../services/posts";
 import { useTheme } from "../../hooks/useTheme";
+import { useSettings } from "../../hooks/useSettings";
 
 const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
@@ -17,6 +18,8 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const { isDark, toggleTheme } = useTheme();
+  const { settings } = useSettings();
+  const journalUrl = settings.journalLink || "https://ijissjournal.org/index.php/journal";
 
   const controlNavbar = () => {
     if (typeof window !== "undefined") {
@@ -200,6 +203,7 @@ const Navbar = () => {
                 Publikasi Mahasantri
               </DropdownItem>
               <DropdownItem to="/griya-quran">Griya Qur'an</DropdownItem>
+              <DropdownItem to={journalUrl}>Jurnal Ilmiah</DropdownItem>
             </Dropdown>
           </div>
 
@@ -285,6 +289,15 @@ const Navbar = () => {
                   >
                     Griya Qur'an
                   </Link>
+                  <a
+                    href={journalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-6 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Jurnal Ilmiah
+                  </a>
                 </div>
               </div>
             </div>

@@ -4,6 +4,7 @@ export interface SettingsForm {
   siteName: string;
   tagline: string;
   description: string;
+  journalLink: string;
   email: string;
   phone: string;
   address: string;
@@ -20,6 +21,7 @@ export interface SettingsResponse {
       site_name?: string;
       tagline?: string;
       description?: string;
+      journal_link?: string;
     };
     contact?: {
       email?: string;
@@ -86,6 +88,7 @@ export const settingsService = {
       siteName: data.general?.site_name || '',
       tagline: data.general?.tagline || '',
       description: data.general?.description || '',
+      journalLink: data.general?.journal_link || 'https://ijissjournal.org/index.php/journal',
       email: data.contact?.email || '',
       phone: data.contact?.phone || '',
       address: data.contact?.address || '',
