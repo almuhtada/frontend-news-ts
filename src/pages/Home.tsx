@@ -32,6 +32,7 @@ const Home = () => {
       iconBgColor: "from-emerald-500 to-teal-600",
       badgeType: "new",
       layout: "horizontal",
+      emphasized: true,
     },
     {
       title: "Pilihan Redaksi",

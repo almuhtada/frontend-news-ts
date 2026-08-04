@@ -3,7 +3,10 @@ import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Post } from "../../services/posts";
-import { PLACEHOLDER_IMAGE_LARGE, PLACEHOLDER_IMAGE_SMALL } from "../../config/constants";
+import {
+  PLACEHOLDER_IMAGE_LARGE,
+  PLACEHOLDER_IMAGE_SMALL,
+} from "../../config/constants";
 import { getImageUrl } from "../../config/api";
 
 interface CardHeadlinerApiProps {
@@ -90,9 +93,11 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
 
   const main = slides[0];
   const sideArticles = slides.slice(1, 5);
-  const mainImageUrl = getImageUrl(main.featured_image) || PLACEHOLDER_IMAGE_LARGE;
+  const mainImageUrl =
+    getImageUrl(main.featured_image) || PLACEHOLDER_IMAGE_LARGE;
   const mainCategory = main.categories?.[0]?.name || "Berita";
-  const mainAuthor = main.author?.display_name || main.author?.username || "Redaksi";
+  const mainAuthor =
+    main.author?.display_name || main.author?.username || "Redaksi";
 
   return (
     <div className="pb-8 border-b border-green-800/15 dark:border-green-700/20 w-full min-w-0 overflow-hidden">
@@ -100,7 +105,7 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
       <div className="md:hidden w-full min-w-0">
         {/* Carousel container */}
         <div
-          className="relative overflow-hidden rounded-xl bg-gray-100 select-none w-full aspect-video min-w-0"
+          className="relative overflow-hidden rounded-xl bg-gray-100 select-none w-full aspect-[4/3] min-w-0"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
@@ -112,7 +117,12 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.8 }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+                mass: 0.8,
+              }}
               className="w-full h-full"
             >
               <Link
@@ -123,17 +133,24 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
                   className="absolute inset-0 bg-cover bg-center scale-110"
                   style={{
                     backgroundImage: `url(${getImageUrl(slides[current].featured_image) || PLACEHOLDER_IMAGE_LARGE})`,
-                    filter: "blur(24px)",
+                    filter: "blur(32px)",
                   }}
                   aria-hidden="true"
                 />
-                <div className="absolute inset-0 bg-black/10" aria-hidden="true" />
+                <div
+                  className="absolute inset-0 bg-black/10"
+                  aria-hidden="true"
+                />
                 <img
-                  src={getImageUrl(slides[current].featured_image) || PLACEHOLDER_IMAGE_LARGE}
+                  src={
+                    getImageUrl(slides[current].featured_image) ||
+                    PLACEHOLDER_IMAGE_LARGE
+                  }
                   alt={slides[current].title}
                   className="relative h-full w-full object-cover z-10"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = PLACEHOLDER_IMAGE_LARGE;
+                    (e.target as HTMLImageElement).src =
+                      PLACEHOLDER_IMAGE_LARGE;
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent z-20" />
@@ -141,11 +158,13 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
                   <span className="text-[10px] font-bold text-emerald-300 uppercase tracking-wider drop-shadow-sm">
                     {slides[current].categories?.[0]?.name || "Berita"}
                   </span>
-                  <h2 className="mt-1 text-sm sm:text-base font-bold text-white leading-tight line-clamp-2 drop-shadow-sm break-words">
+                  <h2 className="mt-1 text-lg sm:text-base font-bold text-white leading-tight line-clamp-2 drop-shadow-sm break-words">
                     {slides[current].title}
                   </h2>
                   <div className="mt-1.5 text-[10px] text-gray-300 drop-shadow-sm">
-                    {formatDateTime(slides[current].published_at || slides[current].createdAt)}
+                    {formatDateTime(
+                      slides[current].published_at || slides[current].createdAt,
+                    )}
                   </div>
                 </div>
               </Link>
@@ -199,7 +218,9 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
             </h3>
             <div className="space-y-4 min-w-0 w-full">
               {sideArticles.map((article) => {
-                const imageUrl = getImageUrl(article.featured_image) || PLACEHOLDER_IMAGE_SMALL;
+                const imageUrl =
+                  getImageUrl(article.featured_image) ||
+                  PLACEHOLDER_IMAGE_SMALL;
                 const category = article.categories?.[0]?.name || "Berita";
                 return (
                   <Link
@@ -213,7 +234,8 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
                         alt={article.title}
                         className="h-full w-full object-cover"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = PLACEHOLDER_IMAGE_SMALL;
+                          (e.target as HTMLImageElement).src =
+                            PLACEHOLDER_IMAGE_SMALL;
                         }}
                       />
                     </div>
@@ -225,7 +247,9 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
                         {article.title}
                       </h3>
                       <div className="mt-1 text-[10px] text-gray-400 dark:text-gray-500">
-                        {formatDateTime(article.published_at || article.createdAt)}
+                        {formatDateTime(
+                          article.published_at || article.createdAt,
+                        )}
                       </div>
                     </div>
                   </Link>
@@ -253,7 +277,10 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
                 }}
                 aria-hidden="true"
               />
-              <div className="absolute inset-0 bg-white/10 dark:bg-black/20" aria-hidden="true" />
+              <div
+                className="absolute inset-0 bg-white/10 dark:bg-black/20"
+                aria-hidden="true"
+              />
               <img
                 src={mainImageUrl}
                 alt={main.title}
@@ -275,7 +302,9 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
                   Oleh {mainAuthor}
                 </span>
                 <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
-                <span>{formatDateTime(main.published_at || main.createdAt)}</span>
+                <span>
+                  {formatDateTime(main.published_at || main.createdAt)}
+                </span>
               </div>
             </div>
           </div>
@@ -285,7 +314,8 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
         {sideArticles.length > 0 && (
           <div className="hidden md:flex md:flex-col md:col-span-2 md:justify-between md:gap-5">
             {sideArticles.map((article, index) => {
-              const imageUrl = getImageUrl(article.featured_image) || PLACEHOLDER_IMAGE_SMALL;
+              const imageUrl =
+                getImageUrl(article.featured_image) || PLACEHOLDER_IMAGE_SMALL;
               const category = article.categories?.[0]?.name || "Berita";
               return (
                 <Link
@@ -301,7 +331,9 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
                       {article.title}
                     </h3>
                     <div className="mt-1.5 text-xs text-gray-400 dark:text-gray-500">
-                      {formatDateTime(article.published_at || article.createdAt)}
+                      {formatDateTime(
+                        article.published_at || article.createdAt,
+                      )}
                     </div>
                   </div>
                   <div className="relative w-28 sm:w-32 aspect-[4/3] flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
@@ -310,7 +342,8 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
                       alt={article.title}
                       className="h-full w-full object-cover"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = PLACEHOLDER_IMAGE_SMALL;
+                        (e.target as HTMLImageElement).src =
+                          PLACEHOLDER_IMAGE_SMALL;
                       }}
                     />
                     <span className="absolute top-2 left-2 w-6 h-6 flex items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white shadow">

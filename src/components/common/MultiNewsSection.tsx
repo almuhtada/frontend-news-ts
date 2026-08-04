@@ -9,6 +9,7 @@ export interface NewsSectionConfig {
   iconBgColor?: string;
   badgeType?: "views" | "popular" | "viral" | "new";
   layout?: "horizontal" | "vertical";
+  emphasized?: boolean;
 }
 
 interface MultiNewsSectionProps {
@@ -56,6 +57,7 @@ const MultiNewsSection = ({ sections, isLoading = false }: MultiNewsSectionProps
           iconBgColor={section.iconBgColor}
           badgeType={section.badgeType}
           layout={section.layout}
+          emphasized={section.emphasized}
         />
       ))}
     </div>

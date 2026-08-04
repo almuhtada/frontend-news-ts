@@ -23,6 +23,7 @@ interface NewsSectionProps {
   iconBgColor?: string;
   badgeType?: "views" | "popular" | "viral" | "new";
   layout?: "horizontal" | "vertical";
+  emphasized?: boolean;
 }
 
 const iconMap = {
@@ -40,6 +41,7 @@ const NewsSection = ({
   iconBgColor = "from-emerald-500 to-teal-600",
   badgeType = "new",
   layout = "horizontal",
+  emphasized = false,
 }: NewsSectionProps) => {
   const IconComponent = iconMap[icon];
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -211,13 +213,19 @@ const NewsSection = ({
           return (
             <div
               key={`${article.id}-${index}`}
-              className="flex-shrink-0 w-[280px] sm:w-[320px] group min-w-0"
+              className={`flex-shrink-0 group min-w-0 ${
+                emphasized ? "w-[300px] sm:w-[340px]" : "w-[280px] sm:w-[320px]"
+              }`}
             >
               <Link to={`/detail-news/${article.slug}`} className="block w-full">
                 <div className="bg-transparent overflow-hidden h-full flex flex-col min-w-0">
                   {/* Image */}
                   {article.featured_image && (
-                    <div className="relative h-44 overflow-hidden rounded-lg mb-3 w-full">
+                    <div
+                      className={`relative overflow-hidden rounded-lg mb-3 w-full ${
+                        emphasized ? "h-48 sm:h-56" : "h-44"
+                      }`}
+                    >
                       <img
                         src={getImageUrl(article.featured_image)}
                         alt={article.title}
@@ -229,18 +237,28 @@ const NewsSection = ({
                   {/* Content */}
                   <div className="flex-1 flex flex-col min-w-0">
                     {/* Category Tag */}
-                    <span className="mb-2 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-450">
+                    <span
+                      className={`mb-2 font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-450 ${
+                        emphasized ? "text-[11px] sm:text-xs" : "text-[10px]"
+                      }`}
+                    >
                       {categoryName}
                     </span>
 
                     {/* Title */}
-                    <h3 className="font-bold text-base text-gray-900 dark:text-gray-100 line-clamp-2 mb-2 group-hover:text-emerald-600 transition-colors leading-snug break-words">
+                    <h3
+                      className={`font-bold text-gray-900 dark:text-gray-100 line-clamp-2 mb-2 group-hover:text-emerald-600 transition-colors leading-snug break-words ${
+                        emphasized ? "text-lg sm:text-xl" : "text-base"
+                      }`}
+                    >
                       {article.title}
                     </h3>
 
                     {/* Excerpt */}
                     <div
-                      className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 leading-relaxed break-words"
+                      className={`text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 leading-relaxed break-words ${
+                        emphasized ? "text-sm" : "text-xs"
+                      }`}
                       dangerouslySetInnerHTML={{
                         __html:
                           article.excerpt || article.content?.substring(0, 100) || "",

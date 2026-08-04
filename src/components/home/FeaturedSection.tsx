@@ -15,7 +15,7 @@ const FeaturedSection = ({ articles, isLoading }: FeaturedSectionProps) => {
           <Fire className="h-4 w-4 sm:h-5 sm:w-5" />
         </div>
         <div className="flex-1 min-w-0">
-          <h2 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
+          <h2 className="text-lg sm:text-2l font-bold text-gray-900 dark:text-gray-100 tracking-tight">
             Berita Utama
           </h2>
           <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
