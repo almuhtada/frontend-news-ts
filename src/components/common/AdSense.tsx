@@ -32,20 +32,18 @@ export default function AdSense({
   }, []);
 
   return (
-    <div className={`adsense-container w-full overflow-hidden flex flex-col items-center justify-center bg-gray-50/50 dark:bg-gray-900/30 rounded-2xl py-3 px-2 border border-gray-100/80 dark:border-gray-800/40 min-h-[100px] ${className}`}>
-      <span className="text-[9px] uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1.5 select-none font-semibold">
+    <div className={`adsense-container w-full text-center ${className}`}>
+      <span className="block text-[9px] uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1 select-none font-semibold">
         Iklan
       </span>
-      <div className="w-full flex items-center justify-center">
-        <ins
-          className="adsbygoogle"
-          style={style}
-          data-ad-client={client}
-          data-ad-slot={slot}
-          data-ad-format={format}
-          data-full-width-responsive={responsive ? "true" : "false"}
-        />
-      </div>
+      <ins
+        className="adsbygoogle"
+        style={style}
+        data-ad-client={client}
+        data-ad-slot={slot}
+        data-ad-format={format}
+        data-full-width-responsive={responsive ? "true" : "false"}
+      />
     </div>
   );
 }
