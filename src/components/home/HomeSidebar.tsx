@@ -3,6 +3,7 @@ import TrendingListApi from "../components-global/trending-list-api";
 import { useSettings } from "../../hooks/useSettings";
 import type { Post } from "../../services/posts";
 import type { HotTopic } from "../../types";
+import AdSense from "../common/AdSense";
 
 interface HomeSidebarProps {
   trendingNews: Post[];
@@ -79,6 +80,9 @@ const HomeSidebar = ({
           <TrendingListApi items={trendingNews} />
         )}
       </div>
+
+      {/* AdSense below Terpopuler */}
+      <AdSense client="ca-pub-8836861183221457" slot="1234567890" className="my-4" />
 
       {/* ─── Hot Topics (Topik Hangat) ───────────────────────── */}
       <div className="border-b border-gray-100 dark:border-gray-800/30 pb-6">

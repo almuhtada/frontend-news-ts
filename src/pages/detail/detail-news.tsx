@@ -16,6 +16,7 @@ import ArticleTags from "../../components/detail/ArticleTags";
 import formatEveryFourSentences from "../../utils/formatParagraph";
 import ArticleLike from "../../components/detail/ArticleLike";
 import ArticleComments from "../../components/detail/ArticleComments";
+import AdSense from "../../components/common/AdSense";
 
 const PARAGRAPHS_PER_PAGE = 3;
 
@@ -155,6 +156,9 @@ const DetailNews = () => {
               setCurrentPage={setCurrentPage}
             />
           )}
+
+          {/* AdSense Ad Unit */}
+          <AdSense client="ca-pub-8836861183221457" slot="1234567890" className="my-6" />
 
           {/* Related Posts */}
           <RelatedPosts posts={relatedPosts} />

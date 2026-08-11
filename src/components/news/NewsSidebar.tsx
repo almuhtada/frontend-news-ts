@@ -1,6 +1,7 @@
 import { Flame as Fire, ChevronRight, TrendingUp, Users } from "lucide-react";
 import TrendingListApi from "../components-global/trending-list-api";
 import type { Post } from "../../services/posts";
+import AdSense from "../common/AdSense";
 
 interface NewsSidebarProps {
   categories: string[];
@@ -33,6 +34,9 @@ const NewsSidebar = ({
           />
         </div>
       </div>
+
+      {/* AdSense Unit */}
+      <AdSense client="ca-pub-8836861183221457" slot="1234567890" />
 
       {/* ─── Hot Topics ───────────────────────────────────────── */}
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800/60 shadow-sm overflow-hidden">
