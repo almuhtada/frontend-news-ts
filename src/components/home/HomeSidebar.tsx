@@ -81,9 +81,6 @@ const HomeSidebar = ({
         )}
       </div>
 
-      {/* AdSense below Terpopuler */}
-      <AdSense className="my-4" />
-
       {/* ─── Hot Topics (Topik Hangat) ───────────────────────── */}
       <div className="border-b border-gray-100 dark:border-gray-800/30 pb-6">
         <div className="flex items-center gap-2 mb-4">
@@ -153,6 +150,9 @@ const HomeSidebar = ({
           </div>
         </div>
       )}
+
+      {/* ─── AdSense below Ikuti Kami ─────────────────────────── */}
+      <AdSense className="mt-6" />
     </div>
   );
 };

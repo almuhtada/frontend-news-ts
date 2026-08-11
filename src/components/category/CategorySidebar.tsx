@@ -2,6 +2,7 @@ import { Flame as Fire, ChevronRight, TrendingUp, Users } from "lucide-react";
 import TrendingListApi from "../components-global/trending-list-api";
 import { useSettings } from "../../hooks/useSettings";
 import type { Post, Category } from "../../services/posts";
+import AdSense from "../common/AdSense";
 
 interface CategorySidebarProps {
   trendingNews: Post[];
@@ -127,6 +128,9 @@ const CategorySidebar = ({
           </div>
         </div>
       )}
+
+      {/* ─── AdSense below Ikuti Kami ─────────────────────────── */}
+      <AdSense className="mt-6" />
     </aside>
   );
 };

@@ -35,9 +35,6 @@ const NewsSidebar = ({
         </div>
       </div>
 
-      {/* AdSense Unit */}
-      <AdSense />
-
       {/* ─── Hot Topics ───────────────────────────────────────── */}
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800/60 shadow-sm overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-50 dark:border-gray-800 flex items-center gap-2.5">
@@ -172,6 +169,9 @@ const NewsSidebar = ({
           ))}
         </div>
       </div>
+
+      {/* ─── AdSense below Ikuti Kami ─────────────────────────── */}
+      <AdSense className="mt-2" />
     </div>
   );
 };
