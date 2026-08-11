@@ -5,6 +5,7 @@ import {
   type Comment as CommentType,
 } from "../../services/interactions";
 import { getUserIdentifier } from "../../utils/userIdentifier";
+import { useToast } from "../../context/ToastContext";
 
 interface Props {
   postUuid: string;
@@ -86,6 +87,7 @@ const formatRelativeTime = (dateString: string): string => {
 };
 
 const ArticleComments = ({ postUuid }: Props) => {
+  const { toast } = useToast();
   const [comments, setComments] = useState<CommentType[]>([]);
   const [text, setText] = useState("");
   const [name, setName] = useState("");
@@ -122,24 +124,24 @@ const ArticleComments = ({ postUuid }: Props) => {
 
   const submitComment = async () => {
     if (!text.trim()) {
-      alert("Komentar tidak boleh kosong");
+      toast.warning("Komentar tidak boleh kosong");
       return;
     }
 
     if (!name.trim()) {
-      alert("Nama tidak boleh kosong");
+      toast.warning("Nama tidak boleh kosong");
       return;
     }
 
     if (!email.trim()) {
-      alert("Email tidak boleh kosong");
+      toast.warning("Email tidak boleh kosong");
       return;
     }
 
     // Simple email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      alert("Format email tidak valid");
+      toast.warning("Format email tidak valid");
       return;
     }
 
@@ -171,11 +173,11 @@ const ArticleComments = ({ postUuid }: Props) => {
         }
 
         // Show success message
-        alert("Komentar berhasil dikirim!");
+        toast.success("Komentar berhasil dikirim!");
       }
     } catch (err) {
       console.error("Failed to submit comment:", err);
-      alert("Gagal mengirim komentar. Silakan coba lagi.");
+      toast.error("Gagal mengirim komentar. Silakan coba lagi.");
     } finally {
       setSubmitting(false);
     }
