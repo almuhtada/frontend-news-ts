@@ -82,7 +82,7 @@ const HomeSidebar = ({
       </div>
 
       {/* AdSense below Terpopuler */}
-      <AdSense client="ca-pub-8836861183221457" slot="1234567890" className="my-4" />
+      <AdSense className="my-4" />
 
       {/* ─── Hot Topics (Topik Hangat) ───────────────────────── */}
       <div className="border-b border-gray-100 dark:border-gray-800/30 pb-6">

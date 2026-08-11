@@ -158,7 +158,7 @@ const DetailNews = () => {
           )}
 
           {/* AdSense Ad Unit */}
-          <AdSense client="ca-pub-8836861183221457" slot="1234567890" className="my-6" />
+          <AdSense className="my-6" />
 
           {/* Related Posts */}
           <RelatedPosts posts={relatedPosts} />

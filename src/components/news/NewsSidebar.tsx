@@ -36,7 +36,7 @@ const NewsSidebar = ({
       </div>
 
       {/* AdSense Unit */}
-      <AdSense client="ca-pub-8836861183221457" slot="1234567890" />
+      <AdSense />
 
       {/* ─── Hot Topics ───────────────────────────────────────── */}
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800/60 shadow-sm overflow-hidden">
