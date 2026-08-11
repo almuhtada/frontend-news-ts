@@ -6,10 +6,10 @@
         {
           "type": "header",
           "key": "user-agent",
-          "value": ".*(facebookexternalhit|Facebot|Twitterbot|WhatsApp|TelegramBot|LinkedInBot|Slackbot|Discordbot|Pinterest|Googlebot|bingbot|Applebot|Embedly|Quora Link Preview|Showyoubot|vkShare|W3C_Validator|redditbot|Mediapartners-Google|AdsBot-Google).*"
+          "value": "(?i).*(facebookexternalhit|Facebot|Twitterbot|WhatsApp|TelegramBot|LinkedInBot|Slackbot|Discordbot|Pinterest|Embedly|vkShare|redditbot).*"
         }
       ],
-      "destination": "/api/og?path=detail-news/:slug"
+      "destination": "/api/og?slug=:slug"
     },
     {
       "source": "/(.*)",

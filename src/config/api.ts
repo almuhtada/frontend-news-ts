@@ -69,4 +69,3 @@ export const API_ENDPOINTS = {
   BOOKMARK_STATUS: (postId: string) => `/recommendations/bookmark/${postId}`,
   USER_BOOKMARKS: "/recommendations/bookmarks",
 };
-
