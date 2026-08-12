@@ -18,6 +18,7 @@ const Navbar = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const { isDark, toggleTheme } = useTheme();
   const { settings } = useSettings();
+
   const journalUrl =
     settings.journalLink || "https://ijissjournal.org/index.php/journal";
 

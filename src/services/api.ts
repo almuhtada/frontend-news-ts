@@ -38,7 +38,6 @@ class ApiService {
     const { params, ...fetchOptions } = options;
 
     const url = this.buildURL(endpoint, params);
-    console.log('API Request URL:', url);
 
     const config: RequestInit = {
       ...fetchOptions,
@@ -50,7 +49,6 @@ class ApiService {
 
     try {
       const response = await fetch(url, config);
-      console.log('API Response status:', response.status);
 
       if (!response.ok) {
         const error = await response.json().catch(() => ({
