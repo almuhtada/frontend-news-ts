@@ -1,5 +1,6 @@
 import { useNewsData } from "../hooks/useNewsData";
 import PublicPageLayout from "../components/layouts/PublicPageLayout";
+import SEO from "../components/common/SEO";
 import HeroSection from "../components/news/HeroSection";
 import QuickBites from "../components/news/QuickBites";
 import Features from "../components/news/Features";
@@ -83,6 +84,13 @@ const News = () => {
   // ─── Main Content ──────────────────────────────────────────────
   return (
     <PublicPageLayout>
+      <SEO
+        title="Berita Terkini"
+        description="Kumpulan berita Islami, kabar pesantren, dunia Islam, dan informasi terkini dari Pesantren Riset Al-Muhtada Semarang."
+        keywords="berita islam, berita pesantren, dunia islam, news islam, kabar terbaru, al-muhtada"
+        url="https://almuhtada.org/news"
+        type="category"
+      />
       <div className="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 w-full overflow-hidden">
         {/* Top accent bar */}
         <div className="h-1 bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500" />

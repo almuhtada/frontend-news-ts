@@ -93,15 +93,33 @@ const DetailNews = () => {
   return (
     <PublicPageLayout>
       <SEO
-        title={post.title}
+        title={post.meta_title || post.title}
         description={
-          post.excerpt || post.content
-            ? post.content.replace(/<[^>]*>/g, "").slice(0, 160)
+          post.meta_description ||
+          post.excerpt ||
+          post.content
+            ? (post.meta_description || post.excerpt || post.content)
+                .replace(/<[^>]*>/g, "")
+                .slice(0, 160)
             : ""
         }
+        keywords={[
+          post.title,
+          ...(post.categories?.map((c) => c.name) || []),
+          ...(post.tags?.map((t) => t.name) || []),
+        ].join(", ")}
         image={getImageUrl(post.featured_image)}
         url={`https://almuhtada.org/detail-news/${post.slug}`}
         type="article"
+        publishedTime={post.published_at || post.createdAt}
+        modifiedTime={post.updatedAt}
+        authorName={
+          post.author?.display_name ||
+          post.author?.username ||
+          (post.editor ? post.editor.display_name : undefined)
+        }
+        categories={post.categories?.map((c) => c.name) || []}
+        tags={post.tags?.map((t) => t.name) || []}
       />
       <div
         className="min-h-screen bg-gray-50 dark:bg-gray-950"

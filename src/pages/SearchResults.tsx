@@ -4,6 +4,7 @@ import { Search, Calendar, Eye, AlertCircle } from "lucide-react";
 import { postsService, type Post } from "../services/posts";
 import { getImageUrl } from "../config/api";
 import PublicPageLayout from "../components/layouts/PublicPageLayout";
+import SEO from "../components/common/SEO";
 import { PLACEHOLDER_IMAGE_MEDIUM } from "../config/constants";
 
 const SearchResults = () => {
@@ -110,6 +111,11 @@ const SearchResults = () => {
 
   return (
     <PublicPageLayout>
+      <SEO
+        title={query ? `Hasil Pencarian: ${query}` : "Cari Berita"}
+        description={`Temukan artikel dan berita terbaru mengenai "${query || "topik lainnya"}" di Pesantren Riset Al-Muhtada Semarang.`}
+        noindex
+      />
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           {/* Search Header */}
