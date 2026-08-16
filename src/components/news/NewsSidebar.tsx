@@ -1,13 +1,13 @@
 import { Flame as Fire, ChevronRight, TrendingUp, Users } from "lucide-react";
 import TrendingListApi from "../components-global/trending-list-api";
-import type { Post } from "../../services/posts";
+import type { Category, Post } from "../../services/posts";
 import AdSense from "../common/AdSense";
 
 interface NewsSidebarProps {
-  categories: string[];
+  categories: Category[];
   editorsPicks: Post[];
   mostRead: Post[];
-  onCategoryClick: (category: string) => void;
+  onCategoryClick: (category: Category) => void;
 }
 
 const NewsSidebar = ({
@@ -51,7 +51,7 @@ const NewsSidebar = ({
             <div className="divide-y divide-gray-50 dark:divide-gray-800/60">
               {categories.map((category, index) => (
                 <button
-                  key={index}
+                  key={category.slug}
                   onClick={() => onCategoryClick(category)}
                   className="group w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200 text-left"
                 >
@@ -60,7 +60,7 @@ const NewsSidebar = ({
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     <span className="font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors truncate">
-                      {category}
+                      {category.name}
                     </span>
                   </div>
                   <ChevronRight className="flex-shrink-0 w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all duration-200" />

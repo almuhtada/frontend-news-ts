@@ -18,6 +18,7 @@ export const getImageUrl = (path: string | undefined | null): string => {
 };
 
 export const API_ENDPOINTS = {
+  HOME: "/home",
   // Auth
   LOGIN: "/auth/login",
   REGISTER: "/auth/register",

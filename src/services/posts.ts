@@ -48,6 +48,15 @@ export interface Post {
   tags?: Tag[];
 }
 
+export interface HomeFeed {
+  hero: { main: Post | null; supporting: Post[] };
+  latest: Post[];
+  editorPicks: Post[];
+  viral: Post[];
+  mostRead: Post[];
+  remaining: Post[];
+}
+
 export interface PostsParams {
   page?: number;
   limit?: number;
@@ -56,6 +65,7 @@ export interface PostsParams {
   tag?: string;
   search?: string;
   featured?: boolean;
+  exclude?: string;
 }
 
 // Backend response interfaces
@@ -78,6 +88,11 @@ interface ApiPostResponse {
 interface ApiPostsArrayResponse {
   success: boolean;
   data: Post[];
+}
+
+interface ApiHomeResponse {
+  success: boolean;
+  data: HomeFeed;
 }
 
 // Frontend interface for easier consumption
@@ -106,6 +121,10 @@ export interface UpdatePostData extends Partial<CreatePostData> {
 }
 
 export const postsService = {
+  getHome: async (): Promise<HomeFeed> => {
+    const response = await api.get<ApiHomeResponse>(API_ENDPOINTS.HOME);
+    return response.data;
+  },
   // Get all posts with pagination and filters
   getPosts: async (params?: PostsParams): Promise<PostsResponse> => {
     const response = await api.get<ApiPostsResponse>(

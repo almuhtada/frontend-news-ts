@@ -1,123 +1,132 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { postsService } from "../services/posts";
-import type { Post } from "../services/posts";
+import type { Category, Post } from "../services/posts";
 
 const ARTICLES_PER_PAGE = 6;
 
 export const useNewsData = () => {
   const [searchParams] = useSearchParams();
   const [topStories, setTopStories] = useState<Post[]>([]);
-  const [articles, setArticles] = useState<Post[]>([]);
+  const [allArticles, setAllArticles] = useState<Post[]>([]);
   const [editorsPicks, setEditorsPicks] = useState<Post[]>([]);
   const [mostRead, setMostRead] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategorySlug, setSelectedCategorySlug] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalArticles, setTotalArticles] = useState(0);
 
   useEffect(() => {
     const categoryFromUrl = searchParams.get("category");
-    if (categoryFromUrl) {
-      setSelectedCategory(categoryFromUrl);
-    }
+    setSelectedCategorySlug(categoryFromUrl?.toLowerCase() || null);
+    setCurrentPage(1);
+  }, [searchParams]);
 
+  useEffect(() => {
+    let active = true;
     const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
+        const feed = await postsService.getHome();
+        if (!active) return;
 
-        // Fetch featured posts for top stories
-        const featuredPosts = await postsService.getPosts({
-          featured: true,
-          limit: 10,
-          status: "publish",
-        });
-        setTopStories(featuredPosts.posts);
-
-        // Fetch recent posts for articles with pagination
-        const recentPosts = await postsService.getPosts({
-          limit: ARTICLES_PER_PAGE,
-          page: currentPage,
-          status: "publish",
-        });
-        setArticles(recentPosts.posts);
-        setTotalPages(recentPosts.totalPages || 1);
-        setTotalArticles(recentPosts.total || recentPosts.posts.length);
-
-        // Fetch popular posts
-        const popularPosts = await postsService.getPopularPosts(3);
-        setMostRead(popularPosts);
-
-        // Fetch some posts for editor's picks
-        const editorPosts = await postsService.getRecentPosts(3);
-        setEditorsPicks(editorPosts);
-
-        // Extract unique categories from all posts
-        const allPosts = [
-          ...featuredPosts.posts,
-          ...recentPosts.posts,
-          ...popularPosts,
-          ...editorPosts,
+        const heroArticles = feed.hero.main
+          ? [feed.hero.main, ...feed.hero.supporting]
+          : feed.hero.supporting;
+        const usedArticleIds = new Set([
+          ...heroArticles,
+          ...feed.editorPicks,
+          ...feed.mostRead,
+        ].map((article) => article.id));
+        const allFeedArticles = [
+          ...heroArticles,
+          ...feed.latest,
+          ...feed.editorPicks,
+          ...feed.viral,
+          ...feed.mostRead,
+          ...feed.remaining,
         ];
+        setTopStories(heroArticles);
+        setEditorsPicks(feed.editorPicks);
+        setMostRead(feed.mostRead);
+        // Safety net for older/cached API responses: daftar bawah tidak boleh
+        // mengulang artikel yang sudah terlihat di Hero atau sidebar.
+        setAllArticles(feed.remaining.filter((article) => !usedArticleIds.has(article.id)));
         const uniqueCategories = Array.from(
-          new Set(
-            allPosts
+          new Map(
+            allFeedArticles
               .flatMap((post) => post.categories || [])
-              .map((cat) => cat.name)
-              .filter((name) => name),
-          ),
+              .map((category) => [category.slug.toLowerCase(), category]),
+          ).values(),
         );
         setCategories(uniqueCategories);
       } catch (err) {
-        console.error("Error fetching data:", err);
-        setError("Gagal memuat data. Silakan coba lagi.");
+        console.error("Error fetching news feed:", err);
+        if (active) setError("Gagal memuat data. Silakan coba lagi.");
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     };
-
     fetchData();
-  }, [searchParams, currentPage]);
+    return () => { active = false; };
+  }, []);
 
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory(selectedCategory === category ? null : category);
+  const selectedCategory = useMemo(
+    () =>
+      categories.find(
+        (category) =>
+          category.slug.toLowerCase() === selectedCategorySlug ||
+          category.name.toLowerCase() === selectedCategorySlug,
+      )?.name || null,
+    [categories, selectedCategorySlug],
+  );
+  const categoryArticles = useMemo(
+    () =>
+      selectedCategorySlug
+        ? allArticles.filter((article) =>
+            article.categories?.some(
+              (category) =>
+                category.slug.toLowerCase() === selectedCategorySlug ||
+                category.name.toLowerCase() === selectedCategorySlug,
+            ),
+          )
+        : allArticles,
+    [allArticles, selectedCategorySlug],
+  );
+  const totalArticles = categoryArticles.length;
+  const totalPages = Math.max(1, Math.ceil(totalArticles / ARTICLES_PER_PAGE));
+  const filteredArticles = categoryArticles.slice((currentPage - 1) * ARTICLES_PER_PAGE, currentPage * ARTICLES_PER_PAGE);
+
+  const handleCategoryClick = (category: Category) => {
+    const slug = category.slug.toLowerCase();
+    setSelectedCategorySlug((currentSlug) =>
+      currentSlug === slug ? null : slug,
+    );
     setCurrentPage(1);
   };
 
-  const formatTimeAgo = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60 * 60),
-    );
+  const clearCategoryFilter = () => setSelectedCategorySlug(null);
 
+  const formatTimeAgo = (dateString: string) => {
+    const diffInHours = Math.floor((Date.now() - new Date(dateString).getTime()) / (1000 * 60 * 60));
     if (diffInHours < 1) return "Baru saja";
     if (diffInHours < 24) return `${diffInHours} jam lalu`;
     const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays === 1) return "1 hari lalu";
-    return `${diffInDays} hari lalu`;
+    return diffInDays === 1 ? "1 hari lalu" : `${diffInDays} hari lalu`;
   };
-
-  const filteredArticles = selectedCategory
-    ? articles.filter((article) =>
-        article.categories?.some((cat) => cat.name === selectedCategory),
-      )
-    : articles;
 
   return {
     topStories,
-    articles,
+    articles: filteredArticles,
     editorsPicks,
     mostRead,
     loading,
     error,
     categories,
     selectedCategory,
-    setSelectedCategory,
+    clearCategoryFilter,
     handleCategoryClick,
     formatTimeAgo,
     filteredArticles,

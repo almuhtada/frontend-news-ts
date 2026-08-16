@@ -20,44 +20,30 @@ export const useCategoryData = (categorySlug?: string) => {
       try {
         setLoading(true);
 
-        // Jika ada slug (dari category), fetch berdasarkan category
-        if (categorySlug) {
-          const categoryPosts = await postsService.getPosts({
-            category: categorySlug,
+        // Hero tetap kecil dan cepat; daftar bawah mengecualikan ID Hero di server.
+        const heroResponse = await postsService.getPosts({
+          ...(categorySlug ? { category: categorySlug } : {}),
+          limit: 5,
+          status: "publish",
+        });
+        const excludedIds = heroResponse.posts.map((post) => post.id).join(",");
+        const [listResponse, popular, categoriesData] = await Promise.all([
+          postsService.getPosts({
+            ...(categorySlug ? { category: categorySlug } : {}),
             limit: POSTS_PER_PAGE,
             page: currentPage,
             status: "publish",
-          });
-          setArticles(categoryPosts.posts);
-          setFeaturedArticles(categoryPosts.posts.slice(0, 5));
-          setTotalPages(categoryPosts.totalPages || 1);
-          setTotalPosts(categoryPosts.total || categoryPosts.posts.length);
-        } else {
-          // Fetch featured posts
-          const featured = await postsService.getPosts({
-            featured: true,
-            limit: 5,
-            status: "publish",
-          });
-          setFeaturedArticles(featured.posts);
+            ...(excludedIds ? { exclude: excludedIds } : {}),
+          }),
+          postsService.getPopularPosts(5),
+          categoriesService.getCategories(),
+        ]);
+        setFeaturedArticles(heroResponse.posts);
+        setArticles(listResponse.posts);
+        setTotalPages(listResponse.totalPages || 1);
+        setTotalPosts(listResponse.total || listResponse.posts.length);
 
-          // Fetch articles with pagination
-          const allPosts = await postsService.getPosts({
-            limit: POSTS_PER_PAGE,
-            page: currentPage,
-            status: "publish",
-          });
-          setArticles(allPosts.posts);
-          setTotalPages(allPosts.totalPages || 1);
-          setTotalPosts(allPosts.total || allPosts.posts.length);
-        }
-
-        // Fetch popular posts
-        const popular = await postsService.getPopularPosts(5);
         setTrendingNews(popular);
-
-        // Fetch categories untuk topik hangat
-        const categoriesData = await categoriesService.getCategories();
         setCategories(categoriesData.slice(0, 6));
       } catch (error) {
         console.error("Error fetching data:", error);

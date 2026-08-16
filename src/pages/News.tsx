@@ -17,7 +17,7 @@ const News = () => {
     error,
     categories,
     selectedCategory,
-    setSelectedCategory,
+    clearCategoryFilter,
     handleCategoryClick,
     formatTimeAgo,
     filteredArticles,
@@ -157,7 +157,7 @@ const News = () => {
                 <ArticlesList
                   articles={filteredArticles}
                   selectedCategory={selectedCategory}
-                  onClearFilter={() => setSelectedCategory(null)}
+                  onClearFilter={clearCategoryFilter}
                 />
 
                 {/* Pagination */}
