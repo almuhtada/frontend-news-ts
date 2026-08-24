@@ -168,7 +168,7 @@ const Navbar = () => {
       {/* =========================================================
           HEADER UTAMA
           ========================================================= */}
-      <header className="bg-[#00531b] dark:bg-gray-900 border-b border-green-900 dark:border-gray-700 w-full overflow-visible">
+      <header className="bg-[#00531b] dark:bg-gray-900 w-full">
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 md:px-8 py-3">
           <div className="flex items-center justify-between gap-3 min-w-0">
             {/* Logo + tanggal */}
@@ -184,7 +184,7 @@ const Navbar = () => {
                 <img
                   src={Logo}
                   alt="Logo Al-Muhtada"
-                  className="h-17 sm:h-17 md:h-19 lg:h-24 object-contain flex-shrink-0 max-w-full"
+                  className="h-16 sm:h-16 md:h-18 lg:h-24 object-contain flex-shrink-0 max-w-full"
                 />
               </Link>
 
@@ -192,7 +192,7 @@ const Navbar = () => {
               <div className="hidden lg:block h-6 w-px bg-white/20 mx-5" />
 
               {/* Date */}
-              <span className="hidden lg:block text-sm text-white/95 font-medium leading-tight whitespace-nowrap">
+              <span className="hidden lg:block text-sm text-white/90 font-medium whitespace-nowrap">
                 {new Date().toLocaleDateString("id-ID", {
                   weekday: "long",
                   year: "numeric",
@@ -203,7 +203,7 @@ const Navbar = () => {
             </div>
 
             {/* Search + theme + mobile menu */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {/* Desktop Search */}
               <div className="hidden md:block">
                 <SearchBar />
@@ -212,7 +212,7 @@ const Navbar = () => {
               {/* Theme */}
               <button
                 onClick={toggleTheme}
-                className="flex items-center justify-center w-10 h-10 rounded-full border border-white/20 text-white hover:bg-white/10 transition-colors flex-shrink-0"
+                className="flex items-center justify-center w-9 h-9 rounded-full text-white/90 hover:bg-white/10 transition-colors flex-shrink-0"
                 aria-label={
                   isDark ? "Switch to light mode" : "Switch to dark mode"
                 }
@@ -222,12 +222,12 @@ const Navbar = () => {
 
               {/* Mobile menu button */}
               <button
-                className="md:hidden flex items-center justify-center w-10 h-10 rounded-full border border-white/20 text-white hover:bg-white/10 transition-colors flex-shrink-0"
+                className="md:hidden flex items-center justify-center w-9 h-9 rounded-full text-white/90 hover:bg-white/10 transition-colors flex-shrink-0"
                 onClick={() => setIsOpen((prev) => !prev)}
                 aria-label={isOpen ? "Close menu" : "Open menu"}
                 aria-expanded={isOpen}
               >
-                {isOpen ? <X size={18} /> : <Menu size={18} />}
+                {isOpen ? <X size={19} /> : <Menu size={19} />}
               </button>
             </div>
           </div>
@@ -269,6 +269,7 @@ const Navbar = () => {
           z-[100]
           w-full
           bg-[#00531b] dark:bg-gray-900
+          border-t border-white/10 dark:border-gray-700
           transition-transform duration-300 ease-in-out
           ${
             isScrolled
@@ -298,9 +299,9 @@ const Navbar = () => {
             MOBILE HAMBURGER MENU
             ======================================================= */}
         {isOpen && (
-          <div className="md:hidden flex flex-col py-3 border-t border-white/20 max-h-[75vh] overflow-y-auto min-w-0">
+          <div className="md:hidden flex flex-col py-2 border-t border-white/10 max-h-[75vh] overflow-y-auto min-w-0">
             {/* Mobile Search */}
-            <div className="px-1 pb-3">
+            <div className="px-4 py-3">
               <SearchBar />
             </div>
 
@@ -308,7 +309,7 @@ const Navbar = () => {
             <div className="flex flex-col">
               <Link
                 to="/"
-                className="px-4 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                className="px-4 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 transition-colors"
                 onClick={() => {
                   setActiveCategory("Beranda");
                   setIsOpen(false);
@@ -321,7 +322,7 @@ const Navbar = () => {
                 <Link
                   key={category.id}
                   to={`/category/${category.slug}`}
-                  className="px-4 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                  className="px-4 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 transition-colors"
                   onClick={() => {
                     setActiveCategory(category.slug);
                     setIsOpen(false);
@@ -333,15 +334,15 @@ const Navbar = () => {
             </div>
 
             {/* Profil */}
-            <div className="border-t border-white/15 mt-2 pt-2">
-              <p className="px-4 py-2 text-xs font-semibold text-white/60 uppercase tracking-wider">
+            <div className="border-t border-white/10 mt-2 pt-2">
+              <p className="px-4 py-2 text-xs font-semibold text-white/50 uppercase tracking-wider">
                 Profil
               </p>
 
               <div className="flex flex-col">
                 <Link
                   to="/tentang-pesantren"
-                  className="px-6 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                  className="px-4 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
                   Tentang Pesantren
@@ -349,7 +350,7 @@ const Navbar = () => {
 
                 <Link
                   to="/program-pengajar"
-                  className="px-6 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                  className="px-4 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
                   Program & Pengajar
@@ -357,7 +358,7 @@ const Navbar = () => {
 
                 <Link
                   to="/pendaftaran"
-                  className="px-6 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                  className="px-4 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
                   Pendaftaran Mahasantri Baru
@@ -365,7 +366,7 @@ const Navbar = () => {
 
                 <Link
                   to="/prestasi-mahasantri"
-                  className="px-6 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                  className="px-4 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
                   Prestasi Mahasantri
@@ -373,7 +374,7 @@ const Navbar = () => {
 
                 <Link
                   to="/publikasi-mahasantri"
-                  className="px-6 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                  className="px-4 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
                   Publikasi Mahasantri
@@ -381,7 +382,7 @@ const Navbar = () => {
 
                 <Link
                   to="/griya-quran"
-                  className="px-6 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                  className="px-4 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
                   Griya Qur'an
@@ -391,7 +392,7 @@ const Navbar = () => {
                   href={journalUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-6 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                  className="px-4 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
                   Jurnal Ilmiah
