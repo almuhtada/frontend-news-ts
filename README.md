@@ -16,6 +16,7 @@ Aplikasi berita **Al-Muhtada** dibangun dengan React 19, TypeScript, Vite, dan T
 | Icons | Lucide React |
 | Chart | Recharts |
 | Sanitasi HTML | DOMPurify |
+| Analytics | @vercel/analytics |
 
 ---
 
@@ -299,6 +300,9 @@ Konten dari WordPress diproses oleh `utils/formatParagraph.ts` untuk:
 ### Like Anonim
 Like bisa dilakukan tanpa login menggunakan identifier unik yang disimpan di `localStorage` (`utils/userIdentifier.ts`).
 
+### Vercel Analytics
+Integrasi `@vercel/analytics` untuk tracking performa halaman.
+
 ---
 
 ## Konvensi Kode
@@ -338,3 +342,60 @@ Atau dengan Docker Compose dari root project.
 - **Vercel**: sudah ada `vercel.json`, push ke repo untuk auto-deploy
 - **Nginx**: sudah ada `nginx.conf`, build lalu serve folder `dist/`
 - **Docker**: sudah ada `Dockerfile`
+
+### Nginx Config (sudah ada di `nginx.conf`)
+```nginx
+server {
+    listen 80;
+    server_name almuhtada.org;
+    root /var/www/frontend/dist;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Cache static assets
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+}
+```
+
+### Vercel Config (`vercel.json`)
+```json
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+```
+
+---
+
+## Integrasi Backend
+
+Frontend mengonsumsi API dari `backend-news-js`:
+
+| Fitur | Endpoint Backend |
+|---|---|
+| Home Data | `GET /api/home` |
+| Berita List | `GET /api/posts` |
+| Berita Detail | `GET /api/posts/slug/:slug` |
+| Kategori | `GET /api/categories/*` |
+| Tag | `GET /api/tags/*` |
+| Author | `GET /api/authors/*` |
+| Pencarian | `GET /api/search` |
+| Rekomendasi | `GET /api/recommendations` |
+| Like | `POST/DELETE /api/posts/:id/like` |
+| Komentar | `GET/POST /api/posts/:id/comments` |
+| About | `GET /api/about` |
+| Prestasi | `GET /api/achievements` |
+| Publikasi | `GET /api/publications` |
+| Page Contents | `GET /api/page-contents/*` |
+| Settings | `GET /api/settings` |
+| Stats | `GET /api/stats` |

@@ -29,9 +29,11 @@ const FeaturedImage = ({ post }: FeaturedImageProps) => {
       </div>
 
       {/* CAPTION */}
-      <figcaption className="mt-3 text-center text-sm text-gray-500 italic">
-        {post.meta_description || post.excerpt || "Gambar ilustrasi"}
-      </figcaption>
+      {(post.image_caption || post.meta_description || post.excerpt) && (
+        <figcaption className="mt-3 text-center text-sm text-gray-500 italic">
+          {post.image_caption || post.meta_description || post.excerpt}
+        </figcaption>
+      )}
     </figure>
   );
 };

@@ -1,5 +1,5 @@
-import { api } from './api';
-import { API_ENDPOINTS } from '../config/api';
+import { api } from "./api";
+import { API_ENDPOINTS } from "../config/api";
 
 export interface Author {
   id: number;
@@ -29,13 +29,14 @@ export interface Post {
   excerpt?: string;
   content: string;
   featured_image?: string;
+  image_caption?: string;
   author_id: number;
   editor_id?: number;
-  status: 'draft' | 'publish' | 'archived';
+  status: "draft" | "publish" | "archived";
   is_featured: boolean;
   views?: number;
   view_count?: number;
-  comment_status: 'open' | 'closed';
+  comment_status: "open" | "closed";
   meta_title?: string;
   meta_description?: string;
   published_at?: string;
@@ -60,7 +61,7 @@ export interface HomeFeed {
 export interface PostsParams {
   page?: number;
   limit?: number;
-  status?: 'draft' | 'publish' | 'archived';
+  status?: "draft" | "publish" | "archived";
   category?: string;
   tag?: string;
   search?: string;
@@ -109,7 +110,7 @@ export interface CreatePostData {
   content: string;
   excerpt?: string;
   featured_image?: string;
-  status?: 'draft' | 'publish' | 'archived';
+  status?: "draft" | "publish" | "archived";
   category_ids?: number[];
   tag_ids?: number[];
   author_id?: number;
@@ -129,7 +130,7 @@ export const postsService = {
   getPosts: async (params?: PostsParams): Promise<PostsResponse> => {
     const response = await api.get<ApiPostsResponse>(
       API_ENDPOINTS.POSTS,
-      params as Record<string, string | number | boolean>
+      params as Record<string, string | number | boolean>,
     );
     return {
       posts: response.data,
@@ -142,25 +143,36 @@ export const postsService = {
 
   // Get single post by slug
   getPostBySlug: async (slug: string): Promise<Post> => {
-    const response = await api.get<ApiPostResponse>(API_ENDPOINTS.POST_BY_SLUG(slug));
+    const response = await api.get<ApiPostResponse>(
+      API_ENDPOINTS.POST_BY_SLUG(slug),
+    );
     return response.data;
   },
 
   // Get popular posts (based on total views)
   getPopularPosts: async (limit = 5): Promise<Post[]> => {
-    const response = await api.get<ApiPostsArrayResponse>(API_ENDPOINTS.POPULAR_POSTS, { limit });
+    const response = await api.get<ApiPostsArrayResponse>(
+      API_ENDPOINTS.POPULAR_POSTS,
+      { limit },
+    );
     return response.data;
   },
 
   // Get trending/viral posts (based on engagement in last X hours)
   getTrendingPosts: async (limit = 5, hours = 24): Promise<Post[]> => {
-    const response = await api.get<ApiPostsArrayResponse>(API_ENDPOINTS.TRENDING_POSTS, { limit, hours });
+    const response = await api.get<ApiPostsArrayResponse>(
+      API_ENDPOINTS.TRENDING_POSTS,
+      { limit, hours },
+    );
     return response.data;
   },
 
   // Get recent posts
   getRecentPosts: async (limit = 5): Promise<Post[]> => {
-    const response = await api.get<ApiPostsArrayResponse>(API_ENDPOINTS.RECENT_POSTS, { limit });
+    const response = await api.get<ApiPostsArrayResponse>(
+      API_ENDPOINTS.RECENT_POSTS,
+      { limit },
+    );
     return response.data;
   },
 
@@ -172,7 +184,10 @@ export const postsService = {
 
   // Update post
   updatePost: async (uuid: string, data: UpdatePostData): Promise<Post> => {
-    const response = await api.put<ApiPostResponse>(`${API_ENDPOINTS.POSTS}/${uuid}`, data);
+    const response = await api.put<ApiPostResponse>(
+      `${API_ENDPOINTS.POSTS}/${uuid}`,
+      data,
+    );
     return response.data;
   },
 
