@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
-import News from "./pages/News";
 import SearchResults from "./pages/SearchResults";
 import DetailNews from "./pages/detail/detail-news";
 import AuthorPage from "./pages/AuthorPage";
@@ -36,7 +35,7 @@ function App() {
       <AdSenseRouteHandler />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/news" element={<News />} />
+        <Route path="/news" element={<Navigate to="/" replace />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/detail-news/:slug" element={<DetailNews />} />
         <Route path="/category/:slug" element={<CategoryPage />} />

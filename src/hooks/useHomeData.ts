@@ -15,25 +15,28 @@ export const useHomeData = () => {
   const [recentNews, setRecentNews] = useState<Post[]>([]);
   const [recommendedNews, setRecommendedNews] = useState<Post[]>([]);
   const [remainingNews, setRemainingNews] = useState<Post[]>([]);
+  const [allPublishedPosts, setAllPublishedPosts] = useState<Post[]>([]);
   const [allNews, setAllNews] = useState<Post[]>([]);
   const [categories, setCategories] = useState<Array<{ id: string; label: string; icon: React.ComponentType<{ className?: string }> }>>([{ id: "semua", label: "Semua", icon: Star }]);
   const [hotTopics, setHotTopics] = useState<HotTopic[]>([]);
 
   useEffect(() => {
+    const pool = allPublishedPosts.length > 0 ? allPublishedPosts : remainingNews;
     const visibleNews = activeCategory === "semua"
-      ? remainingNews
-      : remainingNews.filter((article) => article.categories?.some((category) => category.slug === activeCategory));
+      ? pool
+      : pool.filter((article) => article.categories?.some((category) => category.slug === activeCategory));
     setAllNews(visibleNews);
-  }, [activeCategory, remainingNews]);
+  }, [activeCategory, remainingNews, allPublishedPosts]);
 
   useEffect(() => {
     let active = true;
     const fetchData = async () => {
       setIsLoading(true);
-      const [home, categoriesResult, hotTopicsResult] = await Promise.allSettled([
+      const [home, categoriesResult, hotTopicsResult, allPostsResult] = await Promise.allSettled([
         postsService.getHome(),
         categoriesService.getCategories(),
         recommendationsService.getHotTopics(8, 24),
+        postsService.getPosts({ page: 1, limit: 40 }),
       ]);
       if (!active) return;
 
@@ -47,6 +50,10 @@ export const useHomeData = () => {
         setRemainingNews(feed.remaining);
       } else {
         console.error("Error fetching homepage feed:", home.reason);
+      }
+
+      if (allPostsResult.status === "fulfilled") {
+        setAllPublishedPosts(allPostsResult.value.posts);
       }
 
       if (categoriesResult.status === "fulfilled") {

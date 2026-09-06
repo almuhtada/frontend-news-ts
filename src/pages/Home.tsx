@@ -2,29 +2,37 @@ import { useHomeData } from "../hooks/useHomeData";
 import PublicPageLayout from "../components/layouts/PublicPageLayout";
 import SEO from "../components/common/SEO";
 import FeaturedSection from "../components/home/FeaturedSection";
-import CategoryFilter from "../components/home/CategoryFilter";
 import HomeSidebar from "../components/home/HomeSidebar";
 import MultiNewsSection from "../components/common/MultiNewsSection";
-import NewsList from "../components/common/NewsList";
+import ViralSection from "../components/home/ViralSection";
+import OtherNewsGrid from "../components/home/OtherNewsGrid";
 import type { NewsSectionConfig } from "../components/common/MultiNewsSection";
 
 const Home = () => {
   const {
-    activeCategory,
-    setActiveCategory,
     isLoading,
     featuredArticles,
     trendingNews,
     viralNews,
     recentNews,
-    allNews,
-    categories,
     hotTopics,
     recommendedNews,
+    allNews,
   } = useHomeData();
 
+  // Filter artikel yang belum ditampilkan di section atas untuk Berita Lainnya
+  const shownIds = new Set([
+    ...featuredArticles.map((p) => p.id),
+    ...viralNews.map((p) => p.id),
+    ...recentNews.map((p) => p.id),
+    ...recommendedNews.map((p) => p.id),
+  ]);
+
+  const uniqueOtherArticles = allNews.filter((post) => !shownIds.has(post.id));
+  const finalOtherArticles = uniqueOtherArticles.length >= 5 ? uniqueOtherArticles : allNews;
+
   // Konfigurasi sections untuk MultiNewsSection
-  const newsSections: NewsSectionConfig[] = [
+  const recentNewsSection: NewsSectionConfig[] = [
     {
       title: "Berita Terbaru",
       articles: recentNews,
@@ -34,6 +42,9 @@ const Home = () => {
       layout: "horizontal",
       emphasized: true,
     },
+  ];
+
+  const recommendedNewsSection: NewsSectionConfig[] = [
     {
       title: "Pilihan Redaksi",
       articles: recommendedNews,
@@ -42,18 +53,7 @@ const Home = () => {
       badgeType: "new",
       layout: "horizontal",
     },
-    {
-      title: "Viral",
-      articles: viralNews,
-      icon: "flame",
-      iconBgColor: "from-emerald-500 to-green-600",
-      badgeType: "viral",
-      layout: "horizontal",
-    },
   ];
-
-  // Filter allNews berdasarkan category aktif
-  const filteredAllNews = allNews;
 
   return (
     <PublicPageLayout>
@@ -61,38 +61,38 @@ const Home = () => {
       <div className="min-h-screen bg-white dark:bg-gray-950 w-full overflow-hidden">
         <main className="max-w-[1500px] mx-auto px-4 py-6 sm:px-6 md:px-8 sm:py-8 min-w-0 w-full">
           <div className="grid lg:grid-cols-4 gap-6 lg:gap-8 min-w-0 w-full">
-            {/* Main Content */}
+            {/* Main Content (3 Kolom) */}
             <div className="lg:col-span-3 space-y-6 lg:space-y-10 lg:border-r lg:border-green-800/15 dark:lg:border-green-700/20 lg:pr-8 min-w-0 w-full">
+              {/* Headline / Featured News Slider */}
               <FeaturedSection
                 articles={featuredArticles}
                 isLoading={isLoading}
               />
 
-              <MultiNewsSection sections={newsSections} isLoading={isLoading} />
+              {/* Berita Terbaru */}
+              <MultiNewsSection sections={recentNewsSection} isLoading={isLoading} />
 
-              {/* All News List with Pagination */}
-              <div className="mt-8 lg:mt-12">
-                <CategoryFilter
-                  categories={categories}
-                  activeCategory={activeCategory}
-                  onCategoryChange={setActiveCategory}
-                />
+              {/* Section Khusus VIRAL & POPULER (Tampilan Jurnalistik Gambar 1) */}
+              <ViralSection articles={viralNews} isLoading={isLoading} />
 
-                <div className="flex items-center gap-3 mb-6">
-                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
-                    Semua Berita
-                  </h2>
-                </div>
-                <NewsList articles={filteredAllNews} itemsPerPage={10} />
-              </div>
+              {/* Pilihan Redaksi */}
+              <MultiNewsSection sections={recommendedNewsSection} isLoading={isLoading} />
+
+              {/* Berita Lainnya (Persis 15 Berita Berbeda Unik, Gambar Kiri & Teks Kanan) */}
+              <OtherNewsGrid
+                articles={finalOtherArticles}
+                isLoading={isLoading}
+              />
             </div>
 
-            {/* Sidebar */}
-            <HomeSidebar
-              trendingNews={trendingNews}
-              hotTopics={hotTopics}
-              isLoading={isLoading}
-            />
+            {/* Sidebar (Hanya tampil di Desktop, disembunyikan di Mobile) */}
+            <div className="hidden lg:block min-w-0 w-full">
+              <HomeSidebar
+                trendingNews={trendingNews}
+                hotTopics={hotTopics}
+                isLoading={isLoading}
+              />
+            </div>
           </div>
         </main>
       </div>

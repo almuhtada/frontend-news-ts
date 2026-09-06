@@ -174,30 +174,26 @@ const NewsSection = ({
 
   // Horizontal Scrollable slider
   return (
-    <section className="mb-12 border-b border-green-800/10 dark:border-green-700/10 pb-10 min-w-0 w-full">
-      <div className="flex items-center justify-between mb-8 gap-4 min-w-0">
+    <section className="mb-10 border-b border-gray-200/60 dark:border-gray-800/80 pb-8 min-w-0 w-full">
+      <div className="flex items-center justify-between mb-6 gap-4 min-w-0">
         <div className="flex items-center gap-3 min-w-0">
-          <div
-            className={`w-8 h-8 bg-gradient-to-br ${iconBgColor} rounded-2xl flex items-center justify-center flex-shrink-0`}
-          >
-            <IconComponent className={`w-5 h-5 ${iconColor}`} />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 min-w-0 break-words">{title}</h2>
+          <span className="w-1.5 h-6 rounded-full bg-[#00531b] flex-shrink-0" />
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 min-w-0 break-words tracking-tight">{title}</h2>
         </div>
 
         {/* Scroll buttons */}
         <div className="flex gap-2 flex-shrink-0">
           <button
             onClick={() => scroll("left")}
-            className="w-9 h-9 rounded-full bg-white dark:bg-gray-800 shadow hover:shadow-md transition-all flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
+            className="w-8 h-8 rounded-full bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 transition-all flex items-center justify-center hover:bg-[#00531b] hover:text-white dark:hover:bg-emerald-600"
           >
-            <ChevronLeft className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+            <ChevronLeft className="w-4 h-4" />
           </button>
           <button
             onClick={() => scroll("right")}
-            className="w-9 h-9 rounded-full bg-white dark:bg-gray-800 shadow hover:shadow-md transition-all flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
+            className="w-8 h-8 rounded-full bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 transition-all flex items-center justify-center hover:bg-[#00531b] hover:text-white dark:hover:bg-emerald-600"
           >
-            <ChevronRight className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+            <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       </div>

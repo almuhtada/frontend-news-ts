@@ -10,19 +10,16 @@ interface FeaturedSectionProps {
 const FeaturedSection = ({ articles, isLoading }: FeaturedSectionProps) => {
   return (
     <section>
-      <div className="flex items-center gap-2 sm:gap-4 mb-4 lg:mb-8">
-        <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20 flex-shrink-0">
-          <Fire className="h-4 w-4 sm:h-5 sm:w-5" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h2 className="text-lg sm:text-2l font-bold text-gray-900 dark:text-gray-100 tracking-tight">
+      <div className="mb-6">
+        <div className="flex items-center gap-3 mb-1">
+          <span className="w-1.5 h-6 rounded-full bg-[#00531b] flex-shrink-0" />
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
             Berita Utama
           </h2>
-          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-            Kumpulan berita paling relevan untuk Anda
-          </p>
         </div>
-        <div className="hidden md:block flex-1 h-px bg-gradient-to-r from-gray-200 dark:from-gray-700 to-transparent" />
+        <p className="text-gray-500 dark:text-gray-400 ml-4.5 text-xs sm:text-sm">
+          Kumpulan berita paling relevan untuk Anda
+        </p>
       </div>
 
       {isLoading ? (

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Clock } from "lucide-react";
 import { useState } from "react";
 import type { Post } from "../../services/posts";
 import { getImageUrl } from "../../config/api";
@@ -75,6 +75,20 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
     return pages;
   };
 
+  if (articles.length === 0) {
+    return (
+      <section className="rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm p-12 text-center">
+        <Clock className="w-12 h-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+          Belum Ada Berita
+        </h3>
+        <p className="text-gray-500 dark:text-gray-400">
+          Berita terbaru akan tampil di sini
+        </p>
+      </section>
+    );
+  }
+
   return (
     <section className="rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm w-full min-w-0 overflow-hidden">
       {/* List */}
@@ -102,17 +116,18 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
                 {/* Meta */}
                 <div className="flex items-center gap-2 md:gap-3 text-[10px] md:text-xs flex-wrap">
                   {article.categories?.[0] && (
-                    <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 md:px-3 md:py-1 font-semibold text-emerald-700">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30 px-2.5 py-0.5 md:px-3 md:py-1 font-semibold text-emerald-700 dark:text-emerald-300">
                       {article.categories[0].name}
                     </span>
                   )}
-                  <span className="text-gray-400">
+                  <span className="inline-flex items-center gap-1 text-gray-500 dark:text-gray-400">
+                    <Clock className="w-3 h-3" />
                     {formatDate(article.published_at || article.createdAt)}
                   </span>
                 </div>
 
                 {/* Title */}
-                <h3 className="mt-1.5 md:mt-2 mb-1.5 md:mb-2 text-sm md:text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 md:line-clamp-2 group-hover:text-emerald-700 transition break-words">
+                <h3 className="mt-1.5 md:mt-2 mb-1.5 md:mb-2 text-sm md:text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 md:line-clamp-2 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition break-words">
                   {article.title}
                 </h3>
 
@@ -141,7 +156,7 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
               className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
                 currentPage === 1
                   ? "cursor-not-allowed bg-gray-100 dark:bg-gray-800 text-gray-400"
-                  : "bg-emerald-600 text-white hover:bg-emerald-500"
+                  : "bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm hover:shadow-md"
               }`}
             >
               <ChevronLeft className="h-4 w-4" />
@@ -157,9 +172,9 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
                   onClick={() => typeof page === "number" && goToPage(page)}
                   className={`h-9 min-w-[36px] rounded-full text-sm font-medium transition ${
                     page === currentPage
-                      ? "bg-emerald-600 text-white shadow"
+                      ? "bg-emerald-600 text-white shadow-sm"
                       : page === "..."
-                        ? "cursor-default text-gray-400"
+                        ? "cursor-default text-gray-400 px-3"
                         : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 hover:text-emerald-700"
                   }`}
                 >
@@ -175,7 +190,7 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
               className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
                 currentPage === totalPages
                   ? "cursor-not-allowed bg-gray-100 text-gray-400"
-                  : "bg-emerald-600 text-white hover:bg-emerald-500"
+                  : "bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm hover:shadow-md"
               }`}
             >
               Selanjutnya
@@ -184,9 +199,9 @@ const NewsList = ({ articles, itemsPerPage = 10 }: NewsListProps) => {
           </div>
 
           {/* Info */}
-          <div className="mt-4 text-center text-xs text-gray-500">
-            Menampilkan {startIndex + 1}–{Math.min(endIndex, articles.length)}{" "}
-            dari {articles.length} berita
+          <div className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
+            Menampilkan <span className="font-medium text-gray-900 dark:text-gray-100">{startIndex + 1}–{Math.min(endIndex, articles.length)}</span>{" "}
+            dari <span className="font-medium text-gray-900 dark:text-gray-100">{articles.length}</span> berita
           </div>
         </div>
       )}

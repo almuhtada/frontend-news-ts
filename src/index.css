@@ -17,4 +17,28 @@ html.dark {
   color-scheme: dark;
 }
 
+/* Google Translate Bawaan disembunyikan sepenuhnya */
+.goog-te-banner-frame,
+.goog-te-banner,
+.goog-te-menu-frame,
+iframe[id*="translate"],
+.skiptranslate {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+#google_translate_hidden {
+  position: absolute !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+body {
+  top: 0px !important;
+}
 

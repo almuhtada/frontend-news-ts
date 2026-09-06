@@ -103,9 +103,9 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
     <div className="pb-8 border-b border-green-800/15 dark:border-green-700/20 w-full min-w-0 overflow-hidden">
       {/* ========== MOBILE LAYOUT ========== */}
       <div className="md:hidden w-full min-w-0">
-        {/* Carousel container */}
+        {/* Carousel container (Persis Gambar 1) */}
         <div
-          className="relative overflow-hidden rounded-xl bg-gray-100 select-none w-full aspect-[4/3] min-w-0"
+          className="relative overflow-hidden rounded-2xl bg-gray-100 dark:bg-gray-800 select-none w-full aspect-[16/10] min-w-0 shadow-md"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
@@ -129,18 +129,6 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
                 to={`/detail-news/${slides[current].slug}`}
                 className="relative block w-full h-full overflow-hidden"
               >
-                <div
-                  className="absolute inset-0 bg-cover bg-center scale-110"
-                  style={{
-                    backgroundImage: `url(${getImageUrl(slides[current].featured_image) || PLACEHOLDER_IMAGE_LARGE})`,
-                    filter: "blur(32px)",
-                  }}
-                  aria-hidden="true"
-                />
-                <div
-                  className="absolute inset-0 bg-black/10"
-                  aria-hidden="true"
-                />
                 <img
                   src={
                     getImageUrl(slides[current].featured_image) ||
@@ -153,15 +141,15 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
                       PLACEHOLDER_IMAGE_LARGE;
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent z-20" />
-                <div className="absolute bottom-0 left-0 right-0 p-4 pb-5 z-30">
-                  <span className="text-[10px] font-bold text-emerald-300 uppercase tracking-wider drop-shadow-sm">
-                    {slides[current].categories?.[0]?.name || "Berita"}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-20" />
+                <div className="absolute bottom-0 left-0 right-0 p-4 pb-4 z-30">
+                  <span className="text-xs font-bold text-[#34d399] uppercase tracking-wider block mb-1">
+                    {slides[current].categories?.[0]?.name || "BERITA"}
                   </span>
-                  <h2 className="mt-1 text-lg sm:text-base font-bold text-white leading-tight line-clamp-2 drop-shadow-sm break-words">
+                  <h2 className="text-base sm:text-lg font-bold text-white leading-snug line-clamp-2 break-words">
                     {slides[current].title}
                   </h2>
-                  <div className="mt-1.5 text-[10px] text-gray-300 drop-shadow-sm">
+                  <div className="mt-1.5 text-xs text-gray-300">
                     {formatDateTime(
                       slides[current].published_at || slides[current].createdAt,
                     )}
@@ -176,14 +164,14 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
             <>
               <button
                 onClick={goPrev}
-                className="absolute left-2 top-1/2 -translate-y-1/2 z-40 w-8 h-8 flex items-center justify-center rounded-full bg-black/30 text-white hover:bg-black/50 transition-colors backdrop-blur-sm"
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-40 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors backdrop-blur-sm"
                 aria-label="Sebelumnya"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={goNext}
-                className="absolute right-2 top-1/2 -translate-y-1/2 z-40 w-8 h-8 flex items-center justify-center rounded-full bg-black/30 text-white hover:bg-black/50 transition-colors backdrop-blur-sm"
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-40 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors backdrop-blur-sm"
                 aria-label="Selanjutnya"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -192,70 +180,21 @@ const CardHeadlinerApi = ({ slides }: CardHeadlinerApiProps) => {
           )}
         </div>
 
-        {/* Dots indicator */}
+        {/* Dots indicator (Persis Gambar 1: 🟢 ⚪ ⚪ ⚪) */}
         {slides.length > 1 && (
-          <div className="flex items-center justify-center gap-1.5 mt-3">
+          <div className="flex items-center justify-center gap-1.5 mt-3 mb-2">
             {slides.map((_, i) => (
               <button
                 key={i}
                 onClick={() => goTo(i)}
                 className={`h-2 rounded-full transition-all duration-300 ${
                   i === current
-                    ? "w-6 bg-emerald-600"
-                    : "w-2 bg-gray-300 dark:bg-gray-600"
+                    ? "w-6 bg-[#00531b]"
+                    : "w-2 bg-gray-300 dark:bg-gray-700"
                 }`}
                 aria-label={`Slide ${i + 1}`}
               />
             ))}
-          </div>
-        )}
-
-        {/* Side articles section */}
-        {sideArticles.length > 0 && (
-          <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800 min-w-0 w-full">
-            <h3 className="text-base font-bold text-gray-900 dark:text-gray-100 mb-4">
-              Berita Lainnya
-            </h3>
-            <div className="space-y-4 min-w-0 w-full">
-              {sideArticles.map((article) => {
-                const imageUrl =
-                  getImageUrl(article.featured_image) ||
-                  PLACEHOLDER_IMAGE_SMALL;
-                const category = article.categories?.[0]?.name || "Berita";
-                return (
-                  <Link
-                    key={article.id}
-                    to={`/detail-news/${article.slug}`}
-                    className="group flex items-start gap-4 min-w-0 w-full"
-                  >
-                    <div className="relative w-[100px] sm:w-[120px] aspect-[4/3] flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
-                      <img
-                        src={imageUrl}
-                        alt={article.title}
-                        className="h-full w-full object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src =
-                            PLACEHOLDER_IMAGE_SMALL;
-                        }}
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0 pt-0.5">
-                      <span className="text-[10px] sm:text-[11px] font-bold text-emerald-600 dark:text-emerald-450 uppercase tracking-wider">
-                        {category}
-                      </span>
-                      <h3 className="mt-1 text-xs sm:text-sm font-bold text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors break-words">
-                        {article.title}
-                      </h3>
-                      <div className="mt-1 text-[10px] text-gray-400 dark:text-gray-500">
-                        {formatDateTime(
-                          article.published_at || article.createdAt,
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
           </div>
         )}
       </div>
