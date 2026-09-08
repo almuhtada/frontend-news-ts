@@ -44,6 +44,7 @@ const TrendingListApi = ({ items }: TrendingListApiProps) => {
                       const target = e.target as HTMLImageElement;
                       target.src = PLACEHOLDER_IMAGE_SMALL;
                     }}
+                    referrerPolicy="no-referrer"
                   />
                   <span className="absolute top-2 left-2 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-bold text-white shadow">
                     01

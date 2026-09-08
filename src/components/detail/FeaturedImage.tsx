@@ -25,6 +25,7 @@ const FeaturedImage = ({ post }: FeaturedImageProps) => {
           "
           draggable={false}
           onDragStart={(e) => e.preventDefault()}
+          referrerPolicy="no-referrer"
         />
       </div>
 

@@ -474,7 +474,6 @@ const Navbar = () => {
         {/* Mobile Navigation Strip */}
         <MobileNav
           categories={visibleCategories}
-          allCategories={allCategories}
           activeCategory={activeCategory}
           onCategoryChange={setActiveCategory}
           journalUrl={journalUrl}

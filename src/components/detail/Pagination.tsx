@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
@@ -40,7 +42,7 @@ const Pagination = ({
             const showEllipsisBefore = idx > 0 && page - arr[idx - 1] > 1;
 
             return (
-              <React.Fragment key={page}>
+              <Fragment key={page}>
                 {showEllipsisBefore && (
                   <span className="px-2 text-xs text-gray-400 dark:text-gray-500">...</span>
                 )}
@@ -56,7 +58,7 @@ const Pagination = ({
                 >
                   {page}
                 </button>
-              </React.Fragment>
+              </Fragment>
             );
           })}
         </div>
