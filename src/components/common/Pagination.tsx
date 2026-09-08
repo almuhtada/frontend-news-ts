@@ -53,24 +53,24 @@ const Pagination: React.FC<PaginationProps> = ({
   );
 
   return (
-    <div className={`mt-8 flex items-center justify-between ${className}`}>
+    <div className={`mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 ${className}`}>
       {/* Item count info */}
-      <div className="text-sm text-gray-600">
-        Menampilkan <span className="font-semibold">{displayedCount}</span> dari{" "}
-        <span className="font-semibold">{totalItems}</span> {itemLabel}
+      <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 text-center sm:text-left">
+        Menampilkan <span className="font-semibold text-gray-800 dark:text-gray-200">{displayedCount}</span> dari{" "}
+        <span className="font-semibold text-gray-800 dark:text-gray-200">{totalItems}</span> {itemLabel}
       </div>
 
       {/* Pagination controls */}
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
         {/* Previous Button */}
         <button
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}
           disabled={currentPage === 1}
-          className="flex items-center gap-1 px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center gap-1 px-2.5 sm:px-3.5 py-1.5 sm:py-2 border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/80 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-xs"
           aria-label="Previous page"
         >
-          <ChevronLeft className="w-4 h-4" />
-          Prev
+          <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <span>Prev</span>
         </button>
 
         {/* Page Numbers */}
@@ -81,14 +81,14 @@ const Pagination: React.FC<PaginationProps> = ({
             return (
               <React.Fragment key={page}>
                 {showEllipsisBefore && (
-                  <span className="px-2 text-gray-400">...</span>
+                  <span className="px-1 sm:px-2 text-xs sm:text-sm text-gray-400 dark:text-gray-500">...</span>
                 )}
                 <button
                   onClick={() => onPageChange(page)}
-                  className={`min-w-[40px] h-10 px-3 rounded-xl text-sm font-medium transition-colors ${
+                  className={`min-w-[32px] sm:min-w-[38px] h-8 sm:h-9 px-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all ${
                     currentPage === page
-                      ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md"
-                      : "border border-gray-300 text-gray-700 hover:bg-gray-50"
+                      ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-sm font-semibold"
+                      : "border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/80"
                   }`}
                   aria-label={`Page ${page}`}
                   aria-current={currentPage === page ? "page" : undefined}
@@ -104,11 +104,11 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
           disabled={currentPage === totalPages}
-          className="flex items-center gap-1 px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center gap-1 px-2.5 sm:px-3.5 py-1.5 sm:py-2 border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/80 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-xs"
           aria-label="Next page"
         >
-          Next
-          <ChevronRight className="w-4 h-4" />
+          <span>Next</span>
+          <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         </button>
       </div>
     </div>

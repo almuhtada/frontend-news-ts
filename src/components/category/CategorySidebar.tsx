@@ -55,7 +55,7 @@ const CategorySidebar = ({
   ].filter((s) => s.url);
 
   return (
-    <aside className="lg:col-span-1 space-y-8">
+    <aside className="hidden lg:block lg:col-span-1 space-y-8">
       {/* Trending Section */}
       <div className="border-b border-gray-100 dark:border-gray-800/30 pb-6">
         <div className="flex items-center gap-2 mb-4">

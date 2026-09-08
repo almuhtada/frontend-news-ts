@@ -74,10 +74,12 @@ const CategoryPage = () => {
               />
             </div>
 
-            <CategorySidebar
-              trendingNews={trendingNews}
-              categories={categories}
-            />
+            <div className="hidden lg:block min-w-0 w-full">
+              <CategorySidebar
+                trendingNews={trendingNews}
+                categories={categories}
+              />
+            </div>
           </div>
         </main>
       </div>

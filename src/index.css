@@ -42,3 +42,32 @@ body {
   top: 0px !important;
 }
 
+/* Proteksi Header & Navbar dari Google Auto Ads agar tidak merusak tampilan */
+header ins.adsbygoogle,
+header iframe,
+header .google-auto-placed,
+nav ins.adsbygoogle,
+nav iframe,
+nav .google-auto-placed {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Isolasi kontainer iklan agar tidak meluap keluar (overflow) */
+.adsense-container {
+  max-width: 100% !important;
+  overflow: hidden !important;
+  clear: both !important;
+}
+
+.adsense-container iframe,
+.adsense-container ins {
+  max-width: 100% !important;
+}
+

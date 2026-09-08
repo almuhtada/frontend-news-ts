@@ -122,7 +122,7 @@ const DetailNews = () => {
         tags={post.tags?.map((t) => t.name) || []}
       />
       <div
-        className="min-h-screen bg-gray-50 dark:bg-gray-950"
+        className="min-h-screen bg-gray-50 dark:bg-gray-950 overflow-hidden"
         style={{
           userSelect: "none",
           WebkitUserSelect: "none",
@@ -130,7 +130,7 @@ const DetailNews = () => {
           msUserSelect: "none",
         }}
       >
-        <div className="max-w-6xl mx-auto px-4 py-6 sm:px-6 sm:py-8 bg-white dark:bg-gray-900">
+        <div className="max-w-6xl mx-auto px-4 py-6 sm:px-6 sm:py-8 bg-white dark:bg-gray-900 overflow-hidden shadow-sm">
           {/* Header + Like */}
           <div className="flex flex-col md:flex-row md:items-start gap-4">
             <div className="flex-1 min-w-0">

@@ -3,11 +3,10 @@ import { Link } from "react-router-dom";
 import NavLink from "./Navlink";
 import { ChevronDown } from "lucide-react";
 import type { Category } from "../../services/posts";
-import Dropdown, { DropdownItem, DropdownLabel, DropdownSeparator } from "./Dropdown";
+
 
 interface MobileNavProps {
   categories: Category[];
-  allCategories: Category[];
   activeCategory: string;
   onCategoryChange: (slug: string) => void;
   journalUrl: string;
@@ -25,9 +24,7 @@ const profilLinks = [
 
 const navItemClass = (active: boolean) =>
   `relative whitespace-nowrap h-full flex items-center text-sm font-semibold transition-colors duration-200 py-2.5 px-1 ${
-    active
-      ? "text-white font-bold"
-      : "text-white/80 hover:text-white"
+    active ? "text-white font-bold" : "text-white/80 hover:text-white"
   }`;
 
 const underlineClass = (active: boolean) =>
@@ -37,7 +34,6 @@ const underlineClass = (active: boolean) =>
 
 const MobileNav = ({
   categories,
-  allCategories,
   activeCategory,
   onCategoryChange,
   journalUrl,
@@ -45,9 +41,7 @@ const MobileNav = ({
   const [isProfilOpen, setIsProfilOpen] = useState(false);
 
   // Kategori sisa untuk dropdown "Lainnya"
-  const remainingCategories = allCategories.filter(
-    (cat) => !categories.some((vis) => vis.id === cat.id)
-  );
+
 
   return (
     <div className="md:hidden bg-[#00531b] dark:bg-gray-900 border-b border-white/10">
@@ -79,27 +73,6 @@ const MobileNav = ({
         })}
 
         {/* Dropdown Lainnya */}
-        {allCategories.length > categories.length && (
-          <Dropdown
-            label="Lainnya"
-            variant="nav"
-            align="left"
-            width="w-56"
-          >
-            <DropdownLabel>Kategori Lainnya</DropdownLabel>
-            <DropdownSeparator />
-            {(remainingCategories.length > 0 ? remainingCategories : allCategories).map((category) => (
-              <DropdownItem
-                key={category.id}
-                to={`/category/${category.slug}`}
-                active={activeCategory === category.slug}
-                onClick={() => onCategoryChange(category.slug)}
-              >
-                {category.name}
-              </DropdownItem>
-            ))}
-          </Dropdown>
-        )}
 
         {/* Profil Button */}
         <button

@@ -1,5 +1,6 @@
 import Navbar from "../../ui/navbar/Navbar";
 import Footer from "../../ui/footer/Footer";
+import CookieConsent from "../common/CookieConsent";
 
 interface PublicPageLayoutProps {
   children: React.ReactNode;
@@ -11,6 +12,7 @@ const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
       <Navbar />
       <div className="flex-1">{children}</div>
       <Footer />
+      <CookieConsent />
     </div>
   );
 };

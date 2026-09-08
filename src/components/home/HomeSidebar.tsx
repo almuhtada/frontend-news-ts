@@ -58,7 +58,7 @@ const HomeSidebar = ({
   ].filter((s) => s.url);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8 p-4 sm:p-6 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800/80 rounded-2xl shadow-sm">
       {/* ─── Trending Section ─────────────────────────────────── */}
       <div className="border-b border-gray-100 dark:border-gray-800/30 pb-6">
         <div className="flex items-center gap-2 mb-4">

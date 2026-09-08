@@ -176,8 +176,8 @@ const News = () => {
               </div>
             </section>
 
-            {/* Sidebar */}
-            <aside className="lg:col-span-4">
+            {/* Sidebar (Hanya tampil di Desktop, disembunyikan di Mobile) */}
+            <aside className="hidden lg:block lg:col-span-4 min-w-0 w-full">
               <div className="lg:sticky lg:top-6 space-y-6">
                 <NewsSidebar
                   categories={categories}
