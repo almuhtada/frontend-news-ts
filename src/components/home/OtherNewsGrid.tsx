@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Clock } from "lucide-react";
 import type { Post } from "../../services/posts";
 import { PLACEHOLDER_IMAGE_MEDIUM } from "../../config/constants";
 import { getImageUrl } from "../../config/api";
+import Pagination from "../common/Pagination";
 
 interface OtherNewsGridProps {
   articles: Post[];
@@ -10,6 +12,8 @@ interface OtherNewsGridProps {
 }
 
 const OtherNewsGrid = ({ articles, isLoading }: OtherNewsGridProps) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
   const formatDate = (dateString?: string) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -20,13 +24,20 @@ const OtherNewsGrid = ({ articles, isLoading }: OtherNewsGridProps) => {
     });
   };
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [articles]);
+
   if (isLoading) {
     return (
       <div className="mt-10 lg:mt-12 w-full">
         <div className="h-7 w-48 bg-gray-200 dark:bg-gray-800 rounded animate-pulse mb-6" />
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
           {Array.from({ length: 15 }).map((_, i) => (
-            <div key={i} className="h-52 bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />
+            <div
+              key={i}
+              className="h-52 bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse"
+            />
           ))}
         </div>
       </div>
@@ -37,10 +48,14 @@ const OtherNewsGrid = ({ articles, isLoading }: OtherNewsGridProps) => {
 
   // Pastikan hanya artikel unik yang ditampilkan (tanpa duplikasi)
   const uniqueArticles = Array.from(
-    new Map(articles.map((item) => [item.id, item])).values()
+    new Map(articles.map((item) => [item.id || item.slug, item])).values(),
   );
+  const totalPages = Math.ceil(uniqueArticles.length / itemsPerPage);
 
-  const displayArticles = uniqueArticles.slice(0, 15);
+  const displayArticles = uniqueArticles.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
   return (
     <section className="mt-10 lg:mt-12 w-full pt-6 border-t border-gray-200 dark:border-gray-800">
@@ -76,7 +91,10 @@ const OtherNewsGrid = ({ articles, isLoading }: OtherNewsGridProps) => {
               {/* Gambar Thumbnail di Kiri */}
               <div className="relative w-24 h-20 sm:w-28 sm:h-22 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-800">
                 <img
-                  src={getImageUrl(article.featured_image) || PLACEHOLDER_IMAGE_MEDIUM}
+                  src={
+                    getImageUrl(article.featured_image) ||
+                    PLACEHOLDER_IMAGE_MEDIUM
+                  }
                   alt={article.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
@@ -102,6 +120,15 @@ const OtherNewsGrid = ({ articles, isLoading }: OtherNewsGridProps) => {
           );
         })}
       </div>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={uniqueArticles.length}
+        displayedCount={displayArticles.length}
+        itemLabel="berita"
+        onPageChange={setCurrentPage}
+      />
     </section>
   );
 };

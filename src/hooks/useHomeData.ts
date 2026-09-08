@@ -169,6 +169,7 @@ export const useHomeData = () => {
     trendingNews,
     viralNews,
     recentNews,
+    remainingNews,
     allNews,
     recommendedNews,
     categories,

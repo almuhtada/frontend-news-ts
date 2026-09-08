@@ -4,6 +4,7 @@ import SEO from "../components/common/SEO";
 import FeaturedSection from "../components/home/FeaturedSection";
 import HomeSidebar from "../components/home/HomeSidebar";
 import MultiNewsSection from "../components/common/MultiNewsSection";
+import OtherNewsGrid from "../components/home/OtherNewsGrid";
 import type { NewsSectionConfig } from "../components/common/MultiNewsSection";
 
 const Home = () => {
@@ -15,6 +16,7 @@ const Home = () => {
     recentNews,
     hotTopics,
     recommendedNews,
+    remainingNews,
   } = useHomeData();
 
   // Konfigurasi sections untuk MultiNewsSection
@@ -60,6 +62,8 @@ const Home = () => {
               />
 
               <MultiNewsSection sections={newsSections} isLoading={isLoading} />
+
+              <OtherNewsGrid articles={remainingNews} isLoading={isLoading} />
 
               {/* All News List with Pagination */}
               <div className="mt-8 lg:mt-12">
