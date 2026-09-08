@@ -16,6 +16,7 @@ const HeroSection = ({ story, formatTimeAgo }: HeroSectionProps) => {
             src={getImageUrl(story.featured_image)}
             alt={story.title}
             className="w-full h-full object-cover"
+            referrerPolicy="no-referrer"
           />
         </div>
       )}

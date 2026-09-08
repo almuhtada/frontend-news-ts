@@ -73,6 +73,7 @@ const ArticlesList = ({
                         alt={article.title}
                         loading="lazy"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                        referrerPolicy="no-referrer"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
