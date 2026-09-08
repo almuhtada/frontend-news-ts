@@ -79,11 +79,11 @@ const Navbar = () => {
   useEffect(() => {
     setCurrentLang(getActiveLanguage());
 
-    (window as any).googleTranslateElementInit = () => {
-      new (window as any).google.translate.TranslateElement(
+    window.googleTranslateElementInit = () => {
+      new google.translate.TranslateElement(
         {
           pageLanguage: "id",
-          layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE,
+          layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
           autoDisplay: false,
         },
         "google_translate_hidden"
