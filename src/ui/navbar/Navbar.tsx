@@ -28,7 +28,7 @@ const getActiveLanguage = () => {
   if (typeof document === "undefined") return "id";
   const match = document.cookie.match(/googtrans=([^;]+)/);
   if (match) {
-    const value = match[1];
+    const value = decodeURIComponent(match[1]);
     const parts = value.split("/");
     const langCode = parts[parts.length - 1];
     return langCode || "id";
@@ -86,7 +86,7 @@ const Navbar = () => {
           layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
           autoDisplay: false,
         },
-        "google_translate_hidden"
+        "google_translate_hidden",
       );
     };
 
@@ -96,7 +96,7 @@ const Navbar = () => {
       addScript.setAttribute("id", "google-translate-script");
       addScript.setAttribute(
         "src",
-        "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+        "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit",
       );
       addScript.async = true;
       document.body.appendChild(addScript);
@@ -106,36 +106,20 @@ const Navbar = () => {
   const changeLanguage = (langCode: string) => {
     setIsTranslating(true);
     const cookieValue = langCode === "id" ? "" : `/id/${langCode}`;
-    
-    document.cookie = `googtrans=${cookieValue}; path=/;`;
-    
-    const host = window.location.host;
-    const parts = host.split(".");
-    if (parts.length > 2) {
-      const domain = parts.slice(-2).join(".");
-      document.cookie = `googtrans=${cookieValue}; path=/; domain=.${domain};`;
-    }
-    
-    setCurrentLang(langCode);
+    const cookieOptions = "path=/; max-age=31536000; SameSite=Lax";
 
-    setTimeout(() => {
-      try {
-        const googleSelect = document.querySelector(".goog-te-combo") as HTMLSelectElement;
-        if (googleSelect) {
-          googleSelect.value = langCode;
-          googleSelect.dispatchEvent(new Event("change"));
-          
-          setTimeout(() => {
-            setIsTranslating(false);
-          }, 1500);
-        } else {
-          window.location.reload();
-        }
-      } catch (e) {
-        console.error("Error triggering instant translation:", e);
-        window.location.reload();
-      }
-    }, 150);
+    // Clear both cookie variants so Google Translate cannot restore the old language.
+    document.cookie = `googtrans=; path=/; max-age=0`;
+    const hostname = window.location.hostname;
+    if (hostname.includes(".")) {
+      const domain = hostname.split(".").slice(-2).join(".");
+      document.cookie = `googtrans=; path=/; domain=.${domain}; max-age=0`;
+    }
+    document.cookie = `googtrans=${encodeURIComponent(cookieValue)}; ${cookieOptions}`;
+
+    setCurrentLang(langCode);
+    localStorage.removeItem("almuhtada_home_cache");
+    window.location.reload();
   };
 
   /**
@@ -288,7 +272,8 @@ const Navbar = () => {
     }
   }, [isOpen]);
 
-  const activeLangObj = LANGUAGES.find((l) => l.code === currentLang) || LANGUAGES[0];
+  const activeLangObj =
+    LANGUAGES.find((l) => l.code === currentLang) || LANGUAGES[0];
 
   const renderLanguageDropdown = () => (
     <div ref={languageDropdownRef} className="relative">
@@ -297,18 +282,23 @@ const Navbar = () => {
         className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/20 text-white hover:bg-white/10 transition-colors text-xs font-semibold cursor-pointer whitespace-nowrap bg-transparent"
       >
         <Languages size={14} />
-        <span>{activeLangObj.flag} {activeLangObj.name}</span>
-        <ChevronDown size={12} className={`transition-transform duration-200 ${isLanguageOpen ? 'rotate-180' : ''}`} />
+        <span>
+          {activeLangObj.flag} {activeLangObj.name}
+        </span>
+        <ChevronDown
+          size={12}
+          className={`transition-transform duration-200 ${isLanguageOpen ? "rotate-180" : ""}`}
+        />
       </button>
 
       {isLanguageOpen && (
         <>
           {/* Backdrop untuk menutup dropdown */}
-          <div 
-            className="fixed inset-0 z-[110]" 
+          <div
+            className="fixed inset-0 z-[110]"
             onClick={() => setIsLanguageOpen(false)}
           />
-          
+
           {/* Dropdown Menu */}
           <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-1.5 z-[120] max-h-72 overflow-y-auto">
             {LANGUAGES.map((lang) => (
@@ -427,7 +417,9 @@ const Navbar = () => {
           ${
             isScrolled
               ? `fixed top-0 left-0 right-0 ${
-                  showNavbar ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+                  showNavbar
+                    ? "translate-y-0 opacity-100"
+                    : "-translate-y-full opacity-0"
                 }`
               : "relative translate-y-0 opacity-100"
           }
