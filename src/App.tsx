@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import SearchResults from "./pages/SearchResults";
 import DetailNews from "./pages/detail/detail-news";
@@ -13,26 +12,9 @@ import GriyaQuran from "./pages/profile/griya-quran";
 import Pendaftaran from "./pages/profile/pendaftaran-mahasantri";
 import PublicPageLayout from "./components/layouts/PublicPageLayout";
 
-function AdSenseRouteHandler() {
-  const location = useLocation();
-
-  useEffect(() => {
-    try {
-      if (typeof window !== "undefined" && window.adsbygoogle) {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-      }
-    } catch {
-      // Ignore harmless duplicate push errors during SPA navigation
-    }
-  }, [location.pathname]);
-
-  return null;
-}
-
 function App() {
   return (
     <BrowserRouter>
-      <AdSenseRouteHandler />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/news" element={<Navigate to="/" replace />} />

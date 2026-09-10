@@ -10,7 +10,9 @@
 
 /* Smooth dark mode transition */
 html {
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 html.dark {
@@ -59,6 +61,22 @@ nav .google-auto-placed {
   pointer-events: none !important;
 }
 
+/* Auto Ads may be inserted as direct children of the document or app root. */
+body > ins.adsbygoogle,
+body > .google-auto-placed,
+#root > ins.adsbygoogle,
+#root > .google-auto-placed {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
 /* Isolasi kontainer iklan agar tidak meluap keluar (overflow) */
 .adsense-container {
   max-width: 100% !important;
@@ -70,4 +88,3 @@ nav .google-auto-placed {
 .adsense-container ins {
   max-width: 100% !important;
 }
-
