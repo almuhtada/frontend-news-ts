@@ -154,17 +154,19 @@ const DetailNews = () => {
           {/* Social Share */}
           <SocialShare />
 
-          {/* Konten Artikel */}
-          <ArticleContent
-            currentPage={currentPage}
-            totalPages={totalPages}
-            words={words}
-            paragraphs={formattedParagraphs}
-            excerpt={post.excerpt}
-            onNextPage={handleNextPage}
-            showAll={showAll}
-            onShowAll={handleShowAll}
-          />
+          {/* Konten Artikel - area bebas iklan untuk kenyamanan pembaca */}
+          <div data-no-auto-ads="" data-nosnippet="">
+            <ArticleContent
+              currentPage={currentPage}
+              totalPages={totalPages}
+              words={words}
+              paragraphs={formattedParagraphs}
+              excerpt={post.excerpt}
+              onNextPage={handleNextPage}
+              showAll={showAll}
+              onShowAll={handleShowAll}
+            />
+          </div>
 
           {/* Pagination */}
           {!showAll && (
@@ -175,11 +177,11 @@ const DetailNews = () => {
             />
           )}
 
-          {/* AdSense Ad Unit */}
-          <AdSense className="my-6" />
-
           {/* Related Posts */}
           <RelatedPosts posts={relatedPosts} />
+
+          {/* AdSense Ad Unit - placed after related posts, outside reading area */}
+          <AdSense className="my-6" />
 
           {/* Tags */}
           <ArticleTags post={post} />

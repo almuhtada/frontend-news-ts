@@ -55,7 +55,7 @@ const cleanText = (text: string) => {
   const cleaned = text
     .replace(/\[irp[^\]]*\]/gi, "")
     .replace(
-      /\[(?!\/?align-(?:center|right|justify)(?:-(?:h[1-6]|blockquote))?\])[a-zA-Z0-9_-]+[^\]]*\]/g,
+      /\[(?!\/?align-(?:center|right|justify)(?:-(?:h[1-6]|blockquote))?\s*\])[a-zA-Z0-9_-]+[^\]]*\]/g,
       "",
     )
     .replace(
@@ -66,7 +66,10 @@ const cleanText = (text: string) => {
     .replace(/<strong[^>]*>almuhtada\.org[^<]*<\/strong>\s*-?\s*/gi, "")
     .replace(/^almuhtada\.org\s*-\s*/gim, "")
     .replace(/&lt;strong&gt;.*?almuhtada\.org.*?&lt;\/strong&gt;\s*-?\s*/gi, "")
-    .replace(/&lt;a[^&]*&gt;almuhtada\.org&lt;\/a&gt;\s*-?\s*/gi, "");
+    .replace(/&lt;a[^&]*&gt;almuhtada\.org&lt;\/a&gt;\s*-?\s*/gi, "")
+    // Strip remaining formatting tags (strong, b, em, i, etc.) to prevent
+    // broken fragments like orphaned </strong> after line splitting
+    .replace(/<\/?(strong|b|em|i|u|s|strike|del)\b[^>]*>/gi, "");
 
   return cleaned.trim();
 };
@@ -94,14 +97,31 @@ const ArticleContent = ({
     .map(cleanText)
     .filter(Boolean);
 
+  // Merge consecutive Arabic-only lines into a single line so that
+  // Word line-wrapping doesn't split one verse into multiple blocks.
+  const mergedLines: string[] = [];
+  for (let i = 0; i < rawLines.length; i++) {
+    const line = rawLines[i];
+    if (isArabicLine(line)) {
+      let merged = line;
+      while (i + 1 < rawLines.length && isArabicLine(rawLines[i + 1])) {
+        merged += " " + rawLines[i + 1];
+        i++;
+      }
+      mergedLines.push(merged);
+    } else {
+      mergedLines.push(line);
+    }
+  }
+
   const blocks: string[] = [];
   let isFirstParagraph = true;
   let lastContext: ArabicContext = null;
 
-  for (let i = 0; i < rawLines.length; i++) {
-    let line = rawLines[i];
-    const next = rawLines[i + 1];
-    const next2 = rawLines[i + 2];
+  for (let i = 0; i < mergedLines.length; i++) {
+    let line = mergedLines[i];
+    const next = mergedLines[i + 1];
+    const next2 = mergedLines[i + 2];
 
     let alignmentClass = "";
     if (line.includes("[align-center]")) {
@@ -114,11 +134,6 @@ const ArticleContent = ({
       line = line
         .replace(/\[align-right\]/g, "")
         .replace(/\[\/align-right\]/g, "");
-    } else if (line.includes("[align-justify]")) {
-      alignmentClass = " align-justify-block";
-      line = line
-        .replace(/\[align-justify\]/g, "")
-        .replace(/\[\/align-justify\]/g, "");
     }
 
     // Deteksi alignment heading h1-h6
@@ -148,6 +163,11 @@ const ArticleContent = ({
       continue;
     }
 
+    // Clean any remaining orphaned alignment tokens (e.g. closing tag
+    // that was on a separate line from its opening tag)
+    line = line.replace(/\[\/?align-(?:center|right|justify)(?:-(?:h[1-6]|blockquote))?\]/gi, "");
+    if (!line.trim()) continue;
+
     if (
       isArabicLine(line) &&
       next &&
@@ -170,7 +190,7 @@ const ArticleContent = ({
     }
 
     if (isArabicLine(line) && !LATIN_LABEL_REGEX.test(line)) {
-      const context = detectArabicContext(rawLines, i);
+      const context = detectArabicContext(mergedLines, i);
       lastContext = context;
       blocks.push(`
         <div class="arabic-inline-block" dir="rtl">
@@ -211,7 +231,7 @@ const ArticleContent = ({
     if (lastContext) {
       lastContext = null;
       blocks.push(
-        `<p class="article-paragraph explanation-text${alignmentClass}" style="border-left: 3px solid #10b981; padding-left: 1rem; margin: 0.75rem 0;">${line}</p>`,
+        `<p class="article-paragraph explanation-text${alignmentClass}" style="border-left: 3px solid #10b981; padding-left: 1rem; margin: 0.5rem 0;">${line}</p>`,
       );
       continue;
     }
@@ -234,7 +254,7 @@ const ArticleContent = ({
 
   return (
     <>
-      <div className="mt-8 mb-6 flex flex-wrap items-center gap-2 sm:gap-3 text-sm text-gray-500 dark:text-gray-400">
+      <div className="mt-6 mb-4 flex flex-wrap items-center gap-2 sm:gap-3 text-sm text-gray-500 dark:text-gray-400">
         <div className="flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 px-3 py-1.5 rounded-full font-medium">
           <Clock className="w-3.5 h-3.5" />
           {readTime} menit baca
@@ -261,8 +281,8 @@ const ArticleContent = ({
       </div>
 
       {excerpt && (currentPage === 1 || showAll) && (
-        <div className="mb-10">
-          <div className="bg-gray-50/80 rounded-xl px-6 py-5 border border-gray-100">
+        <div className="mb-6">
+          <div className="bg-gray-50/80 rounded-xl px-6 py-4 border border-gray-100">
             <div className="flex items-center gap-2 mb-2.5">
               <FileText
                 className="w-3.5 h-3.5 text-emerald-600"
@@ -279,10 +299,12 @@ const ArticleContent = ({
         </div>
       )}
 
-      <div className="w-16 h-1 bg-emerald-600 rounded-full mb-8" />
+      <div className="w-16 h-1 bg-emerald-600 rounded-full mb-6" />
 
       <div
         className="article-body"
+        data-nosnippet=""
+        data-no-auto-ads=""
         dangerouslySetInnerHTML={{
           __html: DOMPurify.sanitize(blocks.join(""), {
             ADD_ATTR: ["dir"],
@@ -291,9 +313,9 @@ const ArticleContent = ({
       />
 
       {!showAll && currentPage < totalPages && onNextPage && (
-        <div className="mt-10 relative">
-          <div className="absolute -top-20 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent dark:from-gray-900 pointer-events-none" />
-          <div className="flex flex-col items-center gap-3 py-6 border-t border-gray-200 dark:border-gray-700">
+        <div className="mt-6 relative">
+          <div className="absolute -top-16 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent dark:from-gray-900 pointer-events-none" />
+          <div className="flex flex-col items-center gap-2 py-4 border-t border-gray-200 dark:border-gray-700">
             <p className="text-sm text-gray-500 dark:text-gray-400">
               Halaman {currentPage} dari {totalPages}
             </p>
@@ -319,8 +341,8 @@ const ArticleContent = ({
           padding-left: 1.25rem;
           font-style: italic;
           color: #4b5563;
-          margin: 1.75rem 0;
-          line-height: 1.8;
+          margin: 1rem 0;
+          line-height: 1.7;
         }
         .dark .article-body blockquote {
           border-left-color: #10b981;
@@ -329,22 +351,22 @@ const ArticleContent = ({
         .article-body h1 {
           font-size: 1.875rem;
           font-weight: 800;
-          margin-top: 2rem;
-          margin-bottom: 1rem;
+          margin-top: 1.5rem;
+          margin-bottom: 0.5rem;
           line-height: 1.25;
         }
         .article-body h2 {
           font-size: 1.5rem;
           font-weight: 700;
-          margin-top: 1.75rem;
-          margin-bottom: 0.75rem;
+          margin-top: 1.25rem;
+          margin-bottom: 0.5rem;
           line-height: 1.3;
         }
         .article-body h3 {
           font-size: 1.25rem;
           font-weight: 700;
-          margin-top: 1.5rem;
-          margin-bottom: 0.5rem;
+          margin-top: 1rem;
+          margin-bottom: 0.375rem;
           line-height: 1.35;
         }
         .article-body pre {
@@ -381,11 +403,11 @@ const ArticleContent = ({
           display: flex;
           align-items: flex-start;
           gap: 0.5rem;
-          margin: 0.5rem 0;
+          margin: 0.3rem 0;
           margin-left: 1.75rem;
           font-size: 1.125rem;
           color: #1a1a1a;
-          line-height: 1.85;
+          line-height: 1.75;
           width: 100%;
         }
         .dark .list-item-container {
@@ -402,8 +424,8 @@ const ArticleContent = ({
         }
 
         .article-paragraph {
-          margin: 1.75rem 0;
-          line-height: 1.9;
+          margin: 0.875rem 0;
+          line-height: 1.8;
           letter-spacing: 0.01em;
           text-align: justify;
           text-align-last: left;
@@ -411,10 +433,10 @@ const ArticleContent = ({
 
         .first-paragraph::first-letter {
           float: left;
-          font-size: 3.5rem;
+          font-size: 3rem;
           font-weight: 700;
           line-height: 1;
-          margin-right: 0.5rem;
+          margin-right: 0.4rem;
           margin-top: 0.1rem;
           color: #065f46;
         }
@@ -435,9 +457,9 @@ const ArticleContent = ({
         }
 
         .list-item {
-          margin: 0.5rem 0;
+          margin: 0.3rem 0;
           margin-left: 1.75rem;
-          line-height: 1.85;
+          line-height: 1.75;
           list-style: none;
           font-size: 1.125rem;
           color: #1a1a1a;
@@ -456,8 +478,8 @@ const ArticleContent = ({
         }
 
         .doa-card {
-          margin: 2.5rem 0;
-          padding: 2rem 1.75rem;
+          margin: 1.25rem 0;
+          padding: 1.25rem 1.25rem;
           border-radius: 1rem;
           background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0fdf4 100%);
           border: 1px solid #d1fae5;
@@ -483,11 +505,11 @@ const ArticleContent = ({
           font-family: "Amiri", "Cairo", "Noto Naskh Arabic", serif;
           font-size: 1.6rem;
           font-weight: 600;
-          line-height: 2.6;
+          line-height: 2.4;
           text-align: right;
-          margin-bottom: 1rem;
+          margin-bottom: 0.5rem;
           color: #064e3b;
-          padding: 0.5rem 0;
+          padding: 0.25rem 0;
         }
         .dark .doa-arab {
           color: #6ee7b7;
@@ -496,14 +518,14 @@ const ArticleContent = ({
         .doa-divider {
           height: 1px;
           background: linear-gradient(90deg, transparent, #a7f3d0, transparent);
-          margin: 0.75rem 0;
+          margin: 0.5rem 0;
         }
 
         .doa-latin {
           font-style: italic;
-          margin-bottom: 0.75rem;
+          margin-bottom: 0.5rem;
           color: #374151;
-          line-height: 1.8;
+          line-height: 1.7;
           font-size: 1rem;
         }
         .dark .doa-latin {
@@ -522,13 +544,13 @@ const ArticleContent = ({
         }
 
         .arabic-inline-block {
-          margin: 2rem 0;
-          padding: 1.25rem 1.5rem;
+          margin: 1rem 0;
+          padding: 1rem 1.25rem;
           font-family: "Amiri", "Cairo", "Noto Naskh Arabic", serif;
           font-size: 1.4rem;
           text-align: right;
           color: #064e3b;
-          line-height: 2.4;
+          line-height: 2.2;
           background: #f0fdf4;
           border-radius: 0.75rem;
           border-right: 4px solid #10b981;
@@ -538,6 +560,17 @@ const ArticleContent = ({
           color: #6ee7b7;
           background: #064e3b;
           border-right-color: #34d399;
+        }
+        /* Prevent Google Auto Ads from inserting ads inside article content */
+        .article-body ins.adsbygoogle,
+        .article-body iframe[id^="aswift_"],
+        .article-body iframe[id^="google_ads_"],
+        .article-body > div[data-ad-slot],
+        .article-body .google-auto-placed {
+          display: none !important;
+          height: 0 !important;
+          max-height: 0 !important;
+          overflow: hidden !important;
         }
         .align-center-block {
           text-align: center !important;

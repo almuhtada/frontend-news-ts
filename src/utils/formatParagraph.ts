@@ -207,8 +207,8 @@ const handleLists = (html: string): string => {
 
     return content.replace(/<li([^>]*)>([\s\S]*?)<\/li>/gi, (_: string, liAttrs: string, itemContent: string) => {
       counter++;
-      // Extract alignment from li element
-      const alignMatch = liAttrs.match(/style=["'][^"']*text-align\s*:\s*(center|right|justify)[^"']*["']/i);
+      // Extract alignment from li element (only center/right matter; justify is default)
+      const alignMatch = liAttrs.match(/style=["'][^"']*text-align\s*:\s*(center|right)[^"']*["']/i);
       const align = alignMatch ? alignMatch[1].toLowerCase() : null;
       
       // Clean inner HTML tags from list item
@@ -230,8 +230,8 @@ const handleLists = (html: string): string => {
   // Handle unordered lists (<ul>) - convert to bullet items
   text = text.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/gi, (_match, content) => {
     return content.replace(/<li([^>]*)>([\s\S]*?)<\/li>/gi, (_: string, liAttrs: string, itemContent: string) => {
-      // Extract alignment from li element
-      const alignMatch = liAttrs.match(/style=["'][^"']*text-align\s*:\s*(center|right|justify)[^"']*["']/i);
+      // Extract alignment from li element (only center/right matter; justify is default)
+      const alignMatch = liAttrs.match(/style=["'][^"']*text-align\s*:\s*(center|right)[^"']*["']/i);
       const align = alignMatch ? alignMatch[1].toLowerCase() : null;
       
       // Clean inner HTML tags from list item
@@ -251,8 +251,8 @@ const handleLists = (html: string): string => {
   // Handle any remaining <li> tags (outside of ol/ul)
   // Check if content already has numbering - don't add bullet if it does
   text = text.replace(/<li([^>]*)>([\s\S]*?)<\/li>/gi, (_match, liAttrs: string, content) => {
-    // Extract alignment from li element
-    const alignMatch = liAttrs.match(/style=["'][^"']*text-align\s*:\s*(center|right|justify)[^"']*["']/i);
+    // Extract alignment from li element (only center/right matter; justify is default)
+    const alignMatch = liAttrs.match(/style=["'][^"']*text-align\s*:\s*(center|right)[^"']*["']/i);
     const align = alignMatch ? alignMatch[1].toLowerCase() : null;
     
     const cleanContent = cleanListItem(content);
@@ -380,18 +380,22 @@ const handleAlignmentToTokens = (html: string): string => {
   for (let i = 1; i <= 6; i++) {
     text = text.replace(new RegExp(`<h${i}[^>]*style=["'][^"']*text-align\\s*:\\s*center[^"']*["'][^>]*>([\\s\\S]*?)<\\/h${i}>`, "gi"), `[align-center-h${i}]$2[/align-center-h${i}]`);
     text = text.replace(new RegExp(`<h${i}[^>]*style=["'][^"']*text-align\\s*:\\s*right[^"']*["'][^>]*>([\\s\\S]*?)<\\/h${i}>`, "gi"), `[align-right-h${i}]$2[/align-right-h${i}]`);
-    text = text.replace(new RegExp(`<h${i}[^>]*style=["'][^"']*text-align\\s*:\\s*justify[^"']*["'][^>]*>([\\s\\S]*?)<\\/h${i}>`, "gi"), `[align-justify-h${i}]$2[/align-justify-h${i}]`);
+    // justify on headings: strip the style, no token needed (justify is default)
+    text = text.replace(new RegExp(`<h${i}[^>]*style=["'][^"']*text-align\\s*:\\s*justify[^"']*["'][^>]*>([\\s\\S]*?)<\\/h${i}>`, "gi"), `<h${i}>$1</h${i}>`);
   }
 
   // Convert text-align center, right, justify on blockquotes to specific tokens
   text = text.replace(/<blockquote[^>]*style=["'][^"']*text-align\s*:\s*center[^"']*["'][^>]*>([\s\S]*?)<\/blockquote>/gi, "[align-center-blockquote]$1[/align-center-blockquote]");
   text = text.replace(/<blockquote[^>]*style=["'][^"']*text-align\s*:\s*right[^"']*["'][^>]*>([\s\S]*?)<\/blockquote>/gi, "[align-right-blockquote]$1[/align-right-blockquote]");
-  text = text.replace(/<blockquote[^>]*style=["'][^"']*text-align\s*:\s*justify[^"']*["'][^>]*>([\s\S]*?)<\/blockquote>/gi, "[align-justify-blockquote]$1[/align-justify-blockquote]");
+  // justify on blockquotes: strip the style, no token needed
+  text = text.replace(/<blockquote[^>]*style=["'][^"']*text-align\s*:\s*justify[^"']*["'][^>]*>([\s\S]*?)<\/blockquote>/gi, "<blockquote>$1</blockquote>");
 
-  // Convert text-align center, right, justify on other tags to tokens
+  // Convert text-align center, right on other tags to tokens
   text = text.replace(/<(p|div|li|ol|ul)[^>]*style=["'][^"']*text-align\s*:\s*center[^"']*["'][^>]*>([\s\S]*?)<\/\1>/gi, "[align-center]$2[/align-center]");
   text = text.replace(/<(p|div|li|ol|ul)[^>]*style=["'][^"']*text-align\s*:\s*right[^"']*["'][^>]*>([\s\S]*?)<\/\1>/gi, "[align-right]$2[/align-right]");
-  text = text.replace(/<(p|div|li|ol|ul)[^>]*style=["'][^"']*text-align\s*:\s*justify[^"']*["'][^>]*>([\s\S]*?)<\/\1>/gi, "[align-justify]$2[/align-justify]");
+  // justify on p/div/li: just strip the styled tag into plain content with newlines
+  // (justify is the default article style, so no token is needed)
+  text = text.replace(/<(p|div)[^>]*style=["'][^"']*text-align\s*:\s*justify[^"']*["'][^>]*>([\s\S]*?)<\/\1>/gi, "\n\n$2\n\n");
 
   return text;
 };
@@ -406,6 +410,9 @@ const stripHtml = (html: string): string => {
   text = text.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
   text = text.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "");
   text = text.replace(/<noscript[^>]*>[\s\S]*?<\/noscript>/gi, "");
+
+  // Remove Microsoft Office / Word specific tags (o:p, v:*, w:*, etc.)
+  text = text.replace(/<\/?\w+:[^>]*>/gi, "");
 
   // Step 1: Remove WordPress shortcodes
   text = removeShortcodes(text);
